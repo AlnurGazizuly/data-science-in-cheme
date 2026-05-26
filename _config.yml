@@ -10,19 +10,6 @@ html:
   use_issues_button: false
   use_edit_page_button: false
   home_page_in_navbar: true
-  navbar_number_sections: false
-  announcement: "📘 Data Science in Chemical Engineering — Bucknell University, ChemE Dept."
-  extra_navbar: |
-    <p>By <a href="https://www.bucknell.edu">Bucknell University</a></p>
-  theme:
-    name: sphinx-book-theme
-    options:
-      default_mode: dark
-      show_navbar_depth: 2
-      navigation_with_keys: true
-      repository_url: https://github.com/AlnurGazizuly/data-science-in-cheme
-      use_fullscreen_button: true
-      toc_title: "On this page"
 
 parse:
   myst_enable_extensions:
@@ -41,3 +28,12 @@ sphinx:
   config:
     html_show_sourcelink: false
     pygments_dark_style: monokai
+    html_theme_options:
+      default_mode: dark
+      show_navbar_depth: 2
+      navigation_with_keys: true
+      repository_url: "https://github.com/AlnurGazizuly/data-science-in-cheme"
+      use_fullscreen_button: true
+      toc_title: "On this page"
+      logo:
+        text: "DS in ChemE"
