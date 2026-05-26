@@ -1,15 +1,43 @@
 title: Data Science in Chemical Engineering
-author: Maya Fetzer & Dr. Jude Okolie
+author: Maya Fetzer & Dr. Jude Okolie — Bucknell University
+copyright: "2024"
 
 execute:
   execute_notebooks: "off"
 
 html:
-  use_repository_button: false
+  use_repository_button: true
   use_issues_button: false
   use_edit_page_button: false
+  home_page_in_navbar: true
+  navbar_number_sections: false
+  announcement: "📘 Data Science in Chemical Engineering — Bucknell University, ChemE Dept."
+  extra_navbar: |
+    <p>By <a href="https://www.bucknell.edu">Bucknell University</a></p>
+  theme:
+    name: sphinx-book-theme
+    options:
+      default_mode: dark
+      show_navbar_depth: 2
+      navigation_with_keys: true
+      repository_url: https://github.com/AlnurGazizuly/data-science-in-cheme
+      use_fullscreen_button: true
+      toc_title: "On this page"
 
 parse:
   myst_enable_extensions:
     - colon_fence
     - deflist
+    - tasklist
+  myst_heading_anchors: 3
+
+repository:
+  url: https://github.com/AlnurGazizuly/data-science-in-cheme
+  branch: main
+
+sphinx:
+  extra_extensions:
+    - sphinx_copybutton
+  config:
+    html_show_sourcelink: false
+    pygments_dark_style: monokai
