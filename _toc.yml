@@ -1,0 +1,27 @@
+format: jb-book
+root: intro
+chapters:
+- file: section-01
+  title: "Section 1: Foundations of Data Science"
+- file: section-02
+  title: "Section 2: Introduction to Python"
+- file: section-03
+  title: "Section 3: Exploratory Data Analysis"
+- file: section-04
+  title: "Section 4: Introduction to Machine Learning"
+- file: section-05
+  title: "Section 5: GitHub"
+- file: section-06
+  title: "Section 6: Deploying a GUI"
+- file: section-07
+  title: "Section 7: Ethics"
+- file: section-08
+  title: "Section 8: Transformers & GPTs"
+- file: section-09
+  title: "Section 9: LangChain"
+- file: section-10
+  title: "Section 10: Accessibility in AI & ML"
+- file: section-11a
+  title: "Section 11a: Student ML Projects"
+- file: section-11b
+  title: "Section 11b: ML Projects in Research"

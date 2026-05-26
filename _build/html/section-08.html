@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs) &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-08';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 9: Langchain" href="section-09.html" />
+    <link rel="prev" title="Section 7: Ethics" href="section-07.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Science in Chemical Engineering</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Data Science in Chemical Engineering
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-08.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 8: Transformers & Generative Pre-trained Transformers (GPTs)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-transformers">8.1. Why Use Transformers?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-cons-of-transformers">8.2. Pros &amp; Cons of Transformers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pros">Pros</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cons">Cons</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-are-transformers-so-popular-lately">8.3. Why Are Transformers So Popular Lately?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advances-in-hardware-cloud-computing">1. Advances in Hardware &amp; Cloud Computing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rise-of-open-source-ai">2. The Rise of Open-Source AI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-licensing-pricing-changes">3. Data Licensing &amp; Pricing Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-demand-for-generative-ai">4. Consumer Demand for Generative AI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transformer-architecture">8.4. The Transformer Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-implementing-self-attention-in-python">Example: Implementing Self-Attention in Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-ended-questions">Open-Ended Questions:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-8-transformers-generative-pre-trained-transformers-gpts">
+<h1>Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs)<a class="headerlink" href="#section-8-transformers-generative-pre-trained-transformers-gpts" title="Link to this heading">#</a></h1>
+<p>This section explores Transformers and Generative Pre-trained Transformers (GPTs), highlighting their role in natural language processing (NLP) and deep learning. It covers the architecture, training process, and applications of these models in tasks such as text generation, translation, and predictive analytics.</p>
+<section id="why-use-transformers">
+<h2>8.1. Why Use Transformers?<a class="headerlink" href="#why-use-transformers" title="Link to this heading">#</a></h2>
+<p>Transformers have revolutionized deep learning, particularly in <strong>Natural Language Processing (NLP)</strong> and other sequential tasks like <strong>time-series forecasting</strong> and <strong>image processing</strong>. Their adoption stems from several key advantages over previous architectures like recurrent neural networks (RNNs) and long short-term memory (LSTM) networks.</p>
+<p><strong>Key Reasons to Use Transformers:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Better Handling of Long-Range Dependencies</strong></p>
+<ul class="simple">
+<li><p>RNNs and LSTMs struggle with vanishing gradients when processing long sequences. Transformers use <strong>self-attention</strong>, allowing them to capture relationships between words across entire sentences.</p></li>
+</ul>
+</li>
+<li><p><strong>Parallelization for Faster Training</strong></p>
+<ul class="simple">
+<li><p>RNNs process words sequentially, slowing down training. Transformers process all tokens simultaneously using <strong>multi-head self-attention</strong>, making them significantly faster.</p></li>
+</ul>
+</li>
+<li><p><strong>Scalability to Large Datasets</strong></p>
+<ul class="simple">
+<li><p>Modern transformers like GPT-4 and PaLM-2 are trained on <strong>terabytes of text data</strong>, something that traditional NLP models could not handle effectively.</p></li>
+</ul>
+</li>
+<li><p><strong>Transfer Learning &amp; Pretraining</strong></p>
+<ul class="simple">
+<li><p>Pretrained transformer models can be <strong>fine-tuned</strong> for specific tasks, drastically reducing training time and computation for downstream applications.</p></li>
+</ul>
+</li>
+<li><p><strong>Versatility Across Modalities</strong></p>
+<ul class="simple">
+<li><p>While originally designed for text, transformers are now used in <strong>image processing (Vision Transformers - ViTs)</strong>, <strong>audio processing (Whisper by OpenAI)</strong>, and even <strong>drug discovery (AlphaFold by DeepMind)</strong>.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="pros-cons-of-transformers">
+<h2>8.2. Pros &amp; Cons of Transformers<a class="headerlink" href="#pros-cons-of-transformers" title="Link to this heading">#</a></h2>
+<p>While transformers offer substantial benefits, they also come with trade-offs.</p>
+<hr class="docutils" />
+</section>
+<section id="pros">
+<h2>Pros<a class="headerlink" href="#pros" title="Link to this heading">#</a></h2>
+<p><strong>High Accuracy on NLP Tasks</strong></p>
+<ul class="simple">
+<li><p>Achieves <strong>state-of-the-art</strong> performance in tasks like text generation, translation, summarization, and sentiment analysis.</p></li>
+</ul>
+<p><strong>Handles Complex Context &amp; Meaning</strong></p>
+<ul class="simple">
+<li><p>Self-attention allows models to understand context better than RNNs or bag-of-words models.</p></li>
+</ul>
+<p><strong>Efficient Training via Parallelization</strong></p>
+<ul class="simple">
+<li><p>Unlike RNNs that process tokens sequentially, transformers handle entire sequences at once, allowing faster training.</p></li>
+</ul>
+<p><strong>Scalability to Massive Models &amp; Datasets</strong></p>
+<ul class="simple">
+<li><p>Models like <strong>GPT-4 and PaLM-2</strong> leverage billions of parameters and large datasets, significantly improving fluency and coherence.</p></li>
+</ul>
+<p><strong>Pretraining + Fine-tuning Paradigm</strong></p>
+<ul class="simple">
+<li><p>A single pre-trained model can be <strong>fine-tuned</strong> for a variety of applications, reducing overall training costs for businesses.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="cons">
+<h2>Cons<a class="headerlink" href="#cons" title="Link to this heading">#</a></h2>
+<p><strong>High Computational Costs</strong></p>
+<ul class="simple">
+<li><p>Training large-scale transformers requires <strong>massive GPU/TPU clusters</strong>, making them expensive to develop.</p></li>
+</ul>
+<p><strong>Memory-Intensive</strong></p>
+<ul class="simple">
+<li><p>Self-attention has <strong>O(n²) complexity</strong>, meaning that memory usage grows quadratically with input length. This limits the model’s ability to handle extremely long sequences.</p></li>
+</ul>
+<p><strong>Requires Large Amounts of Training Data</strong></p>
+<ul class="simple">
+<li><p>Transformer-based models need <strong>billions of words</strong> to generalize well, making them inaccessible to smaller organizations without access to massive datasets.</p></li>
+</ul>
+<p><strong>Susceptible to Bias &amp; Misinformation</strong></p>
+<ul class="simple">
+<li><p>Since transformers learn from human-generated text, they <strong>inherit biases</strong> from their training data. This can lead to problematic outputs if not carefully monitored.</p></li>
+</ul>
+<p><strong>Difficult to Interpret</strong></p>
+<ul class="simple">
+<li><p>Unlike rule-based systems, transformers are often considered <strong>black boxes</strong>, making it hard to explain why they produce specific outputs.</p></li>
+</ul>
+</section>
+<section id="why-are-transformers-so-popular-lately">
+<h2>8.3. Why Are Transformers So Popular Lately?<a class="headerlink" href="#why-are-transformers-so-popular-lately" title="Link to this heading">#</a></h2>
+<p>Transformers have surged in popularity for several reasons, including advancements in <strong>computing power</strong>, <strong>cloud-based AI models</strong>, and most notably, <strong>changes in the pricing of data access</strong>.</p>
+<section id="advances-in-hardware-cloud-computing">
+<h3>1. Advances in Hardware &amp; Cloud Computing<a class="headerlink" href="#advances-in-hardware-cloud-computing" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>GPUs &amp; TPUs</strong>: The rise of NVIDIA A100, H100, and Google’s TPUs has made large-scale training feasible.</p></li>
+<li><p><strong>Cloud AI Services</strong>: Platforms like OpenAI, Hugging Face, and Google Cloud allow businesses to <strong>rent</strong> transformers instead of training from scratch.</p></li>
+</ul>
+</section>
+<section id="the-rise-of-open-source-ai">
+<h3>2. The Rise of Open-Source AI<a class="headerlink" href="#the-rise-of-open-source-ai" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Open-source transformers (e.g., <strong>BERT, GPT-2, LLaMA</strong>) have democratized access, letting researchers and businesses fine-tune them without massive costs.</p></li>
+<li><p>Frameworks like <strong>Hugging Face Transformers</strong> simplify implementation with pre-trained models.</p></li>
+</ul>
+</section>
+<section id="data-licensing-pricing-changes">
+<h3>3. Data Licensing &amp; Pricing Changes<a class="headerlink" href="#data-licensing-pricing-changes" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Limited Web Scraping</strong>: Many high-quality datasets (e.g., Common Crawl, Wikipedia) were previously free. However, recent legal debates on AI scraping have led to <strong>increased costs</strong> for using copyrighted data.</p></li>
+<li><p><strong>Paywall-Restricted Content</strong>: Premium publications (NYT, academic journals) are limiting AI access, forcing companies to <strong>purchase proprietary datasets</strong>.</p></li>
+<li><p><strong>Synthetic Data Boom</strong>: Due to data pricing concerns, firms are investing in <strong>synthetically generated data</strong> to train transformers instead of relying solely on scraped text.</p></li>
+</ul>
+</section>
+<section id="consumer-demand-for-generative-ai">
+<h3>4. Consumer Demand for Generative AI<a class="headerlink" href="#consumer-demand-for-generative-ai" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>ChatGPT, Copilot, and Bard have shown real-world value for <strong>writing, coding, and automation</strong>, pushing businesses to integrate <strong>AI chatbots and content generation tools</strong>.</p></li>
+<li><p>Companies that traditionally ignored AI (e.g., law firms, banks) are now investing in <strong>domain-specific transformers</strong> for legal, financial, and medical applications.</p></li>
+</ul>
+</section>
+</section>
+<section id="the-transformer-architecture">
+<h2>8.4. The Transformer Architecture<a class="headerlink" href="#the-transformer-architecture" title="Link to this heading">#</a></h2>
+<p>Transformers use an <strong>encoder-decoder structure</strong>, but models like GPT only use the <strong>decoder</strong> for autoregressive text generation.</p>
+<section id="key-components">
+<h3>Key Components:<a class="headerlink" href="#key-components" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Multi-Head Self-Attention</strong>: Identifies relationships between words dynamically.</p></li>
+<li><p><strong>Positional Encoding</strong>: Helps retain order in sequences.</p></li>
+<li><p><strong>Feedforward Networks</strong>: Enhances feature representations for better predictions.</p></li>
+<li><p><strong>Layer Normalization &amp; Residual Connections</strong>: Stabilizes training and prevents gradient problems.</p></li>
+</ul>
+</section>
+<section id="example-implementing-self-attention-in-python">
+<h3>Example: Implementing Self-Attention in Python<a class="headerlink" href="#example-implementing-self-attention-in-python" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scaled_dot_product_attention</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes self-attention scores and applies them to the value tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<span class="c1"># Example tensors for Query, Key, and Value</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># (batch, sequence_length, embedding_dim)</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">value</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">attention_output</span> <span class="o">=</span> <span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attention Output:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attention_output</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="open-ended-questions">
+<h2>Open-Ended Questions:<a class="headerlink" href="#open-ended-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>How does self-attention allow Transformers to capture long-range dependencies better than RNNs?</p></li>
+<li><p>What are the trade-offs of using Transformers in resource-limited settings?</p></li>
+<li><p>With increasing restrictions on web-scraped data, how will AI companies adapt to train large models in the future?</p></li>
+<li><p>What role do synthetic datasets play in Transformer training, and how do they compare to real-world data?</p></li>
+<li><p>If you were to optimize a Transformer model for mobile devices, what modifications would you make?</p></li>
+</ol>
+<p><em>Add your response here</em></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-07.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 7: Ethics</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-09.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 9: Langchain</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-transformers">8.1. Why Use Transformers?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pros-cons-of-transformers">8.2. Pros &amp; Cons of Transformers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pros">Pros</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cons">Cons</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-are-transformers-so-popular-lately">8.3. Why Are Transformers So Popular Lately?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advances-in-hardware-cloud-computing">1. Advances in Hardware &amp; Cloud Computing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rise-of-open-source-ai">2. The Rise of Open-Source AI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-licensing-pricing-changes">3. Data Licensing &amp; Pricing Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#consumer-demand-for-generative-ai">4. Consumer Demand for Generative AI</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-transformer-architecture">8.4. The Transformer Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-implementing-self-attention-in-python">Example: Implementing Self-Attention in Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-ended-questions">Open-Ended Questions:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

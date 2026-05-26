@@ -1,0 +1,15 @@
+title: Data Science in Chemical Engineering
+author: Maya Fetzer & Dr. Jude Okolie
+
+execute:
+  execute_notebooks: "off"
+
+html:
+  use_repository_button: false
+  use_issues_button: false
+  use_edit_page_button: false
+
+parse:
+  myst_enable_extensions:
+    - colon_fence
+    - deflist

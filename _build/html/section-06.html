@@ -1,0 +1,883 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 6: Deploying a Graphical User Inteface (GUI) &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-06';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 7: Ethics" href="section-07.html" />
+    <link rel="prev" title="Section 5: Github" href="section-05.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Science in Chemical Engineering</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Data Science in Chemical Engineering
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-06.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 6: Deploying a Graphical User Inteface (GUI)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streamlit-versus-hugging-face">6.1. Streamlit versus Hugging Face</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-and-importing-streamlit">6.2. Installing and Importing Streamlit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-basic-streamlit-app">6.3. Creating a Basic Streamlit App</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-user-input">6.4. Adding User Input</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-buttons-and-conditional-actions">6.5. Adding Buttons and Conditional Actions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-data-with-tables-and-charts">6.6. Displaying Data with Tables and Charts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-to-hugging-face-spaces">6.7. <strong>Deploying to Hugging Face Spaces</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-with-streamlit-community-cloud-alternative">6.8. Deploying with Streamlit Community Cloud (Alternative)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-6-deploying-a-graphical-user-inteface-gui">
+<h1>Section 6: Deploying a Graphical User Inteface (GUI)<a class="headerlink" href="#section-6-deploying-a-graphical-user-inteface-gui" title="Link to this heading">#</a></h1>
+<p>Learn to build and deploy interactive web applications using Streamlit and Hugging Face Spaces, making it easy to share and deploy models, dashboards, and data tools. There are some xifferences between Streamlit and Hugging Face as shown in the table below:</p>
+<section id="streamlit-versus-hugging-face">
+<h2>6.1. Streamlit versus Hugging Face<a class="headerlink" href="#streamlit-versus-hugging-face" title="Link to this heading">#</a></h2>
+<p>Before choosing how to deploy an AI or data science app, it helps to understand the difference between popular options like <strong>Streamlit</strong> and <strong>Hugging Face Spaces</strong>. Both tools make it easy to turn models into interactive demos, but they serve slightly different purposes. Streamlit focuses on flexible app building and customization in Python, while Hugging Face Spaces emphasizes sharing, hosting, and discoverability within the machine learning community.</p>
+<p><strong>Streamlit</strong></p>
+<ul class="simple">
+<li><p>Designed for building interactive data and machine learning web apps directly in Python.</p></li>
+<li><p>Great for local development and rapid prototyping — you can run apps with <code class="docutils literal notranslate"><span class="pre">streamlit</span> <span class="pre">run</span> <span class="pre">app.py</span></code>.</p></li>
+<li><p>Flexible: can connect to any model (local, API, or cloud-hosted).</p></li>
+<li><p>Allows custom UI design and logic using widgets (<code class="docutils literal notranslate"><span class="pre">st.slider</span></code>, <code class="docutils literal notranslate"><span class="pre">st.text_input</span></code>, etc.).</p></li>
+<li><p>Deployment options include Streamlit Community Cloud, Docker, or internal servers.</p></li>
+<li><p>Ideal for data scientists or engineers who want control over UI and logic in one Python script.</p></li>
+</ul>
+<p><strong>Hugging Face Spaces</strong></p>
+<ul class="simple">
+<li><p>Platform for hosting and sharing ML demos publicly (or privately with paid plans).</p></li>
+<li><p>Integrates directly with Hugging Face models and datasets — easy to showcase a model from the Hub.</p></li>
+<li><p>Supports both <strong>Gradio</strong> and <strong>Streamlit</strong> apps as runtimes.</p></li>
+<li><p>Automatically handles hosting, version control, and discoverability through the Hugging Face Hub.</p></li>
+<li><p>Best suited for sharing finished demos with the community, teaching, or showcasing models for research and outreach.</p></li>
+</ul>
+</section>
+<section id="installing-and-importing-streamlit">
+<h2>6.2. Installing and Importing Streamlit<a class="headerlink" href="#installing-and-importing-streamlit" title="Link to this heading">#</a></h2>
+<p>Streamlit is a Python framework that allows users to create interactive web-based applications with minimal effort. Unlike traditional web development, Streamlit simplifies the process by allowing users to focus on writing Python scripts without worrying about front-end or back-end development. Streamlit is particularly useful for building interactive dashboards, machine learning apps, and engineering tools.</p>
+<p>To get started with Streamlit, you need to install it and import the library.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Uncomment and run this line if you haven&#39;t installed Streamlit</span>
+<span class="c1"># !pip install streamlit</span>
+</pre></div>
+</div>
+<p>Now, import Streamlit into your Python script:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-a-basic-streamlit-app">
+<h2>6.3. Creating a Basic Streamlit App<a class="headerlink" href="#creating-a-basic-streamlit-app" title="Link to this heading">#</a></h2>
+<p>Every Streamlit application starts with defining the interface elements. These include titles, text, buttons, and more. Below is a simple example of a basic Streamlit app:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Welcome to My First Streamlit App&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;This is a simple interactive web application built with Streamlit.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Run the script using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">streamlit</span> <span class="n">run</span> <span class="n">my_script</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This will launch your Streamlit app in a web browser.</p>
+</section>
+<section id="adding-user-input">
+<h2>6.4. Adding User Input<a class="headerlink" href="#adding-user-input" title="Link to this heading">#</a></h2>
+<p>To make applications interactive, we need to accept user input. Streamlit provides various input elements such as text boxes, sliders, and dropdown menus. The example below demonstrates how to accept text input from a user and dynamically update the display based on their input.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Interactive Streamlit App&quot;</span><span class="p">)</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span><span class="s2">&quot;Enter your name:&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, when a user types their name into the input field, it is displayed back dynamically using <code class="docutils literal notranslate"><span class="pre">st.write()</span></code>.</p>
+</section>
+<section id="adding-buttons-and-conditional-actions">
+<h2>6.5. Adding Buttons and Conditional Actions<a class="headerlink" href="#adding-buttons-and-conditional-actions" title="Link to this heading">#</a></h2>
+<p>Buttons allow users to trigger actions within a Streamlit app. You can use them to process inputs, execute functions, or display messages when clicked. Below is an example of a button that, when clicked, displays a success message.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Button Interaction Example&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&quot;Click me!&quot;</span><span class="p">):</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;You clicked the button!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="displaying-data-with-tables-and-charts">
+<h2>6.6. Displaying Data with Tables and Charts<a class="headerlink" href="#displaying-data-with-tables-and-charts" title="Link to this heading">#</a></h2>
+<p>Streamlit allows seamless integration with pandas to display data in a tabular format. This is particularly useful for chemical engineering applications where data analysis is a key component. Below is an example of how to display a DataFrame using Streamlit.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Displaying a DataFrame&quot;</span><span class="p">)</span>
+
+<span class="c1"># Sample Data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Charlie&quot;</span><span class="p">],</span> <span class="s2">&quot;Score&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">78</span><span class="p">]}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="deploying-to-hugging-face-spaces">
+<h2>6.7. <strong>Deploying to Hugging Face Spaces</strong><a class="headerlink" href="#deploying-to-hugging-face-spaces" title="Link to this heading">#</a></h2>
+<p>Instead of running Streamlit locally, you can deploy your app to <strong>Hugging Face Spaces</strong>, a free hosting platform that allows you to share and showcase interactive applications. This is useful for engineers and researchers who want to share their work without setting up cloud servers.</p>
+<p><strong>Step 1: Push Your Code to GitHub</strong></p>
+<p>Ensure your Streamlit script (<code class="docutils literal notranslate"><span class="pre">app.py</span></code>) is stored in a GitHub repository.</p>
+<p><strong>Step 2: Create a Hugging Face Space</strong></p>
+<ol class="arabic simple">
+<li><p>Go to <a class="reference external" href="https://huggingface.co/spaces">Hugging Face Spaces</a>.</p></li>
+<li><p>Click <strong>Create new Space</strong>.</p></li>
+<li><p>Choose <strong>Streamlit</strong> as the application type.</p></li>
+<li><p>Link your GitHub repository or manually upload your <code class="docutils literal notranslate"><span class="pre">app.py</span></code> file.</p></li>
+</ol>
+<p><strong>Step 3: Add a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> File</strong></p>
+<p>Your app needs a <strong>requirements.txt</strong> file to install dependencies. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">streamlit</span>
+<span class="n">pandas</span>
+<span class="n">numpy</span>
+</pre></div>
+</div>
+<p><strong>Step 4: Deploy and Share</strong></p>
+<p>Once Hugging Face builds your Space, you’ll get a <strong>public URL</strong> to share your app with others!</p>
+</section>
+<section id="deploying-with-streamlit-community-cloud-alternative">
+<h2>6.8. Deploying with Streamlit Community Cloud (Alternative)<a class="headerlink" href="#deploying-with-streamlit-community-cloud-alternative" title="Link to this heading">#</a></h2>
+<p>Another option for deployment is <strong>Streamlit Community Cloud</strong>, which allows you to host apps directly from GitHub.</p>
+<p><strong>Steps to Deploy:</strong></p>
+<ol class="arabic simple">
+<li><p>Push your script to <strong>GitHub</strong>.</p></li>
+<li><p>Go to <a class="reference external" href="https://share.streamlit.io/">Streamlit Community Cloud</a>.</p></li>
+<li><p>Connect your GitHub repository.</p></li>
+<li><p>Deploy and share your live app with a simple link!</p></li>
+</ol>
+</section>
+<section id="task">
+<h2>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h2>
+<p>In chemical engineering, some caluclations are multi-step and complicated. Creating a a GUI interface can be helpful to prevent mistakes when doing repetitive and common calculations.</p>
+<p>Create the below calculators and deploy to github. Then, create a GUI using streamlit. Your github should contain the following files once you are complete:</p>
+<p>Calc_Wastewater - an app to calcualte the dissolved oxygen in wastewater</p>
+<p>Calc_MCT - an app to do McCabe-Thiele analysis</p>
+<p>Calc_LLE - an app to calculate ratios and plot tie-lines in the LLE</p>
+<p>Calc_CSTR - compares CSTR and PFR reactors for a first-order irreversible reaction and calculates reactor volumes</p>
+<p>requirements.txt - requirements file</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</section>
+<section id="answer-key">
+<h2>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wastewater Calculation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Function to calculate the dissolved oxygen level iteratively</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_do</span><span class="p">(</span><span class="n">do</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">otr</span><span class="p">,</span> <span class="n">consumption_rate</span><span class="p">):</span>
+    <span class="c1"># Iteratively calculate DO at each time step</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Time step</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
+        <span class="c1"># Oxygen transfer rate (OTR) - Oxygen consumption rate</span>
+        <span class="n">ddo</span> <span class="o">=</span> <span class="n">otr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">9.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">consumption_rate</span>
+        <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ddo</span> <span class="o">*</span> <span class="n">dt</span>  <span class="c1"># Update DO based on OTR and consumption</span>
+        <span class="c1"># DO can&#39;t fall below zero</span>
+        <span class="k">if</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">do</span>
+
+<span class="c1"># Streamlit app interface</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Wastewater Treatment: Dissolved Oxygen Profile in Aeration Tank&quot;</span><span class="p">)</span>
+
+<span class="c1"># Display a fancy wastewater treatment image</span>
+<span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/9/9f/Wastewater_Treatment_2.jpg&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Aeration Tank in Wastewater Treatment&quot;</span><span class="p">,</span> <span class="n">use_column_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Input parameters for simulation</span>
+<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Oxygen Transfer and Consumption Parameters&quot;</span><span class="p">)</span>
+<span class="n">ote</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Oxygen Transfer Efficiency (OTE, %)&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>  <span class="c1"># Oxygen transfer efficiency</span>
+<span class="n">otr</span> <span class="o">=</span> <span class="n">ote</span> <span class="o">/</span> <span class="mi">100</span>  <span class="c1"># Convert to a fraction for OTR calculation</span>
+<span class="n">consumption_rate</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Oxygen Consumption Rate (mg/L/min)&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+<span class="n">initial_do</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Initial Dissolved Oxygen (DO, mg/L)&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># Initial DO level</span>
+
+<span class="c1"># Time array for simulation (minutes)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+
+<span class="c1"># Initialize DO array with initial value</span>
+<span class="n">do</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">do</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_do</span>
+
+<span class="c1"># Calculate DO profile</span>
+<span class="n">do_profile</span> <span class="o">=</span> <span class="n">calculate_do</span><span class="p">(</span><span class="n">do</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">otr</span><span class="p">,</span> <span class="n">consumption_rate</span><span class="p">)</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Dissolved Oxygen Profile in the Aeration Tank&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">do_profile</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;DO Level&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Minimum DO Threshold (2 mg/L)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (minutes)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dissolved Oxygen (mg/L)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;DO Concentration Over Time in Aeration Tank&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Display the plot in Streamlit</span>
+<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="c1"># Display DO levels over time</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Dissolved Oxygen Level: </span><span class="si">{</span><span class="n">do_profile</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mg/L&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explanation of the simulation</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">### Oxygen Transfer in Wastewater Treatment</span>
+<span class="s2">This simulation models the dissolved oxygen (DO) concentration over time in an aeration tank during wastewater treatment. Oxygen is transferred into the water to support microbial processes that consume oxygen to break down organic material.</span>
+
+<span class="s2">- **Oxygen Transfer Efficiency (OTE)**: The percentage of oxygen that is effectively transferred into the water.</span>
+<span class="s2">- **Oxygen Consumption Rate**: The rate at which oxygen is consumed by the microbes.</span>
+<span class="s2">- **Initial Dissolved Oxygen (DO)**: The starting concentration of DO in the tank.</span>
+
+<span class="s2">You can adjust these parameters to see how they affect the DO profile in the aeration tank.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MCT Calculation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Function to calculate equilibrium curve (y = alpha * x / (1 + (alpha - 1) * x))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Function to calculate the rectifying section operating line</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rectifying_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">xd</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">R</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">xd</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Function to calculate the stripping section operating line</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stripping_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">xf</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">q</span> <span class="o">/</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="n">xb</span>
+
+<span class="c1"># Streamlit app interface</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distillation Column Calculator using McCabe-Thiele Method&quot;</span><span class="p">)</span>
+
+<span class="c1"># Input section for column design</span>
+<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Data for Distillation Column&quot;</span><span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Relative Volatility (α)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">xf</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed Mole Fraction (xF)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">xd</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Distillate Mole Fraction (xD)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">xb</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Bottom Mole Fraction (xB)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Reflux Ratio (R)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed Condition (q)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;q = 1 for saturated liquid, q = 0 for saturated vapor&quot;</span><span class="p">)</span>
+
+<span class="c1"># Generate x values for plotting (mole fractions)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y_eq</span> <span class="o">=</span> <span class="n">equilibrium_curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+<span class="c1"># Calculate points for operating lines</span>
+<span class="n">y_rectifying</span> <span class="o">=</span> <span class="n">rectifying_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">xd</span><span class="p">)</span>
+<span class="n">y_stripping</span> <span class="o">=</span> <span class="n">stripping_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">xf</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+
+<span class="c1"># McCabe-Thiele plot</span>
+<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;McCabe-Thiele Diagram&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plotting equilibrium curve and operating lines</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Plot equilibrium curve</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_eq</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Equilibrium Curve&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot rectifying section operating line</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_rectifying</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Rectifying Line (R)&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot stripping section operating line</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_stripping</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Stripping Line (q)&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot x = y line (45-degree line)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y = x&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add labels and title</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Mole Fraction of Light Component (x)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Mole Fraction of Light Component (y)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;McCabe-Thiele Diagram&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Display the plot in Streamlit</span>
+<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="c1"># Conclusion and analysis</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">This McCabe-Thiele diagram shows the equilibrium curve and the operating lines for the rectifying and stripping sections of the distillation column. The reflux ratio, feed condition, and relative volatility all influence the number of theoretical stages required for the separation process.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># LLE Calculation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Function to calculate solute distribution between two phases (based on distribution ratio)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_distribution</span><span class="p">(</span><span class="n">c_s</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+    <span class="n">c_o</span> <span class="o">=</span> <span class="n">D</span> <span class="o">*</span> <span class="n">c_s</span>  <span class="c1"># Solute concentration in organic phase</span>
+    <span class="k">return</span> <span class="n">c_o</span>
+
+<span class="c1"># Streamlit app interface</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Liquid-Liquid Extraction: Tie-Line Diagram&quot;</span><span class="p">)</span>
+
+<span class="c1"># Input section for solute concentration in aqueous phase and distribution ratio</span>
+<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Data for Liquid-Liquid Extraction&quot;</span><span class="p">)</span>
+<span class="n">c_s</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Initial solute concentration in aqueous phase (mol/L)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Distribution Ratio (D)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Generate solute concentrations in aqueous phase (x-axis)</span>
+<span class="n">c_s_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># Solute concentrations in aqueous phase</span>
+<span class="n">c_o_range</span> <span class="o">=</span> <span class="n">calculate_distribution</span><span class="p">(</span><span class="n">c_s_range</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>  <span class="c1"># Corresponding concentrations in organic phase</span>
+
+<span class="c1"># Plotting the tie-line diagram (c_s vs. c_o)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Tie-Line Diagram: Solute Distribution between Phases&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Plot solute distribution in both phases</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c_s_range</span><span class="p">,</span> <span class="n">c_o_range</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Tie Line&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add labels and title</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Solute Concentration in Aqueous Phase (mol/L)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Solute Concentration in Organic Phase (mol/L)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Tie-Line Diagram: Liquid-Liquid Extraction&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># Display the plot in Streamlit</span>
+<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="c1"># Output the calculated solute concentrations for the given initial concentration</span>
+<span class="n">c_o</span> <span class="o">=</span> <span class="n">calculate_distribution</span><span class="p">(</span><span class="n">c_s</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;For an initial solute concentration of </span><span class="si">{</span><span class="n">c_s</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mol/L in the aqueous phase, the solute concentration in the organic phase is </span><span class="si">{</span><span class="n">c_o</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mol/L.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Conclusion and analysis</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">This tie-line diagram illustrates the equilibrium distribution of a solute between two immiscible phases (aqueous and organic).</span>
+<span class="s2">The slope of the line depends on the distribution ratio (D), which is the ratio of solute concentration in the organic phase to that in the aqueous phase.</span>
+<span class="s2">A higher D indicates that the solute prefers the organic phase, while a lower D indicates preference for the aqueous phase.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># CSTR Calculation</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Title and Description</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;CSTR and PFR Reactor Volume Calculator for First-Order Reactions&quot;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">This app calculates the reactor volume for both CSTR and PFR given the feed rate, rate constant, and target conversion.</span>
+<span class="s2">You can also compare the performance of both reactors by observing the volume required to achieve the same conversion,</span>
+<span class="s2">and plot the conversion profile for the PFR along the reactor length.</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Input parameters</span>
+<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Parameters&quot;</span><span class="p">)</span>
+
+<span class="c1"># Feed rate (F_A0)</span>
+<span class="n">FA0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed rate (mol/s)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Reaction rate constant (k)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Reaction rate constant (1/s)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Conversion (X)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Conversion (X)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># CSTR Volume Calculation</span>
+<span class="k">if</span> <span class="n">FA0</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">V_CSTR</span> <span class="o">=</span> <span class="n">FA0</span> <span class="o">*</span> <span class="n">X</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X</span><span class="p">))</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**CSTR Volume required for </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">% conversion:** </span><span class="si">{</span><span class="n">V_CSTR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³&quot;</span><span class="p">)</span>
+
+<span class="c1"># PFR Volume Calculation</span>
+<span class="k">if</span> <span class="n">FA0</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">V_PFR</span> <span class="o">=</span> <span class="n">FA0</span> <span class="o">/</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X</span><span class="p">))</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**PFR Volume required for </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">% conversion:** </span><span class="si">{</span><span class="n">V_PFR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compare Reactor Volumes</span>
+<span class="k">if</span> <span class="n">V_CSTR</span> <span class="ow">and</span> <span class="n">V_PFR</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;### Performance Comparison:&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The required volume for CSTR is </span><span class="si">{</span><span class="n">V_CSTR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³, whereas for PFR it is </span><span class="si">{</span><span class="n">V_PFR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³.&quot;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;PFR requires less volume than CSTR for the same conversion.&quot;</span><span class="p">)</span>
+
+<span class="c1"># PFR Conversion Profile</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;### PFR Conversion Profile:&quot;</span><span class="p">)</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">V_PFR</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">X_PFR_profile</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">FA0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">X_PFR_profile</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PFR Conversion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Reactor Volume (m³)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Conversion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;PFR Conversion Profile&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span>
+
+<span class="c1"># CSTR Conversion vs Volume plot</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;### CSTR Conversion vs Reactor Volume:&quot;</span><span class="p">)</span>
+<span class="n">V_CSTR_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">V_CSTR</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">X_CSTR_range</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">FA0</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">V_CSTR_range</span> <span class="o">+</span> <span class="n">FA0</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V_CSTR_range</span><span class="p">,</span> <span class="n">X_CSTR_range</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;CSTR Conversion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Reactor Volume (m³)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Conversion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;CSTR Conversion vs Reactor Volume&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-05.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 5: Github</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-07.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 7: Ethics</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#streamlit-versus-hugging-face">6.1. Streamlit versus Hugging Face</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-and-importing-streamlit">6.2. Installing and Importing Streamlit</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-a-basic-streamlit-app">6.3. Creating a Basic Streamlit App</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-user-input">6.4. Adding User Input</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-buttons-and-conditional-actions">6.5. Adding Buttons and Conditional Actions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-data-with-tables-and-charts">6.6. Displaying Data with Tables and Charts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-to-hugging-face-spaces">6.7. <strong>Deploying to Hugging Face Spaces</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-with-streamlit-community-cloud-alternative">6.8. Deploying with Streamlit Community Cloud (Alternative)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
