@@ -10,16 +10,14 @@
 :class: tip
 
 - All materials are free and shareable.
-- Created for chemical engineers with **no prior data science background**.
-- Focuses on **practical applications** of Python and ML in ChemE contexts.
+- No prior data science background required.
+- Focused on practical Python and ML skills for chemical engineers.
 - Hands-on exercises use real engineering datasets and problems.
 ```
 
-This course integrates the principles of data science with chemical engineering practice, equipping students with tools essential for solving modern engineering challenges. Students explore foundational topics such as Python programming and data handling, progressing to advanced applications like machine learning, generative AI, and collaborative tools.
+This course covers data science tools and how to apply them in chemical engineering. Students start with Python basics and data handling, then move into machine learning, generative AI, and tools like LangChain, GitHub, and Hugging Face.
 
-By combining theoretical concepts with hands-on activities, students learn not only how to process and analyze data, but how to apply these insights to tackle complex engineering problems. Each section builds upon the previous, culminating in collaborative projects and ethical considerations that mirror real-world scenarios.
-
-The inclusion of state-of-the-art tools such as **LangChain** for generative AI, **GitHub** for version control, and **Hugging Face** for machine learning deployment prepares students to work at the forefront of chemical engineering innovation.
+Each section builds on the last, ending with student projects and a discussion of ethics in AI. By the end, you'll be able to work with data, build models, and apply them to real ChemE problems.
 
 ---
 
