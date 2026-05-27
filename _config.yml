@@ -23,20 +23,17 @@ repository:
   branch: main
 
 launch_buttons:
-  thebe: true
-  binderhub_url: "https://mybinder.org"
+  jupyterhub_url: ""
+  thebe: false
 
 sphinx:
   extra_extensions:
     - sphinx_copybutton
-    - sphinx_thebe
+    - jupyterlite_sphinx
   config:
     html_show_sourcelink: false
     pygments_dark_style: monokai
-    thebe_config:
-      repository_url: "https://github.com/AlnurGazizuly/data-science-in-cheme"
-      repository_branch: "main"
-      path_to_book: "."
+    jupyterlite_sphinx_strip_tagged_cells: true
     html_theme_options:
       default_mode: dark
       show_navbar_depth: 2
@@ -44,8 +41,5 @@ sphinx:
       repository_url: "https://github.com/AlnurGazizuly/data-science-in-cheme"
       use_fullscreen_button: true
       toc_title: "On this page"
-      launch_buttons:
-        thebe: true
-        binderhub_url: "https://mybinder.org"
       logo:
         text: "DS in ChemE"
