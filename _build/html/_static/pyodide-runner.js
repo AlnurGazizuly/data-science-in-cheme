@@ -1,25 +1,58 @@
 /**
- * Pyodide Inline Runner
- * Transforms all Python code cells into live editable + runnable editors.
- * Shared namespace across all cells on the page (like a real Jupyter session).
+ * Pyodide Inline Runner v2
+ * - Auto-installs missing packages via micropip
+ * - Captures matplotlib plots as inline images
+ * - Shows helpful banner for browser-incompatible libraries (streamlit, torch, etc.)
+ * - Shared namespace across all cells on the page
  */
 
 (function () {
   'use strict';
 
-  // ── Config ────────────────────────────────────────────────────────────────
   const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
 
-  // ── State ─────────────────────────────────────────────────────────────────
+  // Packages that can be installed via micropip in Pyodide
+  const MICROPIP_MAP = {
+    'sklearn':      'scikit-learn',
+    'cv2':          'opencv-python',
+    'PIL':          'Pillow',
+    'missingno':    'missingno',
+    'shap':         'shap',
+    'skopt':        'scikit-optimize',
+    'imblearn':     'imbalanced-learn',
+    'xgboost':      'xgboost',
+    'plotly':       'plotly',
+    'statsmodels':  'statsmodels',
+    'nltk':         'nltk',
+    'seaborn':      'seaborn',
+    'scipy':        'scipy',
+    'matplotlib':   'matplotlib',
+    'pandas':       'pandas',
+    'numpy':        'numpy',
+    'joblib':       'joblib',
+  };
+
+  // Packages already bundled in Pyodide (no micropip needed)
+  const PYODIDE_BUILTIN = new Set([
+    'numpy','pandas','matplotlib','scipy','sklearn','scikit-learn','PIL',
+    'sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib',
+  ]);
+
+  // Libraries that CANNOT run in a browser — show a banner, skip execution
+  const BROWSER_INCOMPATIBLE = new Set([
+    'streamlit','torch','gradio','langchain','tensorflow','keras',
+    'flask','django','fastapi','celery','redis','psycopg2',
+  ]);
+
+  // State
   let pyodide = null;
   let pyodideLoading = false;
   let pyodideReady = false;
-  const pendingRuns = [];        // callbacks waiting for pyodide to be ready
-
-  // Shared Python namespace (globals dict, set once pyodide loads)
+  const pendingRuns = [];
   let sharedNamespace = null;
+  const installedPackages = new Set();
 
-  // ── Styles ────────────────────────────────────────────────────────────────
+  // ── CSS ───────────────────────────────────────────────────────────────────
   const CSS = `
 .pyodide-editor-wrap {
   margin: 0.5rem 0 0.25rem;
@@ -95,40 +128,58 @@
 }
 .pyodide-output.has-content { display: block; }
 .pyodide-output.is-error { color: #f38ba8; }
-.pyodide-output.is-loading { color: rgba(255,255,255,0.4); font-style: italic; }
-/* make textarea tab-friendly */
+.pyodide-output.is-loading { color: rgba(255,255,255,0.45); font-style: italic; }
+.pyodide-output img { max-width: 100%; margin-top: 6px; border-radius: 4px; display: block; }
+.pyodide-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(243,139,168,0.08);
+  border-top: 1px solid rgba(243,139,168,0.2);
+  color: #f5c2e7;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.pyodide-banner .banner-icon { font-size: 1.1rem; flex-shrink: 0; }
+.pyodide-banner code { 
+  background: rgba(255,255,255,0.1); 
+  border-radius: 3px; 
+  padding: 1px 5px; 
+  font-family: monospace;
+}
 .pyodide-textarea:focus { background: rgba(255,255,255,0.03); }
 `;
 
   function injectStyles() {
     if (document.getElementById('pyodide-runner-css')) return;
-    const style = document.createElement('style');
-    style.id = 'pyodide-runner-css';
-    style.textContent = CSS;
-    document.head.appendChild(style);
+    const s = document.createElement('style');
+    s.id = 'pyodide-runner-css';
+    s.textContent = CSS;
+    document.head.appendChild(s);
   }
 
   // ── Pyodide bootstrap ─────────────────────────────────────────────────────
   function loadPyodideIfNeeded() {
     if (pyodideReady || pyodideLoading) return;
     pyodideLoading = true;
-
     const script = document.createElement('script');
     script.src = PYODIDE_CDN;
     script.onload = async () => {
       try {
         pyodide = await loadPyodide();
-        // Create one shared globals namespace for the whole page
         sharedNamespace = pyodide.globals;
-        // Redirect stdout/stderr into our capture buffer
+        // Setup stdout/stderr capture + matplotlib backend
         await pyodide.runPythonAsync(`
-import sys, io as _io
-class _CaptureIO(_io.StringIO):
-    pass
-_capture = _CaptureIO()
+import sys, io as _io, base64 as _b64
+class _Capture(_io.StringIO): pass
+_capture = _Capture()
 sys.stdout = _capture
 sys.stderr = _capture
+_plot_images = []
 `);
+        // Load micropip
+        await pyodide.loadPackage('micropip');
         pyodideReady = true;
         pyodideLoading = false;
         pendingRuns.forEach(fn => fn());
@@ -138,10 +189,7 @@ sys.stderr = _capture
         console.error('Pyodide failed to load:', e);
       }
     };
-    script.onerror = () => {
-      pyodideLoading = false;
-      console.error('Could not load Pyodide from CDN.');
-    };
+    script.onerror = () => { pyodideLoading = false; };
     document.head.appendChild(script);
   }
 
@@ -150,54 +198,171 @@ sys.stderr = _capture
     else pendingRuns.push(fn);
   }
 
+  // ── Parse imports from code ───────────────────────────────────────────────
+  function parseImports(code) {
+    const imports = new Set();
+    const lines = code.split('\n');
+    for (const line of lines) {
+      const m1 = line.match(/^\s*import\s+([\w,\s]+)/);
+      const m2 = line.match(/^\s*from\s+(\w+)/);
+      if (m1) m1[1].split(',').forEach(p => imports.add(p.trim().split(' ')[0]));
+      if (m2) imports.add(m2[1]);
+    }
+    return imports;
+  }
+
+  // ── Check for browser-incompatible libs ───────────────────────────────────
+  function findIncompatible(imports) {
+    return [...imports].filter(i => BROWSER_INCOMPATIBLE.has(i));
+  }
+
+  // ── Install packages via micropip ─────────────────────────────────────────
+  async function ensurePackages(imports, outputEl) {
+    const toInstall = [];
+    for (const imp of imports) {
+      if (PYODIDE_BUILTIN.has(imp) || installedPackages.has(imp)) continue;
+      const pkg = MICROPIP_MAP[imp];
+      if (pkg) toInstall.push({ imp, pkg });
+    }
+    if (!toInstall.length) return;
+
+    for (const { imp, pkg } of toInstall) {
+      outputEl.textContent = `⏳ Installing ${pkg}…`;
+      try {
+        await pyodide.runPythonAsync(`
+import micropip
+await micropip.install('${pkg}')
+`);
+        installedPackages.add(imp);
+      } catch (e) {
+        // Non-fatal: some packages may not install but we try anyway
+        console.warn(`micropip install ${pkg} failed:`, e.message);
+      }
+    }
+  }
+
   // ── Run code ──────────────────────────────────────────────────────────────
-  async function runCode(code, outputEl) {
+  async function runCode(code, outputEl, bannerEl) {
+    // Reset output
     outputEl.className = 'pyodide-output has-content is-loading';
-    outputEl.textContent = '⏳ Running…';
+    outputEl.textContent = '⏳ Loading Python runtime…';
+    bannerEl.style.display = 'none';
+
+    // Check for incompatible imports
+    const imports = parseImports(code);
+    const incompatible = findIncompatible(imports);
+    if (incompatible.length) {
+      outputEl.className = 'pyodide-output';
+      outputEl.textContent = '';
+      bannerEl.style.display = 'flex';
+      bannerEl.innerHTML = `
+        <span class="banner-icon">⚠️</span>
+        <div>
+          <strong>Browser-incompatible library:</strong> 
+          ${incompatible.map(l => `<code>${l}</code>`).join(', ')} cannot run in the browser.<br>
+          ${incompatible.includes('streamlit') ? 'Streamlit apps need a server. Try the underlying Python logic without <code>st.*</code> calls, or run locally with <code>streamlit run yourfile.py</code>.' : ''}
+          ${incompatible.includes('torch') ? 'PyTorch requires a server environment. Run locally with <code>pip install torch</code>.' : ''}
+          ${incompatible.includes('gradio') ? 'Gradio apps need a server. Run locally with <code>pip install gradio</code>.' : ''}
+          ${incompatible.includes('langchain') ? 'LangChain requires API keys and a server. Run locally with <code>pip install langchain</code>.' : ''}
+        </div>`;
+      return;
+    }
+
+    outputEl.textContent = '⏳ Starting Python…';
+
+    // Install missing packages
+    await ensurePackages(imports, outputEl);
+
+    // Setup matplotlib capture if needed
+    if (imports.has('matplotlib') || imports.has('plt')) {
+      try {
+        await pyodide.runPythonAsync(`
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+_plot_images.clear()
+`);
+      } catch(e) {}
+    }
 
     // Reset capture buffer
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0)`);
 
-    let result = '';
+    let textOut = '';
     let isError = false;
+    let plotImages = [];
 
     try {
       const ret = await pyodide.runPythonAsync(code, { globals: sharedNamespace });
-      result = pyodide.runPython(`_capture.getvalue()`);
-      // If the last expression returned something meaningful, append it
-      if (ret !== undefined && ret !== null) {
-        const repr = String(ret);
-        if (result && !result.endsWith('\n')) result += '\n';
-        result += repr;
+
+      // Capture any matplotlib figures
+      if (imports.has('matplotlib') || code.includes('plt.')) {
+        try {
+          await pyodide.runPythonAsync(`
+import matplotlib.pyplot as plt
+import io as _mio, base64 as _mb64
+for _fig_num in plt.get_fignums():
+    _fig = plt.figure(_fig_num)
+    _buf = _mio.BytesIO()
+    _fig.savefig(_buf, format='png', bbox_inches='tight', dpi=120)
+    _buf.seek(0)
+    _plot_images.append(_mb64.b64encode(_buf.read()).decode())
+    plt.close(_fig)
+`);
+          plotImages = pyodide.globals.get('_plot_images').toJs();
+        } catch(e) {}
+      }
+
+      textOut = pyodide.runPython(`_capture.getvalue()`);
+      if (ret !== undefined && ret !== null && String(ret) !== 'None') {
+        if (textOut && !textOut.endsWith('\n')) textOut += '\n';
+        textOut += String(ret);
       }
     } catch (err) {
       isError = true;
-      const captured = pyodide.runPython(`_capture.getvalue()`);
-      result = captured ? captured + '\n' + err.message : err.message;
+      const cap = pyodide.runPython(`_capture.getvalue()`);
+      // Clean up Pyodide internal traceback noise
+      let msg = cap ? cap : '';
+      msg += (msg ? '\n' : '') + err.message;
+      // Remove pyodide internal file paths for cleaner output
+      msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^\^\^\^\^+\n/g, '\n');
+      textOut = msg;
     }
 
+    // Render output
     outputEl.className = 'pyodide-output has-content' + (isError ? ' is-error' : '');
-    outputEl.textContent = result || (isError ? '(error with no message)' : '✓ Done (no output)');
+    outputEl.textContent = '';
+
+    if (textOut.trim()) {
+      outputEl.textContent = textOut;
+    } else if (!plotImages.length && !isError) {
+      outputEl.textContent = '✓ Done (no output)';
+    }
+
+    // Render plot images
+    for (const b64 of plotImages) {
+      const img = document.createElement('img');
+      img.src = 'data:image/png;base64,' + b64;
+      img.style.maxWidth = '100%';
+      outputEl.appendChild(img);
+    }
   }
 
   // ── Build editor widget ───────────────────────────────────────────────────
-  function buildEditor(originalCode, cellEl) {
+  function buildEditor(originalCode) {
     const wrap = document.createElement('div');
     wrap.className = 'pyodide-editor-wrap';
 
     // Toolbar
     const toolbar = document.createElement('div');
     toolbar.className = 'pyodide-toolbar';
-
     const label = document.createElement('span');
     label.className = 'py-label';
     label.textContent = 'Python';
-
     const btn = document.createElement('button');
     btn.className = 'pyodide-run-btn';
     btn.innerHTML = `<svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 271c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg> Run`;
     btn.title = 'Run cell (Shift+Enter)';
-
     toolbar.appendChild(label);
     toolbar.appendChild(btn);
 
@@ -210,83 +375,69 @@ sys.stderr = _capture
     textarea.autocomplete = 'off';
     textarea.autocorrect = 'off';
     textarea.autocapitalize = 'off';
-
-    // Auto-grow textarea
     textarea.addEventListener('input', () => {
       textarea.rows = Math.max(2, (textarea.value.match(/\n/g) || []).length + 1);
     });
-
-    // Tab key support
     textarea.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
         e.preventDefault();
-        const s = textarea.selectionStart, end = textarea.selectionEnd;
-        textarea.value = textarea.value.slice(0, s) + '    ' + textarea.value.slice(end);
+        const s = textarea.selectionStart;
+        textarea.value = textarea.value.slice(0, s) + '    ' + textarea.value.slice(textarea.selectionEnd);
         textarea.selectionStart = textarea.selectionEnd = s + 4;
       }
-      if (e.key === 'Enter' && e.shiftKey) {
-        e.preventDefault();
-        btn.click();
-      }
+      if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); btn.click(); }
     });
 
-    // Output area
+    // Output + banner
     const output = document.createElement('div');
     output.className = 'pyodide-output';
+    const banner = document.createElement('div');
+    banner.className = 'pyodide-banner';
+    banner.style.display = 'none';
 
-    // Run button click
+    // Run button
     btn.addEventListener('click', () => {
+      btn.disabled = true;
+      const after = () => { btn.disabled = false; };
       if (!pyodideReady) {
         output.className = 'pyodide-output has-content is-loading';
-        output.textContent = '⏳ Loading Python runtime (first time only)…';
+        output.textContent = '⏳ Loading Python runtime (one-time, ~10s)…';
         loadPyodideIfNeeded();
-        whenReady(() => runCode(textarea.value.trim(), output));
+        whenReady(() => runCode(textarea.value, output, banner).then(after).catch(after));
         return;
       }
-      runCode(textarea.value.trim(), output);
+      runCode(textarea.value, output, banner).then(after).catch(after);
     });
 
     wrap.appendChild(toolbar);
     wrap.appendChild(textarea);
+    wrap.appendChild(banner);
     wrap.appendChild(output);
     return wrap;
   }
 
-  // ── Extract raw code from a highlight div ─────────────────────────────────
-  function extractCode(highlightDiv) {
-    const pre = highlightDiv.querySelector('pre');
+  // ── Extract code from highlight div ──────────────────────────────────────
+  function extractCode(el) {
+    const pre = el.querySelector('pre');
     if (!pre) return '';
-    // textContent gives us the raw code without span tags
     return pre.textContent.replace(/^\n/, '').replace(/\n$/, '');
   }
 
-  // ── Main transform ────────────────────────────────────────────────────────
+  // ── Transform all code cells ──────────────────────────────────────────────
   function transformCells() {
     injectStyles();
-
-    // Target: div.cell_input containing a highlight-python block
-    const cellInputs = document.querySelectorAll('div.cell_input');
-    if (!cellInputs.length) return;
-
-    cellInputs.forEach(cellInput => {
-      const highlightDiv = cellInput.querySelector('.highlight-python');
-      if (!highlightDiv) return;
-
-      const code = extractCode(highlightDiv);
-      if (!code) return;
-
-      // Build the editor
-      const editor = buildEditor(code, cellInput);
-
-      // Replace the static code block with the editor
-      highlightDiv.parentNode.replaceChild(editor, highlightDiv);
+    document.querySelectorAll('div.cell_input').forEach(cellInput => {
+      const highlight = cellInput.querySelector('.highlight-python, .highlight-ipython3, .highlight-default');
+      if (!highlight) return;
+      const code = extractCode(highlight);
+      if (!code.trim()) return;
+      const editor = buildEditor(code);
+      highlight.parentNode.replaceChild(editor, highlight);
     });
-
-    // Trigger Pyodide load in the background so it's ready when user first clicks
+    // Preload Pyodide in background
     loadPyodideIfNeeded();
   }
 
-  // ── Boot ──────────────────────────────────────────────────────────────────
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', transformCells);
   } else {
