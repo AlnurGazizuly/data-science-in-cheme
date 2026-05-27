@@ -157,8 +157,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis (EDA)</a></li>
-
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
@@ -220,6 +219,55 @@
 
 
 
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/AlnurGazizuly/data-science-in-cheme/master?urlpath=tree/section-09.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
 <div class="dropdown dropdown-download-buttons">
   <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
     <i class="fas fa-download"></i>
@@ -228,7 +276,7 @@
       
       
       
-      <li><a href="_sources/section-09.md" target="_blank"
+      <li><a href="_sources/section-09.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -238,7 +286,7 @@
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.md</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
 </li>
       
@@ -438,9 +486,49 @@ Run the model on an example chemical process.</p></li>
 <p>Overview: Crude oil distillation is a separation process that uses differences in boiling points to fractionate hydrocarbons.</p>
 <p>Steps: Heating in a furnace, vaporization, fractional distillation in a column, and condensation.</p>
 <p>Optimizations: Energy recovery via heat exchangers, use of vacuum distillation to improve yield.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 <section id="answer-key">
 <h2>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChain</span>
+
+<span class="c1"># Define the prompt template</span>
+<span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a chemical engineering assistant. Given the following process description, generate a structured summary report:</span>
+<span class="s2">Process: </span><span class="si">{process_description}</span>
+
+<span class="s2">Your report should include:</span>
+<span class="s2">1. Overview of the process</span>
+<span class="s2">2. Key operational steps</span>
+<span class="s2">3. Potential improvements for efficiency and sustainability&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;process_description&quot;</span><span class="p">])</span>
+
+<span class="c1"># Set up the LLM</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1"># Create the chain</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">LLMChain</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+
+<span class="c1"># Example process description</span>
+<span class="n">process_description</span> <span class="o">=</span> <span class="s2">&quot;Fermentation of glucose to ethanol using yeast in a batch reactor.&quot;</span>
+
+<span class="c1"># Generate report</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">process_description</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <p>Expected Output Example</p>
 <p>Overview:
 The fermentation of glucose to ethanol is a biochemical process where yeast cells metabolize glucose under anaerobic conditions, producing ethanol and carbon dioxide.</p>
