@@ -137,13 +137,13 @@ Steps: Heating in a furnace, vaporization, fractional distillation in a column, 
 
 Optimizations: Energy recovery via heat exchangers, use of vacuum distillation to improve yield.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
 #### Answer Key:
 
-```python
+```{code-cell} ipython3
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain

@@ -157,7 +157,8 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis (EDA)</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 6: Deploying a GUI</a></li>
@@ -413,18 +414,6 @@
 <section id="displaying-data-with-tables-and-charts">
 <h2>6.6. Displaying Data with Tables and Charts<a class="headerlink" href="#displaying-data-with-tables-and-charts" title="Link to this heading">#</a></h2>
 <p>Streamlit allows seamless integration with pandas to display data in a tabular format. This is particularly useful for chemical engineering applications where data analysis is a key component. Below is an example of how to display a DataFrame using Streamlit.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Displaying a DataFrame&quot;</span><span class="p">)</span>
-
-<span class="c1"># Sample Data</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Charlie&quot;</span><span class="p">],</span> <span class="s2">&quot;Score&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">78</span><span class="p">]}</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 <section id="deploying-to-hugging-face-spaces">
 <h2>6.7. <strong>Deploying to Hugging Face Spaces</strong><a class="headerlink" href="#deploying-to-hugging-face-spaces" title="Link to this heading">#</a></h2>
@@ -468,277 +457,9 @@
 <p>Calc_LLE - an app to calculate ratios and plot tie-lines in the LLE</p>
 <p>Calc_CSTR - compares CSTR and PFR reactors for a first-order irreversible reaction and calculates reactor volumes</p>
 <p>requirements.txt - requirements file</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 <section id="answer-key">
 <h2>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wastewater Calculation</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
-<span class="c1"># Function to calculate the dissolved oxygen level iteratively</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_do</span><span class="p">(</span><span class="n">do</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">otr</span><span class="p">,</span> <span class="n">consumption_rate</span><span class="p">):</span>
-    <span class="c1"># Iteratively calculate DO at each time step</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Time step</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
-        <span class="c1"># Oxygen transfer rate (OTR) - Oxygen consumption rate</span>
-        <span class="n">ddo</span> <span class="o">=</span> <span class="n">otr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">9.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">consumption_rate</span>
-        <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ddo</span> <span class="o">*</span> <span class="n">dt</span>  <span class="c1"># Update DO based on OTR and consumption</span>
-        <span class="c1"># DO can&#39;t fall below zero</span>
-        <span class="k">if</span> <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">do</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="n">do</span>
-
-<span class="c1"># Streamlit app interface</span>
-<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Wastewater Treatment: Dissolved Oxygen Profile in Aeration Tank&quot;</span><span class="p">)</span>
-
-<span class="c1"># Display a fancy wastewater treatment image</span>
-<span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/9/9f/Wastewater_Treatment_2.jpg&quot;</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;Aeration Tank in Wastewater Treatment&quot;</span><span class="p">,</span> <span class="n">use_column_width</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Input parameters for simulation</span>
-<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Oxygen Transfer and Consumption Parameters&quot;</span><span class="p">)</span>
-<span class="n">ote</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Oxygen Transfer Efficiency (OTE, %)&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>  <span class="c1"># Oxygen transfer efficiency</span>
-<span class="n">otr</span> <span class="o">=</span> <span class="n">ote</span> <span class="o">/</span> <span class="mi">100</span>  <span class="c1"># Convert to a fraction for OTR calculation</span>
-<span class="n">consumption_rate</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Oxygen Consumption Rate (mg/L/min)&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
-<span class="n">initial_do</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Initial Dissolved Oxygen (DO, mg/L)&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># Initial DO level</span>
-
-<span class="c1"># Time array for simulation (minutes)</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
-
-<span class="c1"># Initialize DO array with initial value</span>
-<span class="n">do</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<span class="n">do</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">initial_do</span>
-
-<span class="c1"># Calculate DO profile</span>
-<span class="n">do_profile</span> <span class="o">=</span> <span class="n">calculate_do</span><span class="p">(</span><span class="n">do</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">otr</span><span class="p">,</span> <span class="n">consumption_rate</span><span class="p">)</span>
-
-<span class="c1"># Plot the results</span>
-<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Dissolved Oxygen Profile in the Aeration Tank&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">do_profile</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;DO Level&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Minimum DO Threshold (2 mg/L)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (minutes)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Dissolved Oxygen (mg/L)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;DO Concentration Over Time in Aeration Tank&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-<span class="c1"># Display the plot in Streamlit</span>
-<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-
-<span class="c1"># Display DO levels over time</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Dissolved Oxygen Level: </span><span class="si">{</span><span class="n">do_profile</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mg/L&quot;</span><span class="p">)</span>
-
-<span class="c1"># Explanation of the simulation</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">### Oxygen Transfer in Wastewater Treatment</span>
-<span class="s2">This simulation models the dissolved oxygen (DO) concentration over time in an aeration tank during wastewater treatment. Oxygen is transferred into the water to support microbial processes that consume oxygen to break down organic material.</span>
-
-<span class="s2">- **Oxygen Transfer Efficiency (OTE)**: The percentage of oxygen that is effectively transferred into the water.</span>
-<span class="s2">- **Oxygen Consumption Rate**: The rate at which oxygen is consumed by the microbes.</span>
-<span class="s2">- **Initial Dissolved Oxygen (DO)**: The starting concentration of DO in the tank.</span>
-
-<span class="s2">You can adjust these parameters to see how they affect the DO profile in the aeration tank.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MCT Calculation</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
-<span class="c1"># Function to calculate equilibrium curve (y = alpha * x / (1 + (alpha - 1) * x))</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
-
-<span class="c1"># Function to calculate the rectifying section operating line</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rectifying_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">xd</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">R</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">xd</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-<span class="c1"># Function to calculate the stripping section operating line</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">stripping_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">xf</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">q</span> <span class="o">/</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="n">xb</span>
-
-<span class="c1"># Streamlit app interface</span>
-<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distillation Column Calculator using McCabe-Thiele Method&quot;</span><span class="p">)</span>
-
-<span class="c1"># Input section for column design</span>
-<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Data for Distillation Column&quot;</span><span class="p">)</span>
-
-<span class="n">alpha</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Relative Volatility (α)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
-<span class="n">xf</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed Mole Fraction (xF)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">xd</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Distillate Mole Fraction (xD)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">xb</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Bottom Mole Fraction (xB)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Reflux Ratio (R)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
-<span class="n">q</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed Condition (q)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;q = 1 for saturated liquid, q = 0 for saturated vapor&quot;</span><span class="p">)</span>
-
-<span class="c1"># Generate x values for plotting (mole fractions)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
-<span class="n">y_eq</span> <span class="o">=</span> <span class="n">equilibrium_curve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
-
-<span class="c1"># Calculate points for operating lines</span>
-<span class="n">y_rectifying</span> <span class="o">=</span> <span class="n">rectifying_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">xd</span><span class="p">)</span>
-<span class="n">y_stripping</span> <span class="o">=</span> <span class="n">stripping_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xb</span><span class="p">,</span> <span class="n">xf</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-
-<span class="c1"># McCabe-Thiele plot</span>
-<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;McCabe-Thiele Diagram&quot;</span><span class="p">)</span>
-
-<span class="c1"># Plotting equilibrium curve and operating lines</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-<span class="c1"># Plot equilibrium curve</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_eq</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Equilibrium Curve&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot rectifying section operating line</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_rectifying</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Rectifying Line (R)&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot stripping section operating line</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_stripping</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Stripping Line (q)&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot x = y line (45-degree line)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;y = x&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add labels and title</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Mole Fraction of Light Component (x)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Mole Fraction of Light Component (y)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;McCabe-Thiele Diagram&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-<span class="c1"># Display the plot in Streamlit</span>
-<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-
-<span class="c1"># Conclusion and analysis</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This McCabe-Thiele diagram shows the equilibrium curve and the operating lines for the rectifying and stripping sections of the distillation column. The reflux ratio, feed condition, and relative volatility all influence the number of theoretical stages required for the separation process.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># LLE Calculation</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
-<span class="c1"># Function to calculate solute distribution between two phases (based on distribution ratio)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_distribution</span><span class="p">(</span><span class="n">c_s</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
-    <span class="n">c_o</span> <span class="o">=</span> <span class="n">D</span> <span class="o">*</span> <span class="n">c_s</span>  <span class="c1"># Solute concentration in organic phase</span>
-    <span class="k">return</span> <span class="n">c_o</span>
-
-<span class="c1"># Streamlit app interface</span>
-<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Liquid-Liquid Extraction: Tie-Line Diagram&quot;</span><span class="p">)</span>
-
-<span class="c1"># Input section for solute concentration in aqueous phase and distribution ratio</span>
-<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Data for Liquid-Liquid Extraction&quot;</span><span class="p">)</span>
-<span class="n">c_s</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Initial solute concentration in aqueous phase (mol/L)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-<span class="n">D</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Distribution Ratio (D)&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-
-<span class="c1"># Generate solute concentrations in aqueous phase (x-axis)</span>
-<span class="n">c_s_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># Solute concentrations in aqueous phase</span>
-<span class="n">c_o_range</span> <span class="o">=</span> <span class="n">calculate_distribution</span><span class="p">(</span><span class="n">c_s_range</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>  <span class="c1"># Corresponding concentrations in organic phase</span>
-
-<span class="c1"># Plotting the tie-line diagram (c_s vs. c_o)</span>
-<span class="n">st</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Tie-Line Diagram: Solute Distribution between Phases&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-<span class="c1"># Plot solute distribution in both phases</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c_s_range</span><span class="p">,</span> <span class="n">c_o_range</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Tie Line&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
-
-<span class="c1"># Add labels and title</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Solute Concentration in Aqueous Phase (mol/L)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Solute Concentration in Organic Phase (mol/L)&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Tie-Line Diagram: Liquid-Liquid Extraction&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-<span class="c1"># Display the plot in Streamlit</span>
-<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-
-<span class="c1"># Output the calculated solute concentrations for the given initial concentration</span>
-<span class="n">c_o</span> <span class="o">=</span> <span class="n">calculate_distribution</span><span class="p">(</span><span class="n">c_s</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;For an initial solute concentration of </span><span class="si">{</span><span class="n">c_s</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mol/L in the aqueous phase, the solute concentration in the organic phase is </span><span class="si">{</span><span class="n">c_o</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mol/L.&quot;</span><span class="p">)</span>
-
-<span class="c1"># Conclusion and analysis</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This tie-line diagram illustrates the equilibrium distribution of a solute between two immiscible phases (aqueous and organic).</span>
-<span class="s2">The slope of the line depends on the distribution ratio (D), which is the ratio of solute concentration in the organic phase to that in the aqueous phase.</span>
-<span class="s2">A higher D indicates that the solute prefers the organic phase, while a lower D indicates preference for the aqueous phase.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># CSTR Calculation</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">streamlit</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">st</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
-<span class="c1"># Title and Description</span>
-<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;CSTR and PFR Reactor Volume Calculator for First-Order Reactions&quot;</span><span class="p">)</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This app calculates the reactor volume for both CSTR and PFR given the feed rate, rate constant, and target conversion.</span>
-<span class="s2">You can also compare the performance of both reactors by observing the volume required to achieve the same conversion,</span>
-<span class="s2">and plot the conversion profile for the PFR along the reactor length.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-
-<span class="c1"># Input parameters</span>
-<span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">header</span><span class="p">(</span><span class="s2">&quot;Input Parameters&quot;</span><span class="p">)</span>
-
-<span class="c1"># Feed rate (F_A0)</span>
-<span class="n">FA0</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Feed rate (mol/s)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-
-<span class="c1"># Reaction rate constant (k)</span>
-<span class="n">k</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&quot;Reaction rate constant (1/s)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-
-<span class="c1"># Conversion (X)</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">slider</span><span class="p">(</span><span class="s2">&quot;Conversion (X)&quot;</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-
-<span class="c1"># CSTR Volume Calculation</span>
-<span class="k">if</span> <span class="n">FA0</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">V_CSTR</span> <span class="o">=</span> <span class="n">FA0</span> <span class="o">*</span> <span class="n">X</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X</span><span class="p">))</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**CSTR Volume required for </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">% conversion:** </span><span class="si">{</span><span class="n">V_CSTR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³&quot;</span><span class="p">)</span>
-
-<span class="c1"># PFR Volume Calculation</span>
-<span class="k">if</span> <span class="n">FA0</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">V_PFR</span> <span class="o">=</span> <span class="n">FA0</span> <span class="o">/</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">X</span><span class="p">))</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**PFR Volume required for </span><span class="si">{</span><span class="n">X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">% conversion:** </span><span class="si">{</span><span class="n">V_PFR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³&quot;</span><span class="p">)</span>
-
-<span class="c1"># Compare Reactor Volumes</span>
-<span class="k">if</span> <span class="n">V_CSTR</span> <span class="ow">and</span> <span class="n">V_PFR</span><span class="p">:</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;### Performance Comparison:&quot;</span><span class="p">)</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The required volume for CSTR is </span><span class="si">{</span><span class="n">V_CSTR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³, whereas for PFR it is </span><span class="si">{</span><span class="n">V_PFR</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m³.&quot;</span><span class="p">)</span>
-    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;PFR requires less volume than CSTR for the same conversion.&quot;</span><span class="p">)</span>
-
-<span class="c1"># PFR Conversion Profile</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;### PFR Conversion Profile:&quot;</span><span class="p">)</span>
-<span class="n">length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">V_PFR</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">X_PFR_profile</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">FA0</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">X_PFR_profile</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PFR Conversion&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Reactor Volume (m³)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Conversion&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;PFR Conversion Profile&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span>
-
-<span class="c1"># CSTR Conversion vs Volume plot</span>
-<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;### CSTR Conversion vs Reactor Volume:&quot;</span><span class="p">)</span>
-<span class="n">V_CSTR_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">V_CSTR</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">X_CSTR_range</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">FA0</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">V_CSTR_range</span> <span class="o">+</span> <span class="n">FA0</span><span class="p">))</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V_CSTR_range</span><span class="p">,</span> <span class="n">X_CSTR_range</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;CSTR Conversion&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Reactor Volume (m³)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Conversion&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;CSTR Conversion vs Reactor Volume&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">st</span><span class="o">.</span><span class="n">pyplot</span><span class="p">(</span><span class="n">plt</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 </section>
 
@@ -746,8 +467,8 @@
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
-            ref: "master",
+            repo: "AlnurGazizuly/data-science-in-cheme",
+            ref: "main",
         },
         codeMirrorConfig: {
             theme: "abcdef",

@@ -55,9 +55,9 @@ Understanding the structure of a dataset is an essential part of Exploratory Dat
    - Useful for a quick look at the data to understand the column names, variable types, and values.
    
    Example:
-   ```python
-   print(data.head(5))
-   ```
+   ```{code-cell} ipython3
+print(data.head(5))
+```
 
 2. **`df.info()`**  
    - Provides a summary of the dataset, including:
@@ -67,18 +67,18 @@ Understanding the structure of a dataset is an essential part of Exploratory Dat
    - Essential for understanding the dataset's overall structure.
 
    Example:
-   ```python
-   print(data.info())
-   ```
+   ```{code-cell} ipython3
+print(data.info())
+```
 
 3. **`df.describe()`**  
    - Generates summary statistics for numerical columns, such as mean, standard deviation, minimum, maximum, and quartiles.
    - Useful for spotting trends or outliers in numerical data.
 
    Example:
-   ```python
-   print(data.describe())
-   ```
+   ```{code-cell} ipython3
+print(data.describe())
+```
 
 *Output Analysis*
 
@@ -122,42 +122,42 @@ Data types define the kind of values stored in a dataset and determine what kind
    - **Definition**: A list is an ordered, mutable collection of elements. Lists can store mixed data types (e.g., numbers, strings, other lists).
    - **Usage in ML**: Lists are often used for storing collections of features, labels, or intermediate results.
    - **Example**:
-     ```python
-     my_list = [1, 2, 3, 'a', 'b']
+     ```{code-cell} ipython3
+my_list = [1, 2, 3, 'a', 'b']
      print(my_list[0])  # Access first element
      my_list.append(4)  # Add an element
      print(my_list)
-     ```
+```
 
 6. **Tuples**
    - **Definition**: A tuple is an ordered, immutable collection of elements. Tuples are like lists but cannot be modified after creation.
    - **Usage in ML**: Tuples are used when you need to group data that should not change, such as storing dataset dimensions or coordinates.
    - **Example**:
-     ```python
-     my_tuple = (1, 2, 3)
+     ```{code-cell} ipython3
+my_tuple = (1, 2, 3)
      print(my_tuple[1])  # Access second element
      # my_tuple[1] = 4  # This will raise an error because tuples are immutable
-     ```
+```
 
 7. **Dictionaries**
    - **Definition**: A dictionary is an unordered collection of key-value pairs. Keys must be unique, and values can be of any data type.
    - **Usage in ML**: Dictionaries are useful for storing metadata, mapping column names to descriptions, or configuring model parameters.
    - **Example**:
-     ```python
-     my_dict = {'name': 'Alice', 'age': 25, 'city': 'New York'}
+     ```{code-cell} ipython3
+my_dict = {'name': 'Alice', 'age': 25, 'city': 'New York'}
      print(my_dict['name'])  # Access value by key
      my_dict['age'] = 26  # Update value
      print(my_dict)
-     ```
+```
 
 8. **Sets**
    - **Definition**: A set is an unordered collection of unique elements. Duplicate values are automatically removed.
    - **Usage in ML**: Sets are often used for finding unique labels or removing duplicates.
    - **Example**:
-     ```python
-     my_set = {1, 2, 3, 3}
+     ```{code-cell} ipython3
+my_set = {1, 2, 3, 3}
      print(my_set)  # Output: {1, 2, 3}
-     ```
+```
 
      
 *How to Check Data Types*
@@ -169,28 +169,28 @@ Data types define the kind of values stored in a dataset and determine what kind
    Use `df.dtypes` to see the data types of all columns or `df['column_name'].dtype` for a specific column.
 
    Example:
-   ```python
-   print(data.dtypes)  # Check all column data types
+   ```{code-cell} ipython3
+print(data.dtypes)  # Check all column data types
    print(data['sepal_length'].dtype)  # Check data type of 'sepal_length'
-   ```
+```
 
 2. **Check the data type of a specific data point**  
    Use Python’s built-in `type()` function to check the type of a single value.
 
    Example:
-   ```python
-   # Check the type of the first value in 'sepal_length'
+   ```{code-cell} ipython3
+# Check the type of the first value in 'sepal_length'
    print(type(data['sepal_length'][0]))
-   ```
+```
 
 3. **Convert data types**  
    Sometimes, data might be incorrectly typed (e.g., numbers stored as strings). You can convert types using `pd.to_numeric()`, `pd.to_datetime()`, or `.astype()`.
 
    Example:
-   ```python
-   # Convert a column to float
+   ```{code-cell} ipython3
+# Convert a column to float
    data['sepal_length'] = data['sepal_length'].astype(float)
-   ```
+```
 
 #### 3.4. Correcting the Dataset Formatting
 
@@ -200,7 +200,7 @@ Data types define the kind of values stored in a dataset and determine what kind
 3. Print the type of data in each column
 4. If any columns contain the incorrect type of data, explain what type the column should be and write code to correct the error (Hint: one column should be fixed)
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -394,7 +394,7 @@ print(data_cleaned)
 1. Check for missing data and remove any rows that contain missing values
 2. Check for duplicate rows and remove them
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -483,7 +483,7 @@ print(data)
 3. Remove outliers
 4. COnfirm that outliers have been successfully removed by checking for outliers after they have been removed. Print a message showing their are no outliers present
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -556,7 +556,7 @@ By using heatmaps, you can easily identify which features are highly correlated,
 3. What are the strongest negative correlations in the dataset?
 4. Are there any factors (independant variables) that don't correlate with the target (dependant variable)?
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -626,7 +626,7 @@ Regularization refers to techniques used to reduce overfitting by penalizing lar
 2. Plot a histogram of each variable to ensure it falls between 0 and 1
 3. Why do you think it was important to normalize this dataset?
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -770,7 +770,7 @@ When to Use PCA?
 1. Identify variables that have a high correlation which could skew the model.
 2. Use PCA to rewrite the variables
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 

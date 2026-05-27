@@ -13,7 +13,7 @@ Python automatically determines the type of data you assign to a variable, so yo
 A variable is a name that refers to a value stored in your program. In Python, you can assign values to variables using the `=` operator. Python automatically determines the type of the variable based on the value you assign.
 
 **Example:**
-```python
+```{code-cell} ipython3
 # Defining variables
 temperature = 300  # Temperature in Kelvin
 ```
@@ -41,7 +41,7 @@ Python supports various data types. In the example above:
 To check the values of your variables or output information, use the `print()` function.
 
 **Example:**
-```python
+```{code-cell} ipython3
 print(f"Reactor temperature:")
 print(f"Temperature: {temperature} K")
 ```
@@ -73,7 +73,7 @@ By practicing these basics, you'll build a strong foundation for using Python to
 3. Define a variable `is_reactor_on` and assign it the value `True`.
 4. Define a string variable `reactor_status` with the value "Active".
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -102,7 +102,7 @@ Modulus (remainder): %
 
 **Example:**
 
-```python
+```{code-cell} ipython3
 # Basic operations
 sum_value = 5 + 3      # 8
 difference = 10 - 4    # 6
@@ -122,7 +122,7 @@ print(f"Remainder: {remainder}")
 Python follows the standard mathematical order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction.
 
 Example:
-```python
+```{code-cell} ipython3
 result = 5 + 3 * 2  # 5 + (3 * 2) = 11
 print(result)
 
@@ -135,7 +135,7 @@ print(result)
 The math module provides additional mathematical functions, including trigonometric, logarithmic, and advanced calculations.
 
 Example:
-```python
+```{code-cell} ipython3
 import math
 
 # Trigonometric functions
@@ -170,7 +170,7 @@ These operations and functions provide the foundation for performing numerical c
    - c = 4.18 J/g.K
    -  ΔT = 30 K.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -274,7 +274,7 @@ Lists and loops are powerful tools for managing and processing data in Python. B
 2. Create a list of pressures [1.0, 1.5, 2.0, 2.5] and calculate the corresponding volumes for a fixed number of moles (n = 1) and temperature (T = 298 K) using PV = nRT.
 3. Create a list of flow rates [5, 10, 15] and double each value using a loop.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -325,7 +325,7 @@ When using functions, make sure to use `return` instead of just`print`. If you d
 
 Just be careful, using return is always the last thing you do! If you write code in a funciton after the return, then that code will **not run.**
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -371,7 +371,7 @@ print(temperatures_celsius)
 2. Create a numpy array for temperatures in Celsius [25, 50, 75, 100] and convert them to Kelvin. Return the new array.
 3. Calculate the mean and standard deviation of an array representing flow rates [10, 20, 30, 40]. Retyrn the new array.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -418,7 +418,7 @@ print(high_pressure)
 3. Filter rows where `Temperature > 300`.
 4. Create a new column `Pressure_kPa` by converting a column `Pressure` from atm to kPa.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
@@ -470,14 +470,14 @@ plt.show()
 3. Use seaborn to create a scatterplot of `Temperature` vs `Pressure` from the DataFrame `data`.
 4. Plot a histogram of the `FlowRate` column.
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
 ### Answer Key
 
 #### Exercise 2.1:
-```python
+```{code-cell} ipython3
 temperature = 300
 pressure = 1.0
 is_reactor_on = True
@@ -486,7 +486,7 @@ reactor_status = "Active"
 
 #### Exercise 2.2:
 
-```python
+```{code-cell} ipython3
 # Moles of an ideal gas
 P = 1
 V = 22.4
@@ -511,7 +511,7 @@ print("Energy required (Q):", Q, "Joules")
 
 #### Exercise 2.3:
 
-```python
+```{code-cell} ipython3
 # Converting temperatures
 temperatures = [300, 310, 320, 330]
 for temp in temperatures:
@@ -538,7 +538,7 @@ for rate in flow_rates:
 
 #### Exercise 2.4:
 
-```python
+```{code-cell} ipython3
 # Ideal gas law function
 def ideal_gas_law(P, V, R, T):
     return (P * V) / (R * T)
@@ -563,7 +563,7 @@ print("Reynolds Number:", Re)
 
 #### Exercise 2.5:
 
-```python
+```{code-cell} ipython3
 # Pressures to kPA
 import numpy as np
 
@@ -592,7 +592,7 @@ return std_flow
 
 #### Exercise 2.6:
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 
 # Load Excel file
@@ -614,7 +614,7 @@ print(data.head())
 
 #### Exercise 2.7:
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import seaborn as sns
 

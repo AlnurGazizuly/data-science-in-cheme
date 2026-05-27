@@ -157,7 +157,8 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 3: Exploratory Data Analysis (EDA)</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
@@ -313,14 +314,17 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 3: Exploratory Data Analysis (EDA)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-eda">3.1. Why Use EDA</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1-understanding-a-dataset">Exercise 3.1: Understanding a dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-structure">3.2. Dataset Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.3. Data Types</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-type-of-the-first-value-in-sepal-length">Check the type of the first value in ‘sepal_length’</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-2-missing-values-and-duplicates">Exercise 3.2: Missing values and duplicates</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-missing-values">3.5. Locating Missing Values</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-missing-values">3.6. Removing Missing Values</a></li>
@@ -367,6 +371,9 @@
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -419,175 +426,166 @@
 <li><p>Useful for a quick look at the data to understand the column names, variable types, and values.</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</li>
+</ol>
+<p>print(data.head(5))</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+2. **`df.info()`**  
+   - Provides a summary of the dataset, including:
+     - Number of rows and columns.
+     - Column names and their data types (e.g., integer, float, object).
+     - Non-null value counts for each column (helps identify missing data).
+   - Essential for understanding the dataset&#39;s overall structure.
+
+   Example:
+   ```{code-cell} ipython3
+print(data.info())
 </pre></div>
 </div>
-</li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.info()</span></code></strong></p>
-<ul class="simple">
-<li><p>Provides a summary of the dataset, including:</p>
-<ul>
-<li><p>Number of rows and columns.</p></li>
-<li><p>Column names and their data types (e.g., integer, float, object).</p></li>
-<li><p>Non-null value counts for each column (helps identify missing data).</p></li>
-</ul>
-</li>
-<li><p>Essential for understanding the dataset’s overall structure.</p></li>
-</ul>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
-</pre></div>
-</div>
-</li>
+<ol class="arabic" start="3">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">df.describe()</span></code></strong></p>
 <ul class="simple">
 <li><p>Generates summary statistics for numerical columns, such as mean, standard deviation, minimum, maximum, and quartiles.</p></li>
 <li><p>Useful for spotting trends or outliers in numerical data.</p></li>
 </ul>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
-</pre></div>
-</div>
 </li>
 </ol>
-<p><em>Output Analysis</em></p>
-<hr class="docutils" />
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.head()</span></code></strong> shows the actual data and helps verify the column names and the format of values. For instance, we might see columns like <code class="docutils literal notranslate"><span class="pre">sepal_length</span></code>, <code class="docutils literal notranslate"><span class="pre">sepal_width</span></code>, and <code class="docutils literal notranslate"><span class="pre">species</span></code>.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.info()</span></code></strong> reveals critical details, like whether all values in <code class="docutils literal notranslate"><span class="pre">species</span></code> are non-null or if <code class="docutils literal notranslate"><span class="pre">sepal_length</span></code> is stored as a <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.describe()</span></code></strong> highlights statistics such as the mean sepal length or the range of petal widths.</p></li>
-</ul>
-<p>Understanding dataset structure allows us to identify potential issues (like missing values or incorrect data types) and helps us prepare the data for deeper analysis or modeling.</p>
-</section>
-<section id="data-types">
-<h3>3.3. Data Types<a class="headerlink" href="#data-types" title="Link to this heading">#</a></h3>
-<p>Data types define the kind of values stored in a dataset and determine what kind of operations can be performed on them. Understanding data types is crucial for data analysis and machine learning because models and preprocessing techniques often require specific data types.</p>
-<p><em>Common Data Types</em></p>
-<hr class="docutils" />
-<ol class="arabic">
-<li><p><strong>Numerical</strong></p>
-<ul class="simple">
-<li><p><strong>Integer (<code class="docutils literal notranslate"><span class="pre">int</span></code>)</strong>: Whole numbers (e.g., 1, 42, -3).</p></li>
-<li><p><strong>Float (<code class="docutils literal notranslate"><span class="pre">float</span></code>)</strong>: Numbers with decimals (e.g., 3.14, -0.001).</p></li>
-<li><p>These are often used for features like counts, measurements, or continuous values.</p></li>
-</ul>
-</li>
-<li><p><strong>Categorical</strong></p>
-<ul class="simple">
-<li><p><strong>Object (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</strong>: Text or string data (e.g., “cat”, “apple”).</p></li>
-<li><p>Useful for labels or qualitative features.</p></li>
-</ul>
-</li>
-<li><p><strong>Boolean (<code class="docutils literal notranslate"><span class="pre">bool</span></code>)</strong></p>
-<ul class="simple">
-<li><p>Represents binary values: <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p>Often used for flags or binary classification.</p></li>
-</ul>
-</li>
-<li><p><strong>Datetime</strong></p>
-<ul class="simple">
-<li><p>Represents dates or timestamps (e.g., <code class="docutils literal notranslate"><span class="pre">2025-01-01</span></code>, <code class="docutils literal notranslate"><span class="pre">2025-01-01</span> <span class="pre">14:30</span></code>).</p></li>
-<li><p>Useful for time-series data or analyzing temporal trends.</p></li>
-</ul>
-</li>
-<li><p><strong>Lists</strong></p>
-<ul>
-<li><p><strong>Definition</strong>: A list is an ordered, mutable collection of elements. Lists can store mixed data types (e.g., numbers, strings, other lists).</p></li>
-<li><p><strong>Usage in ML</strong>: Lists are often used for storing collections of features, labels, or intermediate results.</p></li>
-<li><p><strong>Example</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Access first element</span>
-<span class="n">my_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Add an element</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+<p>print(data.describe())</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+*Output Analysis*
+
+
+---
+
+
+- **`df.head()`** shows the actual data and helps verify the column names and the format of values. For instance, we might see columns like `sepal_length`, `sepal_width`, and `species`.
+- **`df.info()`** reveals critical details, like whether all values in `species` are non-null or if `sepal_length` is stored as a `float`.
+- **`df.describe()`** highlights statistics such as the mean sepal length or the range of petal widths.
+
+Understanding dataset structure allows us to identify potential issues (like missing values or incorrect data types) and helps us prepare the data for deeper analysis or modeling.
+
+#### 3.3. Data Types
+
+Data types define the kind of values stored in a dataset and determine what kind of operations can be performed on them. Understanding data types is crucial for data analysis and machine learning because models and preprocessing techniques often require specific data types.  
+
+*Common Data Types*
+
+---
+
+
+1. **Numerical**
+   - **Integer (`int`)**: Whole numbers (e.g., 1, 42, -3).
+   - **Float (`float`)**: Numbers with decimals (e.g., 3.14, -0.001).
+   - These are often used for features like counts, measurements, or continuous values.
+
+2. **Categorical**
+   - **Object (`str`)**: Text or string data (e.g., &quot;cat&quot;, &quot;apple&quot;).
+   - Useful for labels or qualitative features.
+
+3. **Boolean (`bool`)**
+   - Represents binary values: `True` or `False`.
+   - Often used for flags or binary classification.
+
+4. **Datetime**
+   - Represents dates or timestamps (e.g., `2025-01-01`, `2025-01-01 14:30`).
+   - Useful for time-series data or analyzing temporal trends.
+
+5. **Lists**
+   - **Definition**: A list is an ordered, mutable collection of elements. Lists can store mixed data types (e.g., numbers, strings, other lists).
+   - **Usage in ML**: Lists are often used for storing collections of features, labels, or intermediate results.
+   - **Example**:
+     ```{code-cell} ipython3
+my_list = [1, 2, 3, &#39;a&#39;, &#39;b&#39;]
+     print(my_list[0])  # Access first element
+     my_list.append(4)  # Add an element
+     print(my_list)
 </pre></div>
 </div>
-</li>
-</ul>
-</li>
+<ol class="arabic simple" start="6">
 <li><p><strong>Tuples</strong></p>
-<ul>
+<ul class="simple">
 <li><p><strong>Definition</strong>: A tuple is an ordered, immutable collection of elements. Tuples are like lists but cannot be modified after creation.</p></li>
 <li><p><strong>Usage in ML</strong>: Tuples are used when you need to group data that should not change, such as storing dataset dimensions or coordinates.</p></li>
-<li><p><strong>Example</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Access second element</span>
-<span class="c1"># my_tuple[1] = 4  # This will raise an error because tuples are immutable</span>
-</pre></div>
-</div>
-</li>
-</ul>
-</li>
-<li><p><strong>Dictionaries</strong></p>
-<ul>
-<li><p><strong>Definition</strong>: A dictionary is an unordered collection of key-value pairs. Keys must be unique, and values can be of any data type.</p></li>
-<li><p><strong>Usage in ML</strong>: Dictionaries are useful for storing metadata, mapping column names to descriptions, or configuring model parameters.</p></li>
-<li><p><strong>Example</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="s1">&#39;New York&#39;</span><span class="p">}</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>  <span class="c1"># Access value by key</span>
-<span class="n">my_dict</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">26</span>  <span class="c1"># Update value</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-</ul>
-</li>
-<li><p><strong>Sets</strong></p>
-<ul>
-<li><p><strong>Definition</strong>: A set is an unordered collection of unique elements. Duplicate values are automatically removed.</p></li>
-<li><p><strong>Usage in ML</strong>: Sets are often used for finding unique labels or removing duplicates.</p></li>
-<li><p><strong>Example</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_set</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">my_set</span><span class="p">)</span>  <span class="c1"># Output: {1, 2, 3}</span>
-</pre></div>
-</div>
-</li>
+<li><p><strong>Example</strong>:</p></li>
 </ul>
 </li>
 </ol>
-<p><em>How to Check Data Types</em></p>
-<hr class="docutils" />
-<ol class="arabic">
-<li><p><strong>Check the data type of an entire column</strong><br />
-Use <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code> to see the data types of all columns or <code class="docutils literal notranslate"><span class="pre">df['column_name'].dtype</span></code> for a specific column.</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>  <span class="c1"># Check all column data types</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>  <span class="c1"># Check data type of &#39;sepal_length&#39;</span>
+<p>my_tuple = (1, 2, 3)
+print(my_tuple[1])  # Access second element
+# my_tuple[1] = 4  # This will raise an error because tuples are immutable</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+7. **Dictionaries**
+   - **Definition**: A dictionary is an unordered collection of key-value pairs. Keys must be unique, and values can be of any data type.
+   - **Usage in ML**: Dictionaries are useful for storing metadata, mapping column names to descriptions, or configuring model parameters.
+   - **Example**:
+     ```{code-cell} ipython3
+my_dict = {&#39;name&#39;: &#39;Alice&#39;, &#39;age&#39;: 25, &#39;city&#39;: &#39;New York&#39;}
+     print(my_dict[&#39;name&#39;])  # Access value by key
+     my_dict[&#39;age&#39;] = 26  # Update value
+     print(my_dict)
 </pre></div>
 </div>
+<ol class="arabic simple" start="8">
+<li><p><strong>Sets</strong></p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A set is an unordered collection of unique elements. Duplicate values are automatically removed.</p></li>
+<li><p><strong>Usage in ML</strong>: Sets are often used for finding unique labels or removing duplicates.</p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
 </li>
+</ol>
+<p>my_set = {1, 2, 3, 3}
+print(my_set)  # Output: {1, 2, 3}</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+     
+*How to Check Data Types*
+
+---
+
+
+1. **Check the data type of an entire column**  
+   Use `df.dtypes` to see the data types of all columns or `df[&#39;column_name&#39;].dtype` for a specific column.
+
+   Example:
+   ```{code-cell} ipython3
+print(data.dtypes)  # Check all column data types
+   print(data[&#39;sepal_length&#39;].dtype)  # Check data type of &#39;sepal_length&#39;
+</pre></div>
+</div>
+<ol class="arabic" start="2">
 <li><p><strong>Check the data type of a specific data point</strong><br />
 Use Python’s built-in <code class="docutils literal notranslate"><span class="pre">type()</span></code> function to check the type of a single value.</p>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the type of the first value in &#39;sepal_length&#39;</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
-</pre></div>
-</div>
-</li>
-<li><p><strong>Convert data types</strong><br />
-Sometimes, data might be incorrectly typed (e.g., numbers stored as strings). You can convert types using <code class="docutils literal notranslate"><span class="pre">pd.to_numeric()</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.to_datetime()</span></code>, or <code class="docutils literal notranslate"><span class="pre">.astype()</span></code>.</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a column to float</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-</pre></div>
-</div>
 </li>
 </ol>
 </section>
+</section>
+</section>
+<section id="check-the-type-of-the-first-value-in-sepal-length">
+<h1>Check the type of the first value in ‘sepal_length’<a class="headerlink" href="#check-the-type-of-the-first-value-in-sepal-length" title="Link to this heading">#</a></h1>
+<p>print(type(data[‘sepal_length’][0]))</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+3. **Convert data types**  
+   Sometimes, data might be incorrectly typed (e.g., numbers stored as strings). You can convert types using `pd.to_numeric()`, `pd.to_datetime()`, or `.astype()`.
+
+   Example:
+   ```{code-cell} ipython3
+# Convert a column to float
+   data[&#39;sepal_length&#39;] = data[&#39;sepal_length&#39;].astype(float)
+</pre></div>
+</div>
 <section id="correcting-the-dataset-formatting">
-<h3>3.4. Correcting the Dataset Formatting<a class="headerlink" href="#correcting-the-dataset-formatting" title="Link to this heading">#</a></h3>
+<h2>3.4. Correcting the Dataset Formatting<a class="headerlink" href="#correcting-the-dataset-formatting" title="Link to this heading">#</a></h2>
 </section>
 <section id="task">
-<h3>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
+<h2>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p>Import the dataset titled ‘Section3.xlsx’</p></li>
 <li><p>Print the first five rows of the spreadsheet</p></li>
 <li><p>Print the type of data in each column</p></li>
 <li><p>If any columns contain the incorrect type of data, explain what type the column should be and write code to correct the error (Hint: one column should be fixed)</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
-</section>
 </section>
 <section id="exercise-3-2-missing-values-and-duplicates">
 <h2>Exercise 3.2: Missing values and duplicates<a class="headerlink" href="#exercise-3-2-missing-values-and-duplicates" title="Link to this heading">#</a></h2>
@@ -733,9 +731,6 @@ Example:</p>
 <li><p>Check for missing data and remove any rows that contain missing values</p></li>
 <li><p>Check for duplicate rows and remove them</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-3-3-outliers">
@@ -816,9 +811,6 @@ Example:</p>
 <li><p>Remove outliers</p></li>
 <li><p>COnfirm that outliers have been successfully removed by checking for outliers after they have been removed. Print a message showing their are no outliers present</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-3-4-heat-maps">
@@ -888,9 +880,6 @@ Example:</p>
 <li><p>What are the strongest negative correlations in the dataset?</p></li>
 <li><p>Are there any factors (independant variables) that don’t correlate with the target (dependant variable)?</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="excercise-3-5-data-scaling">
@@ -946,9 +935,6 @@ $$</p>
 <li><p>Plot a histogram of each variable to ensure it falls between 0 and 1</p></li>
 <li><p>Why do you think it was important to normalize this dataset?</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-3-6-multi-collinearity">
@@ -1066,9 +1052,6 @@ When to Use PCA?</p></li>
 <li><p>Identify variables that have a high correlation which could skew the model.</p></li>
 <li><p>Use PCA to rewrite the variables</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 <section id="answer-key">
 <h3>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h3>
@@ -1320,8 +1303,8 @@ When to Use PCA?</p></li>
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
-            ref: "master",
+            repo: "AlnurGazizuly/data-science-in-cheme",
+            ref: "main",
         },
         codeMirrorConfig: {
             theme: "abcdef",
@@ -1382,14 +1365,17 @@ When to Use PCA?</p></li>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Section 3: Exploratory Data Analysis (EDA)</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-eda">3.1. Why Use EDA</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1-understanding-a-dataset">Exercise 3.1: Understanding a dataset</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-structure">3.2. Dataset Structure</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.3. Data Types</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#check-the-type-of-the-first-value-in-sepal-length">Check the type of the first value in ‘sepal_length’</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-2-missing-values-and-duplicates">Exercise 3.2: Missing values and duplicates</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-missing-values">3.5. Locating Missing Values</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-missing-values">3.6. Removing Missing Values</a></li>
@@ -1436,6 +1422,9 @@ When to Use PCA?</p></li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>

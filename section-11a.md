@@ -58,7 +58,7 @@ Carbon emissions from electicity production A Monthly/Annual CO2 emissions from 
 
 ---
 
-```python
+```{code-cell} ipython3
 import numpy as np
 import pandas as pd
 import matplotlib.pylab
@@ -70,50 +70,50 @@ import itertools
 warnings.filterwarnings("ignore")
 ```
 
-```python
+```{code-cell} ipython3
 df = pd.read_csv("MER_T12_06.csv")
 df.head()
 ```
 
-```python
+```{code-cell} ipython3
 df.info()
 ```
 
-```python
+```{code-cell} ipython3
 # Changing Month from int to Date
 dateparse = lambda x: pd.to_datetime(x, format='%Y%m', errors = 'coerce') #coerce to have a NaN field in empty or corrupted
 df = pd.read_csv("MER_T12_06.csv", parse_dates=['YYYYMM'], index_col='YYYYMM', date_parser=dateparse)
 df.head()
 ```
 
-```python
+```{code-cell} ipython3
 #drop rows with null index
 #ts = time serie
 ts = df[pd.Series(pd.to_datetime(df.index, errors='coerce')).notnull().values]
 ts.head(15)
 ```
 
-```python
+```{code-cell} ipython3
 ts = df[pd.Series(pd.to_datetime(df.index, errors='coerce')).notnull().values]
 ts.head(15)
 ```
 
-```python
+```{code-cell} ipython3
 ts['Value'] = pd.to_numeric(ts['Value'] , errors='coerce')
 ts.head()
 ```
 
-```python
+```{code-cell} ipython3
 ts.dropna(inplace = True)
 ```
 
-```python
+```{code-cell} ipython3
 # sources = CO2 sources
 sources = ts.groupby('Description')
 ts.head(15)
 ```
 
-```python
+```{code-cell} ipython3
 fig, ax = plt.subplots()
 for desc, grp in sources:
     grp.plot( y='Value', label=desc,ax = ax, title='Carbon Emissions per Source', fontsize = 20)
@@ -124,7 +124,7 @@ for desc, grp in sources:
     ax.legend(fontsize = 16)
 ```
 
-```python
+```{code-cell} ipython3
 #Plot per Emission source
 fig, axes = plt.subplots(3,3, figsize = (40, 40))
 for (desc, group), ax in zip(sources, axes.flatten()):
@@ -135,7 +135,7 @@ for (desc, group), ax in zip(sources, axes.flatten()):
     ax.yaxis.label.set_size(20)
 ```
 
-```python
+```{code-cell} ipython3
 QuantityPerSource = ts.groupby('Description')['Value'].sum().sort_values()
 src = ['Geothermal Energy', 'Non-Biomass Waste', 'Petroleum Coke','Distillate Fuel ',
         'Residual Fuel Oil', 'Petroleum', 'Natural Gas', 'Coal', 'Full Emissions']
@@ -150,7 +150,7 @@ plt.xlabel('Carbon Emissions in Million Metric Tons', fontsize = 30)
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # ems = emissions
 ems = ts.drop(['MSN','Column_Order','Unit'], axis=1)  # dropping columns and letting only value and description column
 # total emissions (pte)
@@ -159,12 +159,12 @@ pte = pte.drop(['Description'], axis=1)
 pte
 ```
 
-```python
+```{code-cell} ipython3
 plt.plot(pte)
 # same result
 ```
 
-```python
+```{code-cell} ipython3
 import statsmodels
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller
@@ -188,7 +188,7 @@ def TestStationaryPlt(pte):
 TestStationaryPlt(pte)
 ```
 
-```python
+```{code-cell} ipython3
 def Adf_test(pte):
     result = adfuller(pte['Value'])
     print('ADF Statistic: {}'.format(result[0]))
@@ -199,22 +199,22 @@ def Adf_test(pte):
 Adf_test(pte)
 ```
 
-```python
+```{code-cell} ipython3
 moving_avg = pte.rolling(12).mean()
 pte_trans = pte - moving_avg
 pte_trans.head(13)
 ```
 
-```python
+```{code-cell} ipython3
 pte_trans.dropna(inplace=True)
 TestStationaryPlt(pte_trans)
 ```
 
-```python
+```{code-cell} ipython3
 Adf_test(pte_trans)
 ```
 
-```python
+```{code-cell} ipython3
 # - Find optimal parameters and build an ARIMA model
 fig = plt.figure(figsize=(12,8))
 ax1 = fig.add_subplot(211)
@@ -223,7 +223,7 @@ ax2 = fig.add_subplot(212)
 fig = sm.graphics.tsa.plot_pacf(pte_trans.iloc[13:], lags=40, ax=ax2)
 ```
 
-```python
+```{code-cell} ipython3
 mod = sm.tsa.statespace.SARIMAX(pte,
                                 order=(1,1,1),
                                 seasonal_order=(0,1,1,12),
@@ -233,23 +233,23 @@ results = mod.fit()
 print(results.summary().tables[1])
 ```
 
-```python
+```{code-cell} ipython3
 results.plot_diagnostics(figsize=(15, 12))
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # gaussian residual error
 results.resid.plot(kind='kde')
 ```
 
-```python
+```{code-cell} ipython3
 pred = results.get_prediction(start=pd.to_datetime('1998-01-01'), dynamic=False)
 pred_ci = pred.conf_int()
 pred_ci.head()
 ```
 
-```python
+```{code-cell} ipython3
 ax = pte['1973':].plot(label='observed')
 pred.predicted_mean.plot(ax=ax, label='One-step ahead Forecast', alpha=.5)
 
@@ -269,7 +269,7 @@ plt.show()
 
 ---
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 from datetime import datetime
 
@@ -574,7 +574,7 @@ python model_training.py
 
 ---
 
-```python
+```{code-cell} ipython3
 # app.py
 import streamlit as st
 import pandas as pd
@@ -751,7 +751,7 @@ if __name__ == '__main__':
 
 ---
 
-```python
+```{code-cell} ipython3
 #This script showing all the colume name, some example of the value in the column and type of the value in the colunn (numerical or categorical value)
 
 import pandas as pd
@@ -769,7 +769,7 @@ for column, dtype in df.dtypes.items():
     print(f"{column}: {dtype}")
 ```
 
-```python
+```{code-cell} ipython3
 import numpy as np
 
 print("Missing data information:")
@@ -789,7 +789,7 @@ else:
 
 No missing data deteched
 
-```python
+```{code-cell} ipython3
 # Check for duplicates in the entire dataset
 duplicates = df.duplicated()
 # If there are any duplicates, the 'duplicates' variable will contain True for those rows
@@ -804,12 +804,12 @@ duplicate_rows
 
 Found duplicate row => delete
 
-```python
+```{code-cell} ipython3
 # drop duplicates
 df_clean = df.drop_duplicates()
 ```
 
-```python
+```{code-cell} ipython3
 import scipy.stats as stats
 import seaborn as sns
 import matplotlib
@@ -845,7 +845,7 @@ for column in numeric_columns:
     plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # Your existing code remains the same, then add:
 
 total_outliers = sum(len(df_clean[np.abs(stats.zscore(df_clean[column])) > 3]) for column in numeric_columns)
@@ -853,7 +853,7 @@ print(f"\nTotal number of outliers across all columns: {total_outliers}")
 print(f"Number of rows containing at least one outlier: {len(rows_to_remove)}")
 ```
 
-```python
+```{code-cell} ipython3
 # Create new dataframe without outliers
 df_clean_2 = df_clean.drop(index=rows_to_remove)
 
@@ -863,7 +863,7 @@ print(f"New dataframe shape (without outliers): {df_clean_2.shape}")
 print(f"Number of rows removed: {len(rows_to_remove)}")
 ```
 
-```python
+```{code-cell} ipython3
 # Method 1: Find the exact column name first
 si_al_column = df_clean_2.columns[df_clean_2.columns.str.contains('si/al', case=False, na=False)][0]
 print("Column name containing 'si/al':", si_al_column)
@@ -875,7 +875,7 @@ print("\nAll column names:", df_clean_2.columns)
 print("\nUnique values using index:", df_clean_2.iloc[:, 8].unique())
 ```
 
-```python
+```{code-cell} ipython3
 # Import required libraries if not already imported
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -908,7 +908,7 @@ sorted_correlations = strongest_correlations.sort_values(key=abs, ascending=Fals
 print(sorted_correlations.head(10))  # Print top 10 strongest correlations
 ```
 
-```python
+```{code-cell} ipython3
 # Create a copy of your dataframe to avoid modifying the original
 df_corr = df_clean_2.copy()
 
@@ -944,7 +944,7 @@ print(strongest_correlations.sort_values(key=abs, ascending=False).head(10))
 
 Do a correlation heat map with respect to class - the thing we are trying to predict
 
-```python
+```{code-cell} ipython3
 # Create a copy of your dataframe to avoid modifying the original
 df_corr = df_clean_2.copy()
 
@@ -981,15 +981,15 @@ print("\nCorrelations with Class (sorted):")
 print(correlations)
 ```
 
-```python
+```{code-cell} ipython3
 df.describe()
 ```
 
-```python
+```{code-cell} ipython3
 df_clean_2['si/al\n(ICP-AES)'].unique()
 ```
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries for classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -1106,7 +1106,7 @@ results = train_classification_models(df_clean_2, numerical_columns, categorical
 
 PDP plot for numerical value
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries for classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -1305,7 +1305,7 @@ results = train_classification_models(df_clean_2, numerical_columns, categorical
 
 PDP plot for best 5
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries for classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -1470,7 +1470,7 @@ def train_classification_models(df, numerical_columns, categorical_columns, targ
 results = train_classification_models(df_clean_2, numerical_columns, categorical_columns, target_column)
 ```
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries for classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -1672,7 +1672,7 @@ Ethics DataCard: https://huggingface.co/spaces/asafuM/DataCard-for-Pollution
 
 ---
 
-```python
+```{code-cell} ipython3
 import subprocess
 import sys
 
@@ -1751,7 +1751,7 @@ if __name__ == "__main__":
 
 ---
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries
 !pip install shap -q
 
@@ -1824,7 +1824,7 @@ print(df.head())  # Print the first few rows of the DataFrame
 
 From previous iterations of this project, will drop H (%) and PS (mm) due to their low impact on Qm (mg/g)
 
-```python
+```{code-cell} ipython3
 df = df.drop(['H  (wt.%)', 'PS (mm)'], axis = 1)
 
 print(df.head())
@@ -1832,7 +1832,7 @@ print(df.head())
 
 Missing Data
 
-```python
+```{code-cell} ipython3
 #Check for missing data
 print(df.isna().sum())
 
@@ -1847,14 +1847,14 @@ No Missing Data so moving on to outliers
 
 Excluding All TP Columns from the outlier search
 
-```python
+```{code-cell} ipython3
 outlier_cols = ['TemP (K)', 'Time (min)', 'BET (m2/g)', 'PV (cm3)', 'C (wt.%)', 'N  (wt.%)', 'O  (wt.%)', 'Qm (mg/g)']
 df[outlier_cols] = df[outlier_cols].astype('float32')
 ```
 
 Handling Outliers
 
-```python
+```{code-cell} ipython3
 #Looking for outliers
 
 import numpy as np
@@ -1896,7 +1896,7 @@ else:
 
 Drop rows with outliers
 
-```python
+```{code-cell} ipython3
 # Calculate the interquartile range (IQR) for each column
 Q1 = df[outlier_cols].quantile(0.25)
 Q3 = df[outlier_cols].quantile(0.75)
@@ -1924,7 +1924,7 @@ else:
 
 Check for duplicates
 
-```python
+```{code-cell} ipython3
 # Check for duplicates in the entire dataset
 duplicates = df.duplicated()
 # If there are any duplicates, the 'duplicates' variable will contain True for those rows
@@ -1937,7 +1937,7 @@ else:
 
 Make a heatmap
 
-```python
+```{code-cell} ipython3
 #Redefining cause I have to
 outlier_cols = ['TemP (K)', 'Time (min)', 'BET (m2/g)', 'PV (cm3)', 'C (wt.%)', 'N  (wt.%)', 'O  (wt.%)', 'Qm (mg/g)']
 df[outlier_cols] = df[outlier_cols].astype('float32')
@@ -1963,7 +1963,7 @@ No variable appears so correlated that any of the data is redundant
 
 Training the models
 
-```python
+```{code-cell} ipython3
 from sklearn.model_selection import KFold
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
@@ -2057,7 +2057,7 @@ Based on the data I am going to choose to optimize the parameters of the Random 
 
 Hyperparameter tuning using Bayesian Optimization
 
-```python
+```{code-cell} ipython3
 !pip install scikit-optimize -q
 from skopt import BayesSearchCV
 from sklearn.model_selection import cross_val_score
@@ -2092,7 +2092,7 @@ print("Best score:", opt.best_score_)
 
 Hyperparameter Tuning using Grid Search
 
-```python
+```{code-cell} ipython3
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestRegressor
 
@@ -2119,7 +2119,7 @@ print("Best score:", grid_search.best_score_)
 
 Hyperparameter tuning using Random Search
 
-```python
+```{code-cell} ipython3
 from sklearn.model_selection import RandomizedSearchCV
 
 # Define the parameter distribution
@@ -2145,7 +2145,7 @@ print("Best score:", random_search.best_score_)
 
 Using the optimal parameters given by tunning
 
-```python
+```{code-cell} ipython3
 # Define the number of folds for K-Fold cross-validation
 n_folds = 10  # You can adjust this value based on your needs
 
@@ -2202,7 +2202,7 @@ print(' ')
 
 Saving the model
 
-```python
+```{code-cell} ipython3
 import pickle
 
 # Save the best model as a pickel
@@ -2212,7 +2212,7 @@ with open('best_model.pkl', 'wb') as f:
 
 Interpretability plot
 
-```python
+```{code-cell} ipython3
 def plot_shap(data, target_column, model):
     x = df.drop(target_column, axis=1)
     y = df[target_column]
@@ -2239,7 +2239,7 @@ plot_shap(df,'Qm (mg/g)',gb_model)
 
 ---
 
-```python
+```{code-cell} ipython3
 # Customized Deon Ethics Checklist for Forest Wildfire Prediction Model
 import gradio as gr
 
@@ -2292,7 +2292,7 @@ iface = gr.Interface(fn=display_markdown, inputs=[], outputs="markdown")
 iface.launch()
 ```
 
-```python
+```{code-cell} ipython3
 import gradio as gr
 
 # Ethics DataCard content for forest wildfire prediction model
@@ -2495,7 +2495,7 @@ pip install pickle5
 
 ---
 
-```python
+```{code-cell} ipython3
 import gradio as gr
 import pickle
 import numpy as np
@@ -2569,7 +2569,7 @@ Step 1: Download and preprocess the dataset
 
 In order to make a machine learning model, you need a dataset in order to train the model. For this project, I will be using a dataset that I have collected as a part of my independant research.
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 
 # Replace '/path/to/your/file.xlsx' with the actual file path
@@ -2601,7 +2601,7 @@ print("Numeric columns:", numeric_cols)
 print("Categorical columns:", categorical_cols)
 ```
 
-```python
+```{code-cell} ipython3
 # Remove the redundant data columns that are not relevant to the dataset
 
 # For this dataset, I am going to remove the actual date. This does not matter,
@@ -2618,7 +2618,7 @@ df = df.drop(columns=['Date', 'Triplicate_#','TGA/DSC DH 250-360, 200-360','Hard
 
 Before I can use a machine learning model, I need to make sure that the dataset has no factors that would skew the model. So, I will be looking at removing redundancies, outliers, missing data, etc. and doing some dimensional reduction and normalization of the variables in order to make the dataset ideal for modeling.
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 
@@ -2631,7 +2631,7 @@ print(missing_data[missing_data > 0])
 # missing values.
 ```
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -2671,7 +2671,7 @@ for col, outliers in outliers_dict.items():
 # I think will be important to keep going forward.
 ```
 
-```python
+```{code-cell} ipython3
 # To better understand the trends of the data, I want to then look at the
 # pairplots to better understand if there are variables that relate strongly
 # with one another. This will be helpful when I need to go through and
@@ -2681,7 +2681,7 @@ import seaborn as sns
 sns.pairplot(df)
 ```
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -2705,7 +2705,7 @@ significant_correlations.columns = ['feature1', 'feature2', 'correlation']
 print(significant_correlations)
 ```
 
-```python
+```{code-cell} ipython3
 # Now I will remove anything will a low correlation to time to avoid overfitting.
 df.drop(['GCMS 2-Methylfuran Area (%)','GCMS Methanethiol Area (%)', 'Brew pH','Brew TDS','Brew Color L','Brew Color a','Brew Color b','Density (g/cm^3)'],axis=1, inplace=True)
 
@@ -2719,7 +2719,7 @@ plt.title('Correlation Matrix')
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # Next, we need to deal with multicollinearity within the dataset. This is
 # when two or more variables are highly correlated with one another. If you
 # leave these as seperate terms, it can skew the model and lead to distortion.
@@ -2735,7 +2735,7 @@ df['Oxidation'] = df['DSC endo pk (C)'] * df['TGA N2 residual wt at 700C']
 df.drop(['FTIR Carboxylic Acid Absorbance', 'FTIR Lipid Absorbance','DSC endo pk (C)','TGA N2 residual wt at 700C','TGA/DSC Air exo pk (C)'], axis=1, inplace=True)
 ```
 
-```python
+```{code-cell} ipython3
 # Because we removed the multicollinearity because the GCMS and the FTIR peaks,
 # I am also going to remove the FTIR peak ratio sections of this datasheet.
 # This way we won't have duplicates of the data.
@@ -2754,7 +2754,7 @@ df['Oil Expression'] = df['TGA air onset deg (C)']
 df.drop(['TGA air onset deg (C)'],axis=1, inplace=True)
 ```
 
-```python
+```{code-cell} ipython3
 # We can now relook at the heat map and the significant correlations to make sure that
 # there are no correlations between the features that are going to be close
 # to 1.
@@ -2784,7 +2784,7 @@ significant_correlations.columns = ['feature1', 'feature2', 'correlation']
 print(significant_correlations)
 ```
 
-```python
+```{code-cell} ipython3
 # Finally, we can normalize the dataframe. There are a lot of different
 # numerical categories in this dataframe, and making sure that they are normalized
 # will improve the accuracy of the model and prevent it from being skewed by numbers
@@ -2803,7 +2803,7 @@ df = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
 print(df)
 ```
 
-```python
+```{code-cell} ipython3
 # Before moving on, we are going to look at the dataframe again and make sure that
 # all of the data is still present.
 
@@ -2822,7 +2822,7 @@ There are models that are better and worse at certain things. I am going to be c
 4. Support Vector Machine (SVM) (Support Vector Model)
 5. Gradient Boosting Machine (XGBoost) (Ensemble Model)
 
-```python
+```{code-cell} ipython3
 # Required Libraries
 import pandas as pd
 import numpy as np
@@ -2925,7 +2925,7 @@ According to the above testing of the 5 models, I am going to continue
 forward with the Gradient Boosting model. This model had the best outcomes in terms
 of accuracy, so we want to continue with it.
 
-```python
+```{code-cell} ipython3
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -3058,11 +3058,11 @@ The R2 here is ok, but it could be improved in order to make a more accurate mod
 
 To do this, I am going to be looking at 3 different types of hyperparameter training models: grid search, random search, and Bayasian optimization. The best of these three models can then be used going forward.
 
-```python
+```{code-cell} ipython3
 pip install scikit-optimize
 ```
 
-```python
+```{code-cell} ipython3
 # Required Libraries
 import pandas as pd
 import numpy as np
@@ -3202,7 +3202,7 @@ plt.show()
 
 Based on the hyperparameter tuning, the best model that came out of this is the Bayasian Optimization predictions. This is able to accurto have a higher test and training R2 value, so I will be using this model going forward.
 
-```python
+```{code-cell} ipython3
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
@@ -3344,11 +3344,11 @@ In the future as this research continues, GAN might become a more useful tool to
 
 Step 5: Interpotable Analysis
 
-```python
+```{code-cell} ipython3
 pip install matplotlib seaborn scikit-learn
 ```
 
-```python
+```{code-cell} ipython3
 # Required Libraries for Partial Dependence Plot
 from sklearn.inspection import PartialDependenceDisplay
 import matplotlib.pyplot as plt
@@ -3378,7 +3378,7 @@ for feature in features_to_plot:
     plt.show()  # Display the plot
 ```
 
-```python
+```{code-cell} ipython3
 import shap
 import matplotlib.pyplot as plt
 
@@ -3538,7 +3538,7 @@ possible to track the use of the model and make sure that roasters are not using
 additional measures will be created to secure the model so that only those with permission can access it. For now, this seems like a step that is not needed, because the model is not being fully deployed or
 recommended for use until the dataset is further developed.
 
-```python
+```{code-cell} ipython3
 import gradio as gr
 
 # Ethics DataCard content for coffee freshness prediction model
@@ -3629,7 +3629,7 @@ Since this model uses data from one water treatment facility, there may be limit
 
 ---
 
-```python
+```{code-cell} ipython3
 import streamlit as st
 import pandas as pd
 import pickle
@@ -3756,15 +3756,15 @@ st.markdown(datacard_content)
 
 ---
 
-```python
+```{code-cell} ipython3
 !pip install scikit-optimize
 ```
 
-```python
+```{code-cell} ipython3
 !pip install streamlit
 ```
 
-```python
+```{code-cell} ipython3
 # Import necessary libraries
 import pandas as pd
 import numpy as np
@@ -3788,14 +3788,14 @@ import matplotlib.pyplot as plt
 import streamlit as st
 ```
 
-```python
+```{code-cell} ipython3
 # Load the dataset
 file_name = 'Wastewater Effluent Dataset.xlsx'
 df = pd.read_excel(file_name)
 df.head()
 ```
 
-```python
+```{code-cell} ipython3
 # Check for missing data
 missing_data = df.isnull().sum()
 
@@ -3803,7 +3803,7 @@ missing_data = df.isnull().sum()
 print(missing_data)
 ```
 
-```python
+```{code-cell} ipython3
 # Fill missing values with the mean of each column
 for column in df.columns:
     if df[column].isnull().any():  # Check if column has missing values
@@ -3814,7 +3814,7 @@ for column in df.columns:
 print(df.isnull().sum())
 ```
 
-```python
+```{code-cell} ipython3
 # Calculate the IQR for each column
 Q1 = df.quantile(0.25)
 Q3 = df.quantile(0.75)
@@ -3827,11 +3827,11 @@ outliers = (df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))
 df_cleaned = df[~outliers.any(axis=1)]
 ```
 
-```python
+```{code-cell} ipython3
 df_cleaned.describe()
 ```
 
-```python
+```{code-cell} ipython3
 # Calculate the correlation matrix
 correlation_matrix = df_cleaned.corr()
 
@@ -3842,7 +3842,7 @@ plt.title('Correlation Matrix')
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # Splitting the dataset into training and test sets
 columns_to_drop = [col for col in df_cleaned.columns if 'EC_eff' in col]
 X = df_cleaned.drop(columns=columns_to_drop, axis=1)
@@ -3913,7 +3913,7 @@ with open('best_model.pkl', 'wb') as f:
 print(f"Best model: {best_model_name} with RMSE: {best_rmse}")
 ```
 
-```python
+```{code-cell} ipython3
 # 1. Grid Search
 param_grid = {
     'n_neighbors': [3, 5, 7, 9, 11],
@@ -3982,7 +3982,7 @@ print(f"with RMSE: {results[best_method]['RMSE']:.4f}, "
       f"and MAE: {results[best_method]['MAE']:.4f}")
 ```
 
-```python
+```{code-cell} ipython3
 # Define the parameter grid for Grid Search
 param_grid = {
     'n_estimators': [100, 200, 300],
@@ -4026,7 +4026,7 @@ plt.title('Contour Plot of RMSE for Grid Search')
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 # Partial Dependence Plot
 knn_model = KNeighborsRegressor(n_neighbors=5)
 knn_model.fit(X_train, y_train)
@@ -4043,7 +4043,7 @@ shap.partial_dependence_plot(
 )
 ```
 
-```python
+```{code-cell} ipython3
 # Beeswarm Plot
 model = KNeighborsRegressor()
 model.fit(X_train, y_train)
@@ -4102,7 +4102,7 @@ Data Science Ethics Checklist
 
 *Data Science Ethics Checklist generated with [deon](http://deon.drivendata.org).*
 
-```python
+```{code-cell} ipython3
 # Ethics Data Card
 datacard_content = """
 # Ethics DataCard for Wastewater Effluent Concentration Prediction Model
@@ -4216,7 +4216,7 @@ This predicts catalyst performance based on the available datasets. Install spec
 
 ---
 
-```python
+```{code-cell} ipython3
 # Install specific versions of libraries
 import os
 import pandas as pd
@@ -4409,7 +4409,7 @@ I write to affirm that AI tools such as chatgpt and googlegemni were helpful too
 
 Load dataset and display first few rows
 
-```python
+```{code-cell} ipython3
 # Import libraries
 import pandas as pd
 import numpy as np
@@ -4425,21 +4425,21 @@ print(df.head())
 
 **Data overview**
 
-```python
+```{code-cell} ipython3
 # Basic information about the dataset
 print(df.info())
 ```
 
 **Summary statistics**
 
-```python
+```{code-cell} ipython3
 # Summary statistics
 print(df.describe())
 ```
 
 **Check for missing values**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 
 # Load your dataset into a DataFrame
@@ -4459,7 +4459,7 @@ print("Has missing values:", has_missing_values)
 
 **Imputation for missing values**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 from sklearn.impute import SimpleImputer
 
@@ -4489,7 +4489,7 @@ df.to_excel('cleaned_data_no_missing_values_numerical.xlsx', index=False)  # Sav
 
 **Recheck for missing values**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 
@@ -4511,7 +4511,7 @@ print(f"Missing values after imputation:\n{df.isnull().sum()}")
 
 **Check for outliers**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
@@ -4572,7 +4572,7 @@ print(iqr_outliers)
 
 **Box plot for each variable**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -4629,7 +4629,7 @@ plt.show()
 
 **Check for categorical variables**
 
-```python
+```{code-cell} ipython3
 # Get the data types of each column
 data_types = df.dtypes
 
@@ -4648,7 +4648,7 @@ print("\nCategorical columns:", categorical_cols)
 
 Remove categorical variables before plotting heatmaps
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -4689,7 +4689,7 @@ Targets (y) = Syngas Ratio, CO2 Conversion, CH4 Conversion
 
 Features (x) = Ratio of CH4 in Feed, Reaction Temperature, Ni Loading (catalyst), Reaction Time, Pore Size, Pore Volume, Surface Area, H2-TPR Peak Temperature, Ni Particle Size, Ni Dispersion, Modifier Electronegativity, GHSV
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 
 # Load your data (replace 'your_data.xlsx' with your actual file path)
@@ -4724,7 +4724,7 @@ print(y_co2_conversion.head())
 
 Histogram for CH4 Conversion vs Reaction Temperature
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4752,7 +4752,7 @@ plt.show()
 
 Histogram for CH4 Conversion vs Ni Loading
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4780,7 +4780,7 @@ plt.show()
 
 Histogram for CH4 Conversion vs Ratio of CH4 in Feed
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4808,7 +4808,7 @@ plt.show()
 
 Histogram for CO2 Conversion vs Ni Loading
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4834,7 +4834,7 @@ plt.title('Histogram for CO2 Conversion vs Ratio of CH4 in Feed')
 plt.show()
 ```
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4862,7 +4862,7 @@ plt.show()
 
 Histogram for CO2 Conversion vs Reaction Temperature
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4890,7 +4890,7 @@ plt.show()
 
 Histogram for 'Syngas_Ratio vs 'Reaction Temperature'
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4915,7 +4915,7 @@ plt.show()
 
 Histogram for 'Syngas_Ratio' vs 'Ratio of CH4 in Feed'
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4943,7 +4943,7 @@ plt.show()
 
 Histogram for Syngas_Ratio vs Ni Loading
 
-```python
+```{code-cell} ipython3
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -4971,7 +4971,7 @@ plt.show()
 
 **Training of datasets and evaluation of models**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -5053,7 +5053,7 @@ for target_variable in target_variables:
 
 **Cross Validation**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -5136,7 +5136,7 @@ for target_variable in target_variables:
 Display a plot of training and testing
 𝑅^2 scores for different models
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5234,7 +5234,7 @@ for target_variable in target_variables:
 
 **Hyperparameter tuning**
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5380,7 +5380,7 @@ The procedure is as follows:
 - SHAP analysis
 - Display SHAP analysis plot
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5462,7 +5462,7 @@ Using partial dependence plots (PDP) such as one-way variable and two-way PDP
 - One-way partial dependence plots
 - Two-way partial dependence plots
 
-```python
+```{code-cell} ipython3
 # Install specific versions of libraries
 !pip install pandas==2.2.2 numpy==1.23.5 matplotlib seaborn scikit-learn openpyxl
 
@@ -5627,7 +5627,7 @@ for target_variable in target_variables:
 
 Bee-swarm plot
 
-```python
+```{code-cell} ipython3
 # Install specific versions of libraries to avoid conflicts
 !pip install pandas==1.5.3 numpy==1.23.5 matplotlib seaborn scikit-learn openpyxl
 
@@ -5696,7 +5696,7 @@ plt.show()
 
 **Hugging face user interface**
 
-```python
+```{code-cell} ipython3
 # Install specific versions of libraries
 import os
 import pandas as pd
@@ -5965,7 +5965,7 @@ pip install -r requirements.txt
 ```
 
 4. Download NLTK data:
-```python
+```{code-cell} ipython3
 python -c "import nltk; nltk.download('stopwords')"
 ```
 
@@ -6039,7 +6039,7 @@ All models show strong performance in detecting both legitimate and fraudulent j
 
 ---
 
-```python
+```{code-cell} ipython3
 # Set the title
 st.title("Fake Job Post Detection")
 
@@ -6095,7 +6095,7 @@ else:
 
 ---
 
-```python
+```{code-cell} ipython3
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -6117,7 +6117,7 @@ import missingno as msno
 from scipy import stats
 ```
 
-```python
+```{code-cell} ipython3
 # Initialize nltk
 try:
     nltk.data.find('corpora/stopwords')

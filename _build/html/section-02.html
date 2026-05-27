@@ -157,7 +157,8 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 2: Introduction to Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis (EDA)</a></li>
+
 <li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
@@ -397,10 +398,6 @@
 <h3>2.1. Understanding Variables<a class="headerlink" href="#understanding-variables" title="Link to this heading">#</a></h3>
 <p>A variable is a name that refers to a value stored in your program. In Python, you can assign values to variables using the <code class="docutils literal notranslate"><span class="pre">=</span></code> operator. Python automatically determines the type of the variable based on the value you assign.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defining variables</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># Temperature in Kelvin</span>
-</pre></div>
-</div>
 <ul class="simple">
 <li><p><strong>Variable Naming:</strong> Use descriptive names (e.g., <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure</span></code>, <code class="docutils literal notranslate"><span class="pre">flowrate</span></code>) that make your code easy to read and understand.</p></li>
 <li><p><strong>Comments:</strong> Use the <code class="docutils literal notranslate"><span class="pre">#</span></code> symbol to add comments that explain what your code does.</p></li>
@@ -433,10 +430,6 @@
 <h3>2.4. Printing and Debugging<a class="headerlink" href="#printing-and-debugging" title="Link to this heading">#</a></h3>
 <p>To check the values of your variables or output information, use the <code class="docutils literal notranslate"><span class="pre">print()</span></code> function.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reactor temperature:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature: </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">f</span></code> before the string enables <strong>f-strings</strong>, which allow you to include variable values directly within the string using curly braces (<code class="docutils literal notranslate"><span class="pre">{}</span></code>).</p></li>
 </ul>
@@ -475,9 +468,6 @@
 <li><p>Define a variable <code class="docutils literal notranslate"><span class="pre">is_reactor_on</span></code> and assign it the value <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p>Define a string variable <code class="docutils literal notranslate"><span class="pre">reactor_status</span></code> with the value “Active”.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-2-basic-operations">
@@ -497,53 +487,13 @@
 <p>Exponentiation: **</p>
 <p>Modulus (remainder): %</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic operations</span>
-<span class="n">sum_value</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span>      <span class="c1"># 8</span>
-<span class="n">difference</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">4</span>    <span class="c1"># 6</span>
-<span class="n">product</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">2</span>        <span class="c1"># 14</span>
-<span class="n">quotient</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">3</span>       <span class="c1"># 3.0</span>
-<span class="n">power</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">3</span>         <span class="c1"># 8</span>
-<span class="n">remainder</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">%</span> <span class="mi">3</span>     <span class="c1"># 1</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum: </span><span class="si">{</span><span class="n">sum_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference: </span><span class="si">{</span><span class="n">difference</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Product: </span><span class="si">{</span><span class="n">product</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quotient: </span><span class="si">{</span><span class="n">quotient</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power: </span><span class="si">{</span><span class="n">power</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remainder: </span><span class="si">{</span><span class="n">remainder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>Python follows the standard mathematical order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction.</p>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 5 + (3 * 2) = 11</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># (5 + 3) * 2 = 16</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 <section id="using-the-math-module">
 <h3>2.9. Using the math Module<a class="headerlink" href="#using-the-math-module" title="Link to this heading">#</a></h3>
 <p>The math module provides additional mathematical functions, including trigonometric, logarithmic, and advanced calculations.</p>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
-
-<span class="c1"># Trigonometric functions</span>
-<span class="n">angle_rad</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>  <span class="c1"># Convert degrees to radians</span>
-<span class="n">sin_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
-<span class="n">cos_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
-
-<span class="c1"># Logarithmic functions</span>
-<span class="n">log_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>      <span class="c1"># Natural log</span>
-<span class="n">log10_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># Base-10 log</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sin(45°): </span><span class="si">{</span><span class="n">sin_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cos(45°): </span><span class="si">{</span><span class="n">cos_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ln(10): </span><span class="si">{</span><span class="n">log_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;log10(100): </span><span class="si">{</span><span class="n">log10_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>These operations and functions provide the foundation for performing numerical calculations in Python, enabling you to solve complex engineering problems efficiently.</p>
 </section>
 <section id="id2">
@@ -572,9 +522,6 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 </ul>
 </li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-3-lists-and-loops">
@@ -663,9 +610,6 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 <li><p>Create a list of pressures [1.0, 1.5, 2.0, 2.5] and calculate the corresponding volumes for a fixed number of moles (n = 1) and temperature (T = 298 K) using PV = nRT.</p></li>
 <li><p>Create a list of flow rates [5, 10, 15] and double each value using a loop.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-4-functions">
@@ -711,9 +655,6 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 </ol>
 <p>When using functions, make sure to use <code class="docutils literal notranslate"><span class="pre">return</span></code> instead of just<code class="docutils literal notranslate"><span class="pre">print</span></code>. If you don’t return the variable out of the funciton, it will just be floating around in space! You cannot use a variable outside of a function unless you return it.</p>
 <p>Just be careful, using return is always the last thing you do! If you write code in a funciton after the return, then that code will <strong>not run.</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-5-numpy-basics">
@@ -755,9 +696,6 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 <li><p>Create a numpy array for temperatures in Celsius [25, 50, 75, 100] and convert them to Kelvin. Return the new array.</p></li>
 <li><p>Calculate the mean and standard deviation of an array representing flow rates [10, 20, 30, 40]. Retyrn the new array.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-6-importing-and-manipulating-an-excel-spreadsheet">
@@ -801,9 +739,6 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 <li><p>Filter rows where <code class="docutils literal notranslate"><span class="pre">Temperature</span> <span class="pre">&gt;</span> <span class="pre">300</span></code>.</p></li>
 <li><p>Create a new column <code class="docutils literal notranslate"><span class="pre">Pressure_kPa</span></code> by converting a column <code class="docutils literal notranslate"><span class="pre">Pressure</span></code> from atm to kPa.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="exercise-2-7-data-visualization-with-matplotlib-and-seaborn">
@@ -854,128 +789,28 @@ Assign the result to a variable <code class="docutils literal notranslate"><span
 <li><p>Use seaborn to create a scatterplot of <code class="docutils literal notranslate"><span class="pre">Temperature</span></code> vs <code class="docutils literal notranslate"><span class="pre">Pressure</span></code> from the DataFrame <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
 <li><p>Plot a histogram of the <code class="docutils literal notranslate"><span class="pre">FlowRate</span></code> column.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="answer-key">
 <h2>Answer Key<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
 <section id="exercise-2-1">
 <h3>Exercise 2.1:<a class="headerlink" href="#exercise-2-1" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="o">=</span> <span class="mi">300</span>
-<span class="n">pressure</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">is_reactor_on</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">reactor_status</span> <span class="o">=</span> <span class="s2">&quot;Active&quot;</span>
-</pre></div>
-</div>
 </section>
 <section id="exercise-2-2">
 <h3>Exercise 2.2:<a class="headerlink" href="#exercise-2-2" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Moles of an ideal gas</span>
-<span class="n">P</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">V</span> <span class="o">=</span> <span class="mf">22.4</span>
-<span class="n">R</span> <span class="o">=</span> <span class="mf">0.0821</span>
-<span class="n">T</span> <span class="o">=</span> <span class="mi">300</span>
-<span class="n">moles</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Moles of gas:&quot;</span><span class="p">,</span> <span class="n">moles</span><span class="p">)</span>
-
-<span class="c1"># Work done by a system</span>
-<span class="n">P</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">delta_V</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">work</span> <span class="o">=</span> <span class="o">-</span><span class="n">P</span> <span class="o">*</span> <span class="n">delta_V</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Work done:&quot;</span><span class="p">,</span> <span class="n">work</span><span class="p">)</span>
-
-<span class="c1"># Energy required for heating</span>
-<span class="n">m</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convert kg to grams</span>
-<span class="n">c</span> <span class="o">=</span> <span class="mf">4.18</span>
-<span class="n">delta_T</span> <span class="o">=</span> <span class="mi">30</span>
-<span class="n">Q</span> <span class="o">=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">delta_T</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy required (Q):&quot;</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="s2">&quot;Joules&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 <section id="exercise-2-3">
 <h3>Exercise 2.3:<a class="headerlink" href="#exercise-2-3" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Converting temperatures</span>
-<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">330</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temperatures</span><span class="p">:</span>
-    <span class="n">celsius</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="mf">273.15</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2"> K = </span><span class="si">{</span><span class="n">celsius</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> °C&quot;</span>
-
-<span class="c1"># List of pressures</span>
-<span class="n">pressures</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">R</span> <span class="o">=</span> <span class="mf">0.0821</span>
-<span class="n">T</span> <span class="o">=</span> <span class="mi">298</span>
-<span class="n">volumes</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">P</span> <span class="ow">in</span> <span class="n">pressures</span><span class="p">:</span>
-    <span class="n">V</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span>
-    <span class="n">volumes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Volumes:&quot;</span><span class="p">,</span> <span class="n">volumes</span><span class="p">)</span>
-
-<span class="c1"># Double flow rates</span>
-<span class="n">flow_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">flow_rates</span><span class="p">:</span>
-    <span class="n">doubled_rate</span> <span class="o">=</span> <span class="n">rate</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original: </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2"> L/s, Doubled: </span><span class="si">{</span><span class="n">doubled_rate</span><span class="si">}</span><span class="s2"> L/s&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 <section id="exercise-2-4">
 <h3>Exercise 2.4:<a class="headerlink" href="#exercise-2-4" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ideal gas law function</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">ideal_gas_law</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
-
-<span class="n">moles</span> <span class="o">=</span> <span class="n">ideal_gas_law</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.0821</span><span class="p">,</span> <span class="mi">298</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculated moles:&quot;</span><span class="p">,</span> <span class="n">moles</span><span class="p">)</span>
-
-<span class="c1"># Density function</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_density</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">volume</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">mass</span> <span class="o">/</span> <span class="n">volume</span>
-
-<span class="n">density</span> <span class="o">=</span> <span class="n">calculate_density</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Density:&quot;</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
-
-<span class="c1"># Reynolds number function</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">reynolds_number</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">viscosity</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">velocity</span> <span class="o">*</span> <span class="n">length</span> <span class="o">*</span> <span class="n">density</span><span class="p">)</span> <span class="o">/</span> <span class="n">viscosity</span>
-
-<span class="n">Re</span> <span class="o">=</span> <span class="n">reynolds_number</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reynolds Number:&quot;</span><span class="p">,</span> <span class="n">Re</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 <section id="exercise-2-5">
 <h3>Exercise 2.5:<a class="headerlink" href="#exercise-2-5" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pressures to kPA</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="n">pressures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
-<span class="n">pressures_kpa</span> <span class="o">=</span> <span class="n">pressures</span> <span class="o">*</span> <span class="mf">101.325</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pressures in kPa:&quot;</span><span class="p">,</span> <span class="n">pressures_kpa</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">pressures_kpa</span>
-
-<span class="c1"># Temperatures in Kelvin</span>
-<span class="n">temps_celsius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
-<span class="n">temps_kelvin</span> <span class="o">=</span> <span class="n">temps_celsius</span> <span class="o">+</span> <span class="mf">273.15</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Temperatures in Kelvin:&quot;</span><span class="p">,</span> <span class="n">temps_kelvin</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">temps_kelvin</span>
-
-<span class="c1"># Flow rates</span>
-<span class="n">flow_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
-<span class="n">mean_flow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">flow_rates</span><span class="p">)</span>
-<span class="n">std_flow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">flow_rates</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean flow rate:&quot;</span><span class="p">,</span> <span class="n">mean_flow</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard deviation of flow rates:&quot;</span><span class="p">,</span> <span class="n">std_flow</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">std_flow</span>
-</pre></div>
-</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
 #### Exercise 2.6:
 
-```python
+```{code-cell} ipython3
 import pandas as pd
 
 # Load Excel file
@@ -998,29 +833,6 @@ print(data.head())
 </section>
 <section id="exercise-2-7">
 <h3>Exercise 2.7:<a class="headerlink" href="#exercise-2-7" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-
-<span class="c1"># Line plot</span>
-<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Line Plot&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x-axis&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y-axis&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># Scatterplot</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pressure&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Temperature vs Pressure&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># Histogram</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;FlowRate&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;FlowRate Distribution&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
 </section>
 </section>
 </section>
@@ -1029,8 +841,8 @@ print(data.head())
     {
         requestKernel: true,
         binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
-            ref: "master",
+            repo: "AlnurGazizuly/data-science-in-cheme",
+            ref: "main",
         },
         codeMirrorConfig: {
             theme: "abcdef",

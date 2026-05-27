@@ -1,0 +1,14 @@
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn
+scipy
+plotly
+ipython
+jupyter
+rdkit
+requests
+langchain
+transformers
+torch

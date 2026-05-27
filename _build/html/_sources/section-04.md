@@ -92,7 +92,7 @@ $Y$ is the target variable, $𝑋_1$, $X_2$ , ..., $X_n$, are the predictor vari
 **When to Use:**
 Linear regression works well when the relationship between the features and target is approximately linear, and when you want to interpret the influence of each feature on the outcome.
 
-```python
+```{code-cell} ipython3
 # Here is an example of writing a linear regression model
 
 import pandas as pd
@@ -147,7 +147,7 @@ plt.show()
 
 **When to Use:** Random Forest is ideal for capturing complex, non-linear relationships in the data, and is less prone to overfitting than a single decision tree.
 
-```python
+```{code-cell} ipython3
 # Here is an example of a random forest regression model
 
 from sklearn.ensemble import RandomForestRegressor
@@ -233,7 +233,7 @@ print(f"Average Score: {cv_scores.mean()}")
 
 NOTE: make sure to use the dataframe that you normalized and cleaned from section 3!
 
-```python
+```{code-cell} ipython3
 # Your code and responses go here
 ```
 
@@ -241,7 +241,7 @@ NOTE: make sure to use the dataframe that you normalized and cleaned from sectio
 
 Since this dataset is continuous and contains only numerical data, regression is the best choice because it predicts a continuous target variable. Classification would be inappropriate since there are no categorical labels, and clustering is typically used for unsupervised learning rather than predicting numerical outputs.
 
-```python
+```{code-cell} ipython3
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

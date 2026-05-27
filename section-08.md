@@ -93,7 +93,7 @@ Transformers use an **encoder-decoder structure**, but models like GPT only use 
 
 ##### Example: Implementing Self-Attention in Python  
 
-```python
+```{code-cell} ipython3
 import torch
 import torch.nn.functional as F
 

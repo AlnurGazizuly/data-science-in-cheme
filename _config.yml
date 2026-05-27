@@ -22,12 +22,21 @@ repository:
   url: https://github.com/AlnurGazizuly/data-science-in-cheme
   branch: main
 
+launch_buttons:
+  thebe: true
+  binderhub_url: "https://mybinder.org"
+
 sphinx:
   extra_extensions:
     - sphinx_copybutton
+    - sphinx_thebe
   config:
     html_show_sourcelink: false
     pygments_dark_style: monokai
+    thebe_config:
+      repository_url: "https://github.com/AlnurGazizuly/data-science-in-cheme"
+      repository_branch: "main"
+      path_to_book: "."
     html_theme_options:
       default_mode: dark
       show_navbar_depth: 2
@@ -35,5 +44,8 @@ sphinx:
       repository_url: "https://github.com/AlnurGazizuly/data-science-in-cheme"
       use_fullscreen_button: true
       toc_title: "On this page"
+      launch_buttons:
+        thebe: true
+        binderhub_url: "https://mybinder.org"
       logo:
         text: "DS in ChemE"

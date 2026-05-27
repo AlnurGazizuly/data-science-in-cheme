@@ -10,7 +10,7 @@ Furthermore, the methodology used in this application—data preprocessing, feat
 
 Overall, this project showcases how ML techniques can be leveraged to solve real-world engineering challenges, particularly in energy and process industries. By applying statistical learning to large datasets, chemical engineers can develop smarter, more efficient systems that align with global sustainability goals.
 
-```python
+```{code-cell} ipython3
 import streamlit as st
 import pandas as pd
 import numpy as np

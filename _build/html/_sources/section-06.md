@@ -86,7 +86,7 @@ if st.button("Click me!"):
 
 Streamlit allows seamless integration with pandas to display data in a tabular format. This is particularly useful for chemical engineering applications where data analysis is a key component. Below is an example of how to display a DataFrame using Streamlit.
 
-```python
+```{code-cell} ipython3
 import streamlit as st
 import pandas as pd
 
@@ -155,13 +155,13 @@ Calc_CSTR - compares CSTR and PFR reactors for a first-order irreversible reacti
 
 requirements.txt - requirements file
 
-```python
+```{code-cell} ipython3
 # Your code goes here
 ```
 
 #### Answer Key:
 
-```python
+```{code-cell} ipython3
 # Wastewater Calculation
 
 import streamlit as st
@@ -233,7 +233,7 @@ You can adjust these parameters to see how they affect the DO profile in the aer
 """)
 ```
 
-```python
+```{code-cell} ipython3
 # MCT Calculation
 
 import streamlit as st
@@ -306,7 +306,7 @@ This McCabe-Thiele diagram shows the equilibrium curve and the operating lines f
 """)
 ```
 
-```python
+```{code-cell} ipython3
 # LLE Calculation
 
 import streamlit as st
@@ -358,7 +358,7 @@ A higher D indicates that the solute prefers the organic phase, while a lower D 
 """)
 ```
 
-```python
+```{code-cell} ipython3
 # CSTR Calculation
 
 import streamlit as st
