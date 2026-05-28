@@ -1,8 +1,10 @@
 /**
- * Pyodide Inline Runner v2
+ * Pyodide Inline Runner v3
+ * - Handles both Jupyter notebook cells (div.cell_input) AND
+ *   standalone Markdown code blocks (div.highlight-default, div.highlight-shell, etc.)
  * - Auto-installs missing packages via micropip
  * - Captures matplotlib plots as inline images
- * - Shows helpful banner for browser-incompatible libraries (streamlit, torch, etc.)
+ * - Shows helpful banner for browser-incompatible libraries
  * - Shared namespace across all cells on the page
  */
 
@@ -11,7 +13,6 @@
 
   const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
 
-  // Packages that can be installed via micropip in Pyodide
   const MICROPIP_MAP = {
     'sklearn':      'scikit-learn',
     'cv2':          'opencv-python',
@@ -32,19 +33,16 @@
     'joblib':       'joblib',
   };
 
-  // Packages already bundled in Pyodide (no micropip needed)
   const PYODIDE_BUILTIN = new Set([
     'numpy','pandas','matplotlib','scipy','sklearn','scikit-learn','PIL',
     'sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib',
   ]);
 
-  // Libraries that CANNOT run in a browser — show a banner, skip execution
   const BROWSER_INCOMPATIBLE = new Set([
     'streamlit','torch','gradio','langchain','tensorflow','keras',
     'flask','django','fastapi','celery','redis','psycopg2',
   ]);
 
-  // State
   let pyodide = null;
   let pyodideLoading = false;
   let pyodideReady = false;
@@ -169,7 +167,6 @@
       try {
         pyodide = await loadPyodide();
         sharedNamespace = pyodide.globals;
-        // Setup stdout/stderr capture + matplotlib backend
         await pyodide.runPythonAsync(`
 import sys, io as _io, base64 as _b64
 class _Capture(_io.StringIO): pass
@@ -178,7 +175,6 @@ sys.stdout = _capture
 sys.stderr = _capture
 _plot_images = []
 `);
-        // Load micropip
         await pyodide.loadPackage('micropip');
         pyodideReady = true;
         pyodideLoading = false;
@@ -211,12 +207,10 @@ _plot_images = []
     return imports;
   }
 
-  // ── Check for browser-incompatible libs ───────────────────────────────────
   function findIncompatible(imports) {
     return [...imports].filter(i => BROWSER_INCOMPATIBLE.has(i));
   }
 
-  // ── Install packages via micropip ─────────────────────────────────────────
   async function ensurePackages(imports, outputEl) {
     const toInstall = [];
     for (const imp of imports) {
@@ -235,7 +229,6 @@ await micropip.install('${pkg}')
 `);
         installedPackages.add(imp);
       } catch (e) {
-        // Non-fatal: some packages may not install but we try anyway
         console.warn(`micropip install ${pkg} failed:`, e.message);
       }
     }
@@ -243,12 +236,10 @@ await micropip.install('${pkg}')
 
   // ── Run code ──────────────────────────────────────────────────────────────
   async function runCode(code, outputEl, bannerEl) {
-    // Reset output
     outputEl.className = 'pyodide-output has-content is-loading';
     outputEl.textContent = '⏳ Loading Python runtime…';
     bannerEl.style.display = 'none';
 
-    // Check for incompatible imports
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
     if (incompatible.length) {
@@ -260,7 +251,7 @@ await micropip.install('${pkg}')
         <div>
           <strong>Browser-incompatible library:</strong> 
           ${incompatible.map(l => `<code>${l}</code>`).join(', ')} cannot run in the browser.<br>
-          ${incompatible.includes('streamlit') ? 'Streamlit apps need a server. Try the underlying Python logic without <code>st.*</code> calls, or run locally with <code>streamlit run yourfile.py</code>.' : ''}
+          ${incompatible.includes('streamlit') ? 'Streamlit apps need a server. Try the underlying Python logic without <code>st.*</code> calls.' : ''}
           ${incompatible.includes('torch') ? 'PyTorch requires a server environment. Run locally with <code>pip install torch</code>.' : ''}
           ${incompatible.includes('gradio') ? 'Gradio apps need a server. Run locally with <code>pip install gradio</code>.' : ''}
           ${incompatible.includes('langchain') ? 'LangChain requires API keys and a server. Run locally with <code>pip install langchain</code>.' : ''}
@@ -269,11 +260,8 @@ await micropip.install('${pkg}')
     }
 
     outputEl.textContent = '⏳ Starting Python…';
-
-    // Install missing packages
     await ensurePackages(imports, outputEl);
 
-    // Setup matplotlib capture if needed
     if (imports.has('matplotlib') || imports.has('plt')) {
       try {
         await pyodide.runPythonAsync(`
@@ -285,7 +273,6 @@ _plot_images.clear()
       } catch(e) {}
     }
 
-    // Reset capture buffer
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0)`);
 
     let textOut = '';
@@ -295,7 +282,6 @@ _plot_images.clear()
     try {
       const ret = await pyodide.runPythonAsync(code, { globals: sharedNamespace });
 
-      // Capture any matplotlib figures
       if (imports.has('matplotlib') || code.includes('plt.')) {
         try {
           await pyodide.runPythonAsync(`
@@ -321,15 +307,12 @@ for _fig_num in plt.get_fignums():
     } catch (err) {
       isError = true;
       const cap = pyodide.runPython(`_capture.getvalue()`);
-      // Clean up Pyodide internal traceback noise
       let msg = cap ? cap : '';
       msg += (msg ? '\n' : '') + err.message;
-      // Remove pyodide internal file paths for cleaner output
-      msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^\^\^\^\^+\n/g, '\n');
+      msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^{5,}\n/g, '\n');
       textOut = msg;
     }
 
-    // Render output
     outputEl.className = 'pyodide-output has-content' + (isError ? ' is-error' : '');
     outputEl.textContent = '';
 
@@ -339,7 +322,6 @@ for _fig_num in plt.get_fignums():
       outputEl.textContent = '✓ Done (no output)';
     }
 
-    // Render plot images
     for (const b64 of plotImages) {
       const img = document.createElement('img');
       img.src = 'data:image/png;base64,' + b64;
@@ -353,7 +335,6 @@ for _fig_num in plt.get_fignums():
     const wrap = document.createElement('div');
     wrap.className = 'pyodide-editor-wrap';
 
-    // Toolbar
     const toolbar = document.createElement('div');
     toolbar.className = 'pyodide-toolbar';
     const label = document.createElement('span');
@@ -366,7 +347,6 @@ for _fig_num in plt.get_fignums():
     toolbar.appendChild(label);
     toolbar.appendChild(btn);
 
-    // Textarea
     const textarea = document.createElement('textarea');
     textarea.className = 'pyodide-textarea';
     textarea.value = originalCode;
@@ -388,14 +368,12 @@ for _fig_num in plt.get_fignums():
       if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); btn.click(); }
     });
 
-    // Output + banner
     const output = document.createElement('div');
     output.className = 'pyodide-output';
     const banner = document.createElement('div');
     banner.className = 'pyodide-banner';
     banner.style.display = 'none';
 
-    // Run button
     btn.addEventListener('click', () => {
       btn.disabled = true;
       const after = () => { btn.disabled = false; };
@@ -416,16 +394,18 @@ for _fig_num in plt.get_fignums():
     return wrap;
   }
 
-  // ── Extract code from highlight div ──────────────────────────────────────
+  // ── Extract plain text from a highlight div ───────────────────────────────
   function extractCode(el) {
     const pre = el.querySelector('pre');
     if (!pre) return '';
     return pre.textContent.replace(/^\n/, '').replace(/\n$/, '');
   }
 
-  // ── Transform all code cells ──────────────────────────────────────────────
+  // ── Transform cells: both Jupyter-style AND standalone Markdown blocks ────
   function transformCells() {
     injectStyles();
+
+    // 1. Jupyter notebook cells (div.cell_input > .highlight-*)
     document.querySelectorAll('div.cell_input').forEach(cellInput => {
       const highlight = cellInput.querySelector('.highlight-python, .highlight-ipython3, .highlight-default');
       if (!highlight) return;
@@ -434,6 +414,29 @@ for _fig_num in plt.get_fignums():
       const editor = buildEditor(code);
       highlight.parentNode.replaceChild(editor, highlight);
     });
+
+    // 2. Standalone Markdown code blocks (NOT inside div.cell_input)
+    //    These are the SHELL / plain code blocks shown in the screenshot.
+    //    They appear as: div.highlight-default, div.highlight-shell, etc.
+    //    that are NOT descendants of div.cell_input.
+    const standaloneSelectors = [
+      'div.highlight-python:not(.cell_input *)',
+      'div.highlight-ipython3:not(.cell_input *)',
+      'div.highlight-default:not(.cell_input *)',
+      'div.highlight-shell:not(.cell_input *)',
+    ];
+    document.querySelectorAll(standaloneSelectors.join(',')).forEach(highlightDiv => {
+      // Skip if already replaced
+      if (highlightDiv.closest('.pyodide-editor-wrap')) return;
+      // The outer wrapper may be div.highlight-XXX.notranslate > div.highlight > pre
+      // We want to replace the outermost highlight wrapper
+      const outerWrap = highlightDiv.closest('.highlight-python, .highlight-ipython3, .highlight-default, .highlight-shell') || highlightDiv;
+      const code = extractCode(outerWrap);
+      if (!code.trim()) return;
+      const editor = buildEditor(code);
+      outerWrap.parentNode.replaceChild(editor, outerWrap);
+    });
+
     // Preload Pyodide in background
     loadPyodideIfNeeded();
   }
