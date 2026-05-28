@@ -1,5 +1,6 @@
 /**
- * Pyodide Inline Runner v9
+ * Pyodide Inline Runner v10
+ * All sanitizers run before execution to handle common notebook issues.
  */
 
 (function () {
@@ -24,13 +25,13 @@
     { alias:'sp',  pattern:/\bsp\./,  inject:'import scipy as sp' },
   ];
 
-  // Rich demo DataFrame covering all column names used across sections
-  // Includes NaN values so missing-value heatmaps look correct
-  // Includes Feature1/2/3 with realistic (non-perfect) correlations
+  // Demo data: ALL numeric columns so corr/PCA/MinMaxScaler/quantile always work.
+  // NaN values scattered so missing-value heatmaps show real patterns.
+  // Feature1/2/3 have realistic (non-perfect) correlations.
+  // Values column has an outlier (120) so IQR outlier detection works.
   const DEMO_DATA_PY = `
 import pandas as pd
 import numpy as np
-_rng = np.random.default_rng(42)
 _demo_data = pd.DataFrame({
     'Temperature':   [295, 305, np.nan, 298, 310, 320, np.nan, 302, 318, 308],
     'Pressure':      [1.1, 1.8, 2.5, np.nan, 2.1, 2.9, 0.9, np.nan, 2.7, 2.2],
@@ -39,12 +40,13 @@ _demo_data = pd.DataFrame({
     'Feature1':      [2.3, 4.1, 3.8, 5.2, 1.9, 6.7, 3.3, 4.8, 2.1, 5.5],
     'Feature2':      [1.1, 3.9, 2.7, 4.5, 2.2, 5.1, 1.8, 3.6, 2.9, 4.2],
     'Feature3':      [8.2, 6.4, 9.1, 5.7, 7.8, 4.3, 8.9, 6.1, 7.3, 5.2],
+    'Feature4':      [3.1, 5.5, 4.2, 6.8, 2.5, 7.3, 3.9, 5.1, 2.8, 6.2],
     'sepal_length':  [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9],
     'sepal_width':   [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1],
     'petal_length':  [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5],
     'petal_width':   [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
     'Values':        [10, 12, 15, 18, 19, 120, 14, 13, 16, 17],
-    'species':       ['setosa']*10,
+    'Category':      [1, 2, 1, 3, 2, 1, 3, 2, 1, 2],
 })
 data = _demo_data.copy()
 df = _demo_data.copy()
@@ -114,76 +116,57 @@ _plot_images = []
     document.head.appendChild(script);
   }
 
-  function whenReady(fn) {
-    if (pyodideReady) fn(); else pendingRuns.push(fn);
-  }
+  function whenReady(fn) { if (pyodideReady) fn(); else pendingRuns.push(fn); }
 
   // ── Sanitizer 1: Smart dedent ─────────────────────────────────────────────
-  // The issue: some blocks have line 1 at col 0, but lines 2+ are indented
-  // with 5 spaces (copy artifact from HTML). Standard dedent doesn't help.
-  // Fix: find minimum indent of non-empty, non-first lines when first line is at col 0.
   function dedent(code) {
     const lines = code.split('\n');
     const nonEmpty = lines.filter(l => l.trim().length > 0);
     if (!nonEmpty.length) return code;
     const minIndent = Math.min(...nonEmpty.map(l => l.match(/^(\s*)/)[1].length));
-    if (minIndent === 0) {
-      // First line may be at col 0 but subsequent lines may have spurious indent
-      // Check if ALL non-empty lines after the first have a common indent
-      const rest = nonEmpty.slice(1);
-      if (rest.length > 0) {
-        const restMin = Math.min(...rest.map(l => l.match(/^(\s*)/)[1].length));
-        if (restMin > 0) {
-          // Only strip from lines that have this common extra indent
-          // but only if the first line is a simple statement (not a block header)
-          const firstLine = nonEmpty[0].trimEnd();
-          if (!firstLine.endsWith(':')) {
-            return lines.map(l => {
-              if (l.trim().length === 0) return l;
-              const indent = l.match(/^(\s*)/)[1].length;
-              return indent >= restMin ? l.slice(restMin) : l;
-            }).join('\n');
-          }
-        }
-      }
-      return code;
+    if (minIndent > 0) return lines.map(l => l.slice(minIndent)).join('\n');
+    // minIndent=0: first line at col 0, but rest may have spurious indent
+    const rest = nonEmpty.slice(1);
+    if (rest.length === 0) return code;
+    const restMin = Math.min(...rest.map(l => l.match(/^(\s*)/)[1].length));
+    if (restMin > 0 && !nonEmpty[0].trimEnd().endsWith(':')) {
+      return lines.map(l => {
+        if (l.trim().length === 0) return l;
+        const ind = l.match(/^(\s*)/)[1].length;
+        return ind >= restMin ? l.slice(restMin) : l;
+      }).join('\n');
     }
-    return lines.map(l => l.slice(minIndent)).join('\n');
+    return code;
   }
 
   // ── Sanitizer 2: Remove bare `return` outside functions ───────────────────
   function removeOuterReturns(code) {
-    const lines = code.split('\n');
     let depth = 0;
-    return lines.map(line => {
+    return code.split('\n').map(line => {
       const stripped = line.trim();
       if (/^(def |class |async def )\w/.test(stripped)) depth++;
       if (depth > 0 && stripped.length > 0 && !stripped.startsWith('#')) {
         const lead = line.match(/^(\s*)/)[1].length;
         if (lead === 0 && !/^(def |class |async def |else:|elif |except|finally)/.test(stripped)) depth = 0;
       }
-      if (depth === 0 && /^\s*return(\s|$)/.test(line)) {
+      if (depth === 0 && /^\s*return(\s|$)/.test(line))
         return line.replace(/(\s*)return(\s*)/, '$1# return$2');
-      }
       return line;
     }).join('\n');
   }
 
-  // ── Sanitizer 3: Fix unmatched opening parens ─────────────────────────────
+  // ── Sanitizer 3: Fix unmatched open parens ────────────────────────────────
   function fixUnmatchedParens(code) {
     return code.split('\n').map(line => {
       if (line.trim().startsWith('#')) return line;
-      const open = (line.match(/\(/g)||[]).length;
-      const close = (line.match(/\)/g)||[]).length;
-      const diff = open - close;
-      if (diff > 0 && !/[,(\[{\\]$/.test(line.trimEnd()) && line.trimEnd().length > 0) {
+      const diff = (line.match(/\(/g)||[]).length - (line.match(/\)/g)||[]).length;
+      if (diff > 0 && !/[,(\[{\\]$/.test(line.trimEnd()) && line.trimEnd().length > 0)
         return line + ')'.repeat(diff);
-      }
       return line;
     }).join('\n');
   }
 
-  // ── Sanitizer 4: Rewrite file reads ──────────────────────────────────────
+  // ── Sanitizer 4: Rewrite file reads to demo data ──────────────────────────
   function rewriteFileReads(code) {
     if (!/pd\.(read_excel|read_csv|read_table)\s*\(/.test(code)) return { code, injected: false };
     const rewritten = code.replace(/pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g, '_demo_data.copy()');
@@ -192,8 +175,7 @@ _plot_images = []
 
   // ── Sanitizer 5: Fix ndarray → list for list-only methods ────────────────
   function fixNdarrayListMethods(code) {
-    const listMethods = ['append','remove','insert','pop'];
-    const pattern = new RegExp(`\\b(\\w+)\\.(${listMethods.join('|')})\\s*\\(`, 'g');
+    const pattern = /\b(\w+)\.(append|remove|insert|pop)\s*\(/g;
     const varNames = new Set();
     let m;
     while ((m = pattern.exec(code)) !== null) varNames.add(m[1]);
@@ -206,20 +188,70 @@ _plot_images = []
   }
 
   // ── Sanitizer 6: Fix placeholder column names ─────────────────────────────
-  // Replace literal 'ColumnName' placeholder with first real column of df/data
   function fixPlaceholderColumns(code) {
-    if (!code.includes("'ColumnName'") && !code.includes('"ColumnName"')) return code;
-    // Replace with 'Temperature' which exists in demo data
     return code
-      .replace(/['"]ColumnName['"]/g, "'Temperature'");
+      .replace(/['"]ColumnName['"]/g, "'Temperature'")
+      .replace(/['"]column_name['"]/g, "'Temperature'");
   }
 
-  // ── Sanitizer 7: Fix df.quantile() on mixed-type DataFrames ──────────────
-  // df.quantile() fails when df has non-numeric columns (e.g. 'species')
-  // Replace df.quantile( with df.select_dtypes(include='number').quantile(
-  function fixQuantileOnMixedDf(code) {
-    // Only patch when quantile is called directly on df (not df['col'].quantile)
-    return code.replace(/\b(df|data)\.(quantile)\s*\(/g, '$1.select_dtypes(include=\'number\').$2(');
+  // ── Sanitizer 7: Fix numeric-only operations on mixed-type DataFrames ─────
+  // Handles: .corr(), .quantile(), MinMaxScaler, StandardScaler, PCA
+  // All fail when DataFrame has string/object columns.
+  // Strategy: inject a _num_df helper and use it wherever numeric-only ops occur.
+  function fixNumericOps(code) {
+    let c = code;
+
+    // .corr() on df/data → .select_dtypes(include='number').corr()
+    c = c.replace(/\b(df|data)\.(corr)\s*\(/g, "$1.select_dtypes(include='number').$2(");
+
+    // .quantile() on df/data → .select_dtypes(include='number').quantile()
+    c = c.replace(/\b(df|data)\.(quantile)\s*\(/g, "$1.select_dtypes(include='number').$2(");
+
+    // For MinMaxScaler / StandardScaler / PCA applied to the whole df:
+    // Pattern: scaler.fit_transform(df, ...) or scaler.fit_transform(data, ...)
+    // Replace with a version that uses numeric-only columns
+    // Also handles pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
+    if (/(MinMaxScaler|StandardScaler|PCA)/.test(c)) {
+      // Find variable name (df or data)
+      const dfVar = /\bdf\b/.test(c) ? 'df' : 'data';
+      // Prepend numeric df extraction
+      const numVar = `${dfVar}_num`;
+      const guard = `${numVar} = ${dfVar}.select_dtypes(include='number').dropna()\n`;
+      // Replace fit_transform(df) → fit_transform(df_num)
+      c = c.replace(new RegExp(`\\.fit_transform\\s*\\(\\s*${dfVar}\\s*\\)`, 'g'), `.fit_transform(${numVar})`);
+      // Replace fit_transform(df, columns=df.columns) → fit_transform(df_num, columns=df_num.columns)
+      c = c.replace(
+        new RegExp(`\\.fit_transform\\s*\\(\\s*${dfVar}\\s*,\\s*columns\\s*=\\s*${dfVar}\\.columns\\s*\\)`, 'g'),
+        `.fit_transform(${numVar}, columns=${numVar}.columns)`
+      );
+      // Replace pd.DataFrame(..., columns=df.columns) → pd.DataFrame(..., columns=df_num.columns)
+      c = c.replace(
+        new RegExp(`columns\\s*=\\s*${dfVar}\\.columns`, 'g'),
+        `columns=${numVar}.columns`
+      );
+      // Replace PCA(n_components=len(df.columns)) → PCA(n_components=len(df_num.columns))
+      c = c.replace(
+        new RegExp(`len\\(${dfVar}\\.columns\\)`, 'g'),
+        `len(${numVar}.columns)`
+      );
+      // Replace df.columns[:-1] style references in correlation checks
+      c = c.replace(
+        new RegExp(`${dfVar}\\.columns\\[`, 'g'),
+        `${numVar}.columns[`
+      );
+      // Replace correlation_matrix = df.corr() (already handled above but catch df_num.corr case)
+      // Also fix: for col in correlation_matrix.columns: → works as-is after corr() patch
+      c = guard + c;
+    }
+
+    // IQR alignment fix: when outliers_condition compares df (mixed) against Q1/Q3 (numeric Series)
+    // The Q1/Q3 come from df.select_dtypes(...).quantile() → they're indexed on numeric cols only
+    // But df < Q1 tries to compare all columns → alignment error
+    // Fix: replace (df < (Q1 with (df.select_dtypes(include='number') < (Q1
+    c = c.replace(/\(\s*(df|data)\s*(<|>|<=|>=)\s*\(/g, "($1.select_dtypes(include='number') $2 (");
+    // Also: df[~outliers_condition.any(axis=1)] works if outliers_condition is on numeric df
+
+    return c;
   }
 
   // ── Parse imports ─────────────────────────────────────────────────────────
@@ -263,9 +295,8 @@ _plot_images = []
       if (inCell || nsHas(alias)) continue;
       lines.push(inject);
     }
-    // Auto-inject data/df if used but not defined
     const usesData = /\bdata\b/.test(code) && !/\bdata\s*=/.test(code) && !nsHas('data');
-    const usesDf   = /\bdf\b/.test(code) && !/\bdf\s*=/.test(code) && !nsHas('df');
+    const usesDf   = /\bdf\b/.test(code)   && !/\bdf\s*=/.test(code)   && !nsHas('df');
     if (usesData || usesDf) lines.push(DEMO_DATA_PY);
     return lines.join('\n');
   }
@@ -282,7 +313,7 @@ _plot_images = []
     code = fixUnmatchedParens(code);
     code = fixNdarrayListMethods(code);
     code = fixPlaceholderColumns(code);
-    code = fixQuantileOnMixedDf(code);
+    code = fixNumericOps(code);
 
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
