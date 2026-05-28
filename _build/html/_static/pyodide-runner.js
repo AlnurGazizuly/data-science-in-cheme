@@ -334,23 +334,34 @@ _hist_ncols = 3
     }
     const usesData = /\bdata\b/.test(code) && !/\bdata\s*=/.test(code) && !nsHas('data');
     const usesDf   = /\bdf\b/.test(code)   && !/\bdf\s*=/.test(code)   && !nsHas('df');
-    if (usesData || usesDf) lines.push(DEMO_DATA_PY);
+    if (usesData || usesDf) {
+      lines.push(DEMO_DATA_PY);
+      // If sklearn is involved, auto-provide clean (NaN-free) versions
+      const usesSklearn = /from\s+sklearn|import\s+sklearn|train_test_split|LinearRegression|RandomForest|cross_val/.test(code);
+      if (usesSklearn) {
+        lines.push(`# Auto-clean for sklearn: drop NaN rows from demo data\n_df_clean = df.dropna().reset_index(drop=True)\n_data_clean = data.dropna().reset_index(drop=True)\ndf = _df_clean\ndata = _data_clean\n`);
+      }
+    }
     return lines.join('\n');
   }
 
   // ── Run code ──────────────────────────────────────────────────────────────
   // Fix sklearn API compatibility issues (e.g. squared param removed in newer sklearn)
   function fixSklearnCompat(code) {
-    // mean_squared_error squared= param removed in sklearn 1.4+
+    // make_scorer with squared= param removed in sklearn 1.4+
+    // Remove squared=True (it was the default — plain MSE)
+    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
+      'make_scorer(mean_squared_error,$1$2)');
+    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*squared\s*=\s*True\s*\)/g,
+      'make_scorer(mean_squared_error, greater_is_better=False)');
+    // Remove squared=False (was sqrt(MSE) = RMSE) — replace whole make_scorer with RMSE scorer
+    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,([^)]*),\s*squared\s*=\s*False([^)]*)\)/g,
+      'make_scorer(lambda y,p: __import__("numpy").sqrt(mean_squared_error(y,p)), greater_is_better=False)');
+    // Direct mean_squared_error(y,p, squared=True/False) calls
     code = code.replace(/mean_squared_error\s*\(([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
       'mean_squared_error($1$2)');
     code = code.replace(/mean_squared_error\s*\(([^)]*),\s*squared\s*=\s*False([^)]*)\)/g,
       '__import__("numpy").sqrt(mean_squared_error($1$2))');
-    // make_scorer with squared= param
-    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
-      'make_scorer(mean_squared_error, $1$2)');
-    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*([^)]*),\s*squared\s*=\s*True\s*\)/g,
-      'make_scorer(mean_squared_error, greater_is_better=False)');
     return code;
   }
 
