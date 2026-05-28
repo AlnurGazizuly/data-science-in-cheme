@@ -1,14 +1,15 @@
 /**
- * Pyodide Inline Runner v6
- * Fixes:
- * 1. Pre-loads numpy/pandas/matplotlib/scipy via loadPackage (bundled)
- * 2. Auto-injects np/pd/plt/sns aliases if used but not imported
- * 3. Replaces pd.read_excel/read_csv calls referencing missing files with
- *    synthetic demo DataFrames that match the column names used in the code
- * 4. Auto-defines `data` for section-03 cells that use it without loading it
- * 5. Dedents code that has excess leading whitespace (copy-paste artifact)
- * 6. Handles both Jupyter cells and standalone Markdown code blocks
- * 7. Shared namespace across all cells on the page
+ * Pyodide Inline Runner v7
+ * Fixes applied before execution:
+ *  1. Pre-loads numpy/pandas/matplotlib/scipy via loadPackage
+ *  2. Auto-injects np/pd/plt/sns aliases if used but not imported
+ *  3. Rewrites pd.read_excel/read_csv to use a synthetic demo DataFrame
+ *  4. Auto-defines `data` if used but not in scope
+ *  5. Dedents code with excess leading whitespace
+ *  6. Removes bare `return` statements outside any function
+ *  7. Fixes unmatched open parentheses at end of print/function-call lines
+ *  8. Handles both Jupyter cells and standalone Markdown code blocks
+ *  9. Shared namespace across all cells on the page
  */
 
 (function () {
@@ -51,23 +52,20 @@
     { alias: 'sp',  pattern: /\bsp\./,  inject: 'import scipy as sp' },
   ];
 
-  // ── Synthetic demo DataFrame for file-reading cells ───────────────────────
-  // Detects column names referenced in the code and builds matching data.
-  // Falls back to a general ChemE dataset.
-  const DEMO_DATA_INJECT = `
+  // Demo DataFrame covering all column names used across sections 2 & 3
+  const DEMO_DATA_PY = `
 import pandas as pd
 import numpy as np
-
 _demo_data = pd.DataFrame({
-    'Temperature': [295, 305, 315, 298, 310, 320, 290, 302, 318, 308],
-    'Pressure':    [1.1, 1.8, 2.5, 1.3, 2.1, 2.9, 0.9, 1.6, 2.7, 2.2],
-    'FlowRate':    [10.2, 15.4, 20.1, 12.3, 17.8, 22.5, 9.8, 14.6, 21.3, 18.9],
-    'Concentration': [0.5, 1.0, 1.5, 0.7, 1.2, 1.8, 0.4, 0.9, 1.6, 1.3],
-    'sepal_length': [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9],
-    'sepal_width':  [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1],
-    'petal_length': [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5],
-    'petal_width':  [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
-    'species':      ['setosa']*10,
+    'Temperature':   [295, 305, 315, 298, 310, 320, 290, 302, 318, 308],
+    'Pressure':      [1.1, 1.8, 2.5, 1.3, 2.1, 2.9, 0.9, 1.6, 2.7, 2.2],
+    'FlowRate':      [10.2, 15.4, 20.1, 12.3, 17.8, 22.5, 9.8, 14.6, 21.3, 18.9],
+    'Concentration': [0.5,  1.0,  1.5,  0.7,  1.2,  1.8,  0.4, 0.9,  1.6,  1.3],
+    'sepal_length':  [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9],
+    'sepal_width':   [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1],
+    'petal_length':  [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5],
+    'petal_width':   [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
+    'species':       ['setosa']*10,
 })
 data = _demo_data.copy()
 `;
@@ -178,10 +176,8 @@ data = _demo_data.copy()
 }
 .pyodide-banner .banner-icon { font-size: 1.1rem; flex-shrink: 0; }
 .pyodide-banner code {
-  background: rgba(255,255,255,0.1);
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-family: monospace;
+  background: rgba(255,255,255,0.1); border-radius: 3px;
+  padding: 1px 5px; font-family: monospace;
 }
 .pyodide-textarea:focus { background: rgba(255,255,255,0.03); }
 `;
@@ -207,8 +203,7 @@ data = _demo_data.copy()
         await pyodide.loadPackage(LOAD_PACKAGES);
         await pyodide.runPythonAsync(`
 import sys, io as _io
-import matplotlib
-matplotlib.use('Agg')
+import matplotlib; matplotlib.use('Agg')
 class _Capture(_io.StringIO): pass
 _capture = _Capture()
 sys.stdout = _capture
@@ -234,17 +229,85 @@ _plot_images = []
     else pendingRuns.push(fn);
   }
 
-  // ── Dedent: remove common leading whitespace (fixes copy-paste artifacts) ─
+  // ── Code sanitizers ───────────────────────────────────────────────────────
+
+  // 1. Dedent
   function dedent(code) {
     const lines = code.split('\n');
     const nonEmpty = lines.filter(l => l.trim().length > 0);
     if (!nonEmpty.length) return code;
     const minIndent = Math.min(...nonEmpty.map(l => l.match(/^(\s*)/)[1].length));
-    if (minIndent === 0) return code;
-    return lines.map(l => l.slice(minIndent)).join('\n');
+    return minIndent === 0 ? code : lines.map(l => l.slice(minIndent)).join('\n');
   }
 
-  // ── Parse explicit imports ────────────────────────────────────────────────
+  // 2. Remove bare `return expr` lines that are outside any function/class.
+  //    These appear in cells that were copy-pasted from inside a function body.
+  function removeOuterReturns(code) {
+    const lines = code.split('\n');
+    let indentDepth = 0;   // track def/class nesting
+    const result = [];
+    for (const line of lines) {
+      const stripped = line.trim();
+      // detect entering a function/class block
+      if (/^(def |class |async def )/.test(stripped)) {
+        indentDepth++;
+      }
+      // detect leaving (a non-empty, non-comment line at indent 0 after we were inside)
+      if (indentDepth > 0 && line.length > 0 && !stripped.startsWith('#')) {
+        const leadingSpaces = line.match(/^(\s*)/)[1].length;
+        if (leadingSpaces === 0 && !(/^(def |class |async def )/.test(stripped))) {
+          indentDepth = 0;
+        }
+      }
+      // Drop bare `return` at top level (indentDepth === 0)
+      if (indentDepth === 0 && /^\s*return\b/.test(line)) {
+        // Convert to a comment so the intent is preserved but syntax is valid
+        result.push(line.replace(/^\s*return\b/, '# return'));
+      } else {
+        result.push(line);
+      }
+    }
+    return result.join('\n');
+  }
+
+  // 3. Fix unmatched open parentheses: a line where open parens > close parens
+  //    at the END of the line (i.e., the closing paren is missing entirely).
+  //    Only fix lines that look like function calls (print, etc.) at top level.
+  function fixUnmatchedParens(code) {
+    const lines = code.split('\n');
+    const result = [];
+    for (const line of lines) {
+      const open = (line.match(/\(/g) || []).length;
+      const close = (line.match(/\)/g) || []).length;
+      const diff = open - close;
+      if (diff > 0 && !line.trim().startsWith('#')) {
+        // Only fix if the line ends with a quote or paren-like char
+        // (i.e. it looks truncated, not a multi-line expression)
+        const trimmed = line.trimEnd();
+        if (/["'\w\d]$/.test(trimmed)) {
+          result.push(line + ')'.repeat(diff));
+          continue;
+        }
+      }
+      result.push(line);
+    }
+    return result.join('\n');
+  }
+
+  // 4. Rewrite file reads to use demo data
+  function rewriteFileReads(code) {
+    const hasFileRead = /pd\.(read_excel|read_csv|read_table)\s*\(/.test(code);
+    if (!hasFileRead) return { code, injected: false };
+
+    // Replace the assignment: `something = pd.read_*(...)` → `something = _demo_data.copy()`
+    let rewritten = code.replace(
+      /pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g,
+      '_demo_data.copy()'
+    );
+    return { code: DEMO_DATA_PY + '\n' + rewritten, injected: true };
+  }
+
+  // ── Parse imports ─────────────────────────────────────────────────────────
   function parseImports(code) {
     const imports = new Set();
     for (const line of code.split('\n')) {
@@ -261,13 +324,10 @@ _plot_images = []
   }
 
   async function ensureMicropipPackages(imports, outputEl) {
-    const toInstall = [];
     for (const imp of imports) {
       if (PYODIDE_BUILTIN.has(imp) || installedPackages.has(imp)) continue;
       const pkg = MICROPIP_MAP[imp];
-      if (pkg) toInstall.push({ imp, pkg });
-    }
-    for (const { imp, pkg } of toInstall) {
+      if (!pkg) continue;
       outputEl.textContent = `⏳ Installing ${pkg}…`;
       try {
         await pyodide.runPythonAsync(`import micropip\nawait micropip.install('${pkg}')`);
@@ -278,60 +338,24 @@ _plot_images = []
     }
   }
 
-  // ── Check namespace ───────────────────────────────────────────────────────
   function nsHas(name) {
     try { return pyodide.runPython(`'${name}' in globals()`); }
     catch(e) { return false; }
   }
 
-  // ── Detect if code reads a local file (Excel/CSV) ────────────────────────
-  function usesLocalFile(code) {
-    return /pd\.(read_excel|read_csv|read_table)\s*\(/.test(code) ||
-           /open\s*\(['"]\w+\.(xlsx|csv|txt)/.test(code);
-  }
-
-  // ── Build preamble: alias injection + missing `data` + file replacement ───
+  // Build preamble: alias guards + missing `data` injection
   function buildPreamble(code) {
     const lines = [];
-
-    // 1. Alias guards
     for (const { alias, pattern, inject } of ALIAS_GUARDS) {
       if (!pattern.test(code)) continue;
       const inCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}\\b|import\\s+${alias}\\b)`).test(code);
-      if (inCell) continue;
-      if (nsHas(alias)) continue;
+      if (inCell || nsHas(alias)) continue;
       lines.push(inject);
     }
-
-    // 2. If code uses `data` variable but doesn't define it and it's not in namespace
+    // Auto-inject `data` if used but not defined and not in namespace
     const usesData = /\bdata\b/.test(code) && !/\bdata\s*=/.test(code) && !nsHas('data');
-    if (usesData) {
-      lines.push(DEMO_DATA_INJECT);
-    }
-
+    if (usesData) lines.push(DEMO_DATA_PY);
     return lines.join('\n');
-  }
-
-  // ── Rewrite local file reads to use synthetic data ────────────────────────
-  // Replaces read_excel/read_csv calls so the cell runs without needing the file
-  function rewriteFileReads(code) {
-    if (!usesLocalFile(code)) return { code, injected: false };
-
-    let rewritten = code;
-
-    // Replace read_excel(...) with the demo data definition
-    rewritten = rewritten.replace(
-      /pd\.read_excel\s*\([^)]*\)/g,
-      '_demo_data.copy()'
-    );
-    rewritten = rewritten.replace(
-      /pd\.read_csv\s*\([^)]*\)/g,
-      '_demo_data.copy()'
-    );
-
-    // Prepend the demo data creation
-    const preamble = DEMO_DATA_INJECT;
-    return { code: preamble + '\n' + rewritten, injected: true };
   }
 
   // ── Run code ──────────────────────────────────────────────────────────────
@@ -341,8 +365,10 @@ _plot_images = []
     bannerEl.style.display = 'none';
     if (noteEl) noteEl.style.display = 'none';
 
-    // Dedent first
+    // Apply all sanitizers in order
     let code = dedent(rawCode);
+    code = removeOuterReturns(code);
+    code = fixUnmatchedParens(code);
 
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
@@ -350,39 +376,30 @@ _plot_images = []
       outputEl.className = 'pyodide-output';
       outputEl.textContent = '';
       bannerEl.style.display = 'flex';
-      bannerEl.innerHTML = `
-        <span class="banner-icon">⚠️</span>
-        <div>
-          <strong>Browser-incompatible library:</strong>
-          ${incompatible.map(l => `<code>${l}</code>`).join(', ')} cannot run in the browser.<br>
-          Run locally with <code>pip install ${incompatible.join(' ')}</code>.
-        </div>`;
+      bannerEl.innerHTML = `<span class="banner-icon">⚠️</span><div><strong>Browser-incompatible library:</strong> ${incompatible.map(l=>`<code>${l}</code>`).join(', ')} cannot run in the browser. Run locally with <code>pip install ${incompatible.join(' ')}</code>.</div>`;
       return;
     }
 
     outputEl.textContent = '⏳ Starting Python…';
     await ensureMicropipPackages(imports, outputEl);
 
-    // Rewrite local file reads
-    const { code: fileRewritten, injected: fileInjected } = rewriteFileReads(code);
-    code = fileRewritten;
+    // Rewrite file reads
+    const { code: fileCode, injected: fileInjected } = rewriteFileReads(code);
+    code = fileCode;
 
-    // Build alias/data preamble
+    // Alias + data preamble
     const preamble = buildPreamble(code);
     const fullCode = preamble ? preamble + '\n' + code : code;
     const preambleLines = preamble ? preamble.split('\n').length : 0;
 
-    // Show note if we injected synthetic data
-    if (noteEl && (fileInjected || fullCode.includes('_demo_data'))) {
+    if (noteEl && fileInjected) {
       noteEl.textContent = '📊 Using demo dataset (real file not available in browser)';
       noteEl.style.display = 'block';
     }
 
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0); _plot_images.clear()`);
 
-    let textOut = '';
-    let isError = false;
-    let plotImages = [];
+    let textOut = '', isError = false, plotImages = [];
 
     try {
       const ret = await pyodide.runPythonAsync(fullCode, { globals: sharedNamespace });
@@ -517,7 +534,7 @@ for _fn in plt.get_fignums():
   function transformCells() {
     injectStyles();
 
-    // 1. Jupyter notebook cells
+    // 1. Jupyter notebook cells (div.cell_input)
     document.querySelectorAll('div.cell_input').forEach(cellInput => {
       const highlight = cellInput.querySelector('.highlight-python, .highlight-ipython3, .highlight-default');
       if (!highlight) return;
@@ -526,7 +543,7 @@ for _fn in plt.get_fignums():
       highlight.parentNode.replaceChild(buildEditor(code), highlight);
     });
 
-    // 2. Standalone Markdown code blocks
+    // 2. Standalone Markdown code blocks (not inside div.cell_input)
     const sel = [
       'div.highlight-python:not(.cell_input *)',
       'div.highlight-ipython3:not(.cell_input *)',
