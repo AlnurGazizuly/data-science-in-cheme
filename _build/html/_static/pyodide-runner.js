@@ -7,7 +7,7 @@
   'use strict';
 
   const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
-  const LOAD_PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scipy'];
+  const LOAD_PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scipy', 'scikit-learn'];
 
   const MICROPIP_MAP = {
     'sklearn':'scikit-learn','cv2':'opencv-python','PIL':'Pillow',
@@ -15,7 +15,7 @@
     'imblearn':'imbalanced-learn','xgboost':'xgboost','plotly':'plotly',
     'statsmodels':'statsmodels','nltk':'nltk','seaborn':'seaborn','joblib':'joblib',
   };
-  const PYODIDE_BUILTIN = new Set(['numpy','pandas','matplotlib','scipy','sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib']);
+  const PYODIDE_BUILTIN = new Set(['numpy','pandas','matplotlib','scipy','sklearn','scikit-learn','sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib']);
   const BROWSER_INCOMPATIBLE = new Set(['streamlit','torch','gradio','langchain','tensorflow','keras','flask','django','fastapi','celery','redis','psycopg2']);
   const ALIAS_GUARDS = [
     { alias:'np',  pattern:/\bnp\./,  inject:'import numpy as np' },
@@ -47,6 +47,8 @@ _demo_data = pd.DataFrame({
     'petal_width':   [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
     'Values':        [10, 12, 15, 18, 19, 120, 14, 13, 16, 17],
     'Category':      [1, 2, 1, 3, 2, 1, 3, 2, 1, 2],
+    'target':        [2.1, 3.8, 5.2, 4.7, 6.3, 7.1, 3.5, 4.2, 5.8, 6.9],
+    'MSP':           [45.2, 62.1, 78.5, 55.3, 89.4, 103.2, 51.7, 67.8, 82.1, 94.6],
 })
 data = _demo_data.copy()
 df = _demo_data.copy()
@@ -337,6 +339,21 @@ _hist_ncols = 3
   }
 
   // ── Run code ──────────────────────────────────────────────────────────────
+  // Fix sklearn API compatibility issues (e.g. squared param removed in newer sklearn)
+  function fixSklearnCompat(code) {
+    // mean_squared_error squared= param removed in sklearn 1.4+
+    code = code.replace(/mean_squared_error\s*\(([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
+      'mean_squared_error($1$2)');
+    code = code.replace(/mean_squared_error\s*\(([^)]*),\s*squared\s*=\s*False([^)]*)\)/g,
+      '__import__("numpy").sqrt(mean_squared_error($1$2))');
+    // make_scorer with squared= param
+    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
+      'make_scorer(mean_squared_error, $1$2)');
+    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*([^)]*),\s*squared\s*=\s*True\s*\)/g,
+      'make_scorer(mean_squared_error, greater_is_better=False)');
+    return code;
+  }
+
   async function runCode(rawCode, outputEl, bannerEl, noteEl) {
     outputEl.className = 'pyodide-output has-content is-loading';
     outputEl.textContent = '⏳ Loading Python runtime…';
@@ -350,6 +367,7 @@ _hist_ncols = 3
     code = fixNdarrayListMethods(code);
     code = fixPlaceholderColumns(code);
     code = fixNumericOps(code);
+    code = fixSklearnCompat(code);
 
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
