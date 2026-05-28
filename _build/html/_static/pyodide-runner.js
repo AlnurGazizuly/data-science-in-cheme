@@ -1,11 +1,8 @@
 /**
- * Pyodide Inline Runner v4
- * - Handles both Jupyter notebook cells (div.cell_input) AND
- *   standalone Markdown code blocks (div.highlight-default, div.highlight-shell, etc.)
- * - Auto-injects common aliases (np, pd, plt) if used but not imported in the cell
- * - Auto-installs missing packages via micropip
- * - Captures matplotlib plots as inline images
- * - Shows helpful banner for browser-incompatible libraries
+ * Pyodide Inline Runner v5
+ * - Pre-loads numpy, pandas, matplotlib, scipy via pyodide.loadPackage (bundled, reliable)
+ * - Auto-injects np/pd/plt/sns aliases when used but not imported in the cell
+ * - Handles both Jupyter notebook cells AND standalone Markdown code blocks
  * - Shared namespace across all cells on the page
  */
 
@@ -14,29 +11,30 @@
 
   const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
 
+  // Packages to load via pyodide.loadPackage (bundled in Pyodide distribution)
+  const LOAD_PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scipy'];
+
+  // Additional packages only available via micropip
   const MICROPIP_MAP = {
-    'sklearn':      'scikit-learn',
-    'cv2':          'opencv-python',
-    'PIL':          'Pillow',
-    'missingno':    'missingno',
-    'shap':         'shap',
-    'skopt':        'scikit-optimize',
-    'imblearn':     'imbalanced-learn',
-    'xgboost':      'xgboost',
-    'plotly':       'plotly',
-    'statsmodels':  'statsmodels',
-    'nltk':         'nltk',
-    'seaborn':      'seaborn',
-    'scipy':        'scipy',
-    'matplotlib':   'matplotlib',
-    'pandas':       'pandas',
-    'numpy':        'numpy',
-    'joblib':       'joblib',
+    'sklearn':   'scikit-learn',
+    'cv2':       'opencv-python',
+    'PIL':       'Pillow',
+    'missingno': 'missingno',
+    'shap':      'shap',
+    'skopt':     'scikit-optimize',
+    'imblearn':  'imbalanced-learn',
+    'xgboost':   'xgboost',
+    'plotly':    'plotly',
+    'statsmodels': 'statsmodels',
+    'nltk':      'nltk',
+    'seaborn':   'seaborn',
+    'joblib':    'joblib',
   };
 
+  // Already covered by LOAD_PACKAGES — don't micropip these
   const PYODIDE_BUILTIN = new Set([
-    'numpy','pandas','matplotlib','scipy','sklearn','scikit-learn','PIL',
-    'sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib',
+    'numpy', 'pandas', 'matplotlib', 'scipy', 'sklearn', 'scikit-learn', 'PIL',
+    'sqlite3', 'ssl', 'hashlib', 'hmac', 'lzma', 'bz2', 'zlib',
   ]);
 
   const BROWSER_INCOMPATIBLE = new Set([
@@ -44,14 +42,13 @@
     'flask','django','fastapi','celery','redis','psycopg2',
   ]);
 
-  // Common aliases that are used in code without being imported in the same cell.
-  // If the code uses e.g. `np.` but doesn't import numpy, we prepend the import silently.
+  // Auto-inject these aliases if used but not imported in the cell
   const ALIAS_GUARDS = [
-    { alias: 'np',  pattern: /\bnp\./,       inject: 'import numpy as np' },
-    { alias: 'pd',  pattern: /\bpd\./,       inject: 'import pandas as pd' },
-    { alias: 'plt', pattern: /\bplt\./,      inject: 'import matplotlib\nmatplotlib.use("Agg")\nimport matplotlib.pyplot as plt' },
-    { alias: 'sns', pattern: /\bsns\./,      inject: 'import seaborn as sns' },
-    { alias: 'sp',  pattern: /\bsp\./,       inject: 'import scipy as sp' },
+    { alias: 'np',  pattern: /\bnp\./,  inject: 'import numpy as np' },
+    { alias: 'pd',  pattern: /\bpd\./,  inject: 'import pandas as pd' },
+    { alias: 'plt', pattern: /\bplt\./, inject: 'import matplotlib.pyplot as plt' },
+    { alias: 'sns', pattern: /\bsns\./, inject: 'import seaborn as sns' },
+    { alias: 'sp',  pattern: /\bsp\./,  inject: 'import scipy as sp' },
   ];
 
   let pyodide = null;
@@ -168,7 +165,7 @@
     document.head.appendChild(s);
   }
 
-  // ── Pyodide bootstrap ─────────────────────────────────────────────────────
+  // ── Pyodide bootstrap — loads numpy/pandas/matplotlib/scipy up front ──────
   function loadPyodideIfNeeded() {
     if (pyodideReady || pyodideLoading) return;
     pyodideLoading = true;
@@ -178,15 +175,24 @@
       try {
         pyodide = await loadPyodide();
         sharedNamespace = pyodide.globals;
+
+        // Load bundled packages first — this is what fixes the numpy error
+        await pyodide.loadPackage(LOAD_PACKAGES);
+
+        // Setup capture + matplotlib backend
         await pyodide.runPythonAsync(`
-import sys, io as _io, base64 as _b64
+import sys, io as _io
+import matplotlib
+matplotlib.use('Agg')
 class _Capture(_io.StringIO): pass
 _capture = _Capture()
 sys.stdout = _capture
 sys.stderr = _capture
 _plot_images = []
 `);
+        // Load micropip for non-bundled packages
         await pyodide.loadPackage('micropip');
+
         pyodideReady = true;
         pyodideLoading = false;
         pendingRuns.forEach(fn => fn());
@@ -205,11 +211,10 @@ _plot_images = []
     else pendingRuns.push(fn);
   }
 
-  // ── Parse imports from code ───────────────────────────────────────────────
+  // ── Parse explicit imports from code ─────────────────────────────────────
   function parseImports(code) {
     const imports = new Set();
-    const lines = code.split('\n');
-    for (const line of lines) {
+    for (const line of code.split('\n')) {
       const m1 = line.match(/^\s*import\s+([\w,\s]+)/);
       const m2 = line.match(/^\s*from\s+(\w+)/);
       if (m1) m1[1].split(',').forEach(p => imports.add(p.trim().split(' ')[0]));
@@ -218,40 +223,12 @@ _plot_images = []
     return imports;
   }
 
-  // ── Check what aliases are defined in the shared namespace ───────────────
-  function namespaceHas(name) {
-    try {
-      return pyodide && pyodide.runPython(`'${name}' in dir()`);
-    } catch(e) { return false; }
-  }
-
-  // ── Build auto-inject preamble for missing aliases ────────────────────────
-  // Checks if an alias like `np` is used in the code but not imported there,
-  // and also not already present in the shared namespace from a prior cell.
-  function buildPreamble(code) {
-    const lines = [];
-    for (const { alias, pattern, inject } of ALIAS_GUARDS) {
-      if (!pattern.test(code)) continue;           // alias not used in this cell
-      // Check if it's already imported in this cell
-      const alreadyInCell = new RegExp(
-        `(import\\s+\\S+\\s+as\\s+${alias}|import\\s+${alias}\\b)`
-      ).test(code);
-      if (alreadyInCell) continue;
-      // Check if it's already in the shared namespace from a prior cell
-      try {
-        const inNS = pyodide.runPython(`'${alias}' in globals()`);
-        if (inNS) continue;
-      } catch(e) {}
-      lines.push(inject);
-    }
-    return lines.join('\n');
-  }
-
   function findIncompatible(imports) {
     return [...imports].filter(i => BROWSER_INCOMPATIBLE.has(i));
   }
 
-  async function ensurePackages(imports, outputEl) {
+  // Install packages only available via micropip (not bundled)
+  async function ensureMicropipPackages(imports, outputEl) {
     const toInstall = [];
     for (const imp of imports) {
       if (PYODIDE_BUILTIN.has(imp) || installedPackages.has(imp)) continue;
@@ -259,19 +236,31 @@ _plot_images = []
       if (pkg) toInstall.push({ imp, pkg });
     }
     if (!toInstall.length) return;
-
     for (const { imp, pkg } of toInstall) {
       outputEl.textContent = `⏳ Installing ${pkg}…`;
       try {
-        await pyodide.runPythonAsync(`
-import micropip
-await micropip.install('${pkg}')
-`);
+        await pyodide.runPythonAsync(`import micropip\nawait micropip.install('${pkg}')`);
         installedPackages.add(imp);
       } catch (e) {
         console.warn(`micropip install ${pkg} failed:`, e.message);
       }
     }
+  }
+
+  // Build silent preamble for aliases used but not imported
+  function buildPreamble(code) {
+    const lines = [];
+    for (const { alias, pattern, inject } of ALIAS_GUARDS) {
+      if (!pattern.test(code)) continue;
+      const alreadyInCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}\\b|import\\s+${alias}\\b)`).test(code);
+      if (alreadyInCell) continue;
+      try {
+        const inNS = pyodide.runPython(`'${alias}' in globals()`);
+        if (inNS) continue;
+      } catch(e) {}
+      lines.push(inject);
+    }
+    return lines.join('\n');
   }
 
   // ── Run code ──────────────────────────────────────────────────────────────
@@ -291,53 +280,22 @@ await micropip.install('${pkg}')
         <div>
           <strong>Browser-incompatible library:</strong>
           ${incompatible.map(l => `<code>${l}</code>`).join(', ')} cannot run in the browser.<br>
-          ${incompatible.includes('streamlit') ? 'Streamlit apps need a server. Try the underlying Python logic without <code>st.*</code> calls.' : ''}
-          ${incompatible.includes('torch') ? 'PyTorch requires a server environment. Run locally with <code>pip install torch</code>.' : ''}
-          ${incompatible.includes('gradio') ? 'Gradio apps need a server. Run locally with <code>pip install gradio</code>.' : ''}
-          ${incompatible.includes('langchain') ? 'LangChain requires API keys and a server. Run locally with <code>pip install langchain</code>.' : ''}
+          Run locally with <code>pip install ${incompatible.join(' ')}</code>.
         </div>`;
       return;
     }
 
     outputEl.textContent = '⏳ Starting Python…';
 
-    // Install packages declared in this cell
-    await ensurePackages(imports, outputEl);
+    // Only micropip for non-bundled packages
+    await ensureMicropipPackages(imports, outputEl);
 
-    // Also pre-install packages for aliases we're about to auto-inject
-    const aliasPackages = new Set();
-    for (const { alias, pattern, inject } of ALIAS_GUARDS) {
-      if (!pattern.test(code)) continue;
-      const alreadyInCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}|import\\s+${alias}\\b)`).test(code);
-      if (alreadyInCell) continue;
-      try {
-        const inNS = pyodide.runPython(`'${alias}' in globals()`);
-        if (inNS) continue;
-      } catch(e) {}
-      // Extract the module name from the inject string
-      const modMatch = inject.match(/import\s+(\w+)/);
-      if (modMatch) aliasPackages.add(modMatch[1]);
-    }
-    await ensurePackages(aliasPackages, outputEl);
-
-    // Setup matplotlib backend if needed
-    if (imports.has('matplotlib') || /\bplt\./.test(code)) {
-      try {
-        await pyodide.runPythonAsync(`
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-_plot_images.clear()
-`);
-      } catch(e) {}
-    }
-
-    // Build and prepend auto-inject preamble
+    // Auto-inject missing aliases
     const preamble = buildPreamble(code);
     const fullCode = preamble ? preamble + '\n' + code : code;
 
-    // Reset capture buffer
-    await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0)`);
+    // Reset capture
+    await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0); _plot_images.clear()`);
 
     let textOut = '';
     let isError = false;
@@ -346,13 +304,13 @@ _plot_images.clear()
     try {
       const ret = await pyodide.runPythonAsync(fullCode, { globals: sharedNamespace });
 
+      // Capture matplotlib figures
       if (/\bplt\./.test(code) || imports.has('matplotlib')) {
         try {
           await pyodide.runPythonAsync(`
-import matplotlib.pyplot as plt
-import io as _mio, base64 as _mb64
-for _fig_num in plt.get_fignums():
-    _fig = plt.figure(_fig_num)
+import matplotlib.pyplot as plt, io as _mio, base64 as _mb64
+for _fn in plt.get_fignums():
+    _fig = plt.figure(_fn)
     _buf = _mio.BytesIO()
     _fig.savefig(_buf, format='png', bbox_inches='tight', dpi=120)
     _buf.seek(0)
@@ -371,16 +329,13 @@ for _fig_num in plt.get_fignums():
     } catch (err) {
       isError = true;
       const cap = pyodide.runPython(`_capture.getvalue()`);
-      let msg = cap ? cap : '';
-      msg += (msg ? '\n' : '') + err.message;
-      // Strip internal Pyodide noise
+      let msg = (cap || '') + (cap ? '\n' : '') + err.message;
       msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^{5,}\n/g, '\n');
-      // Also strip the preamble line numbers from tracebacks so user sees their own line numbers
       if (preamble) {
-        const preambleLines = preamble.split('\n').length;
+        const offset = preamble.split('\n').length;
         msg = msg.replace(/line (\d+)/g, (m, n) => {
-          const adjusted = parseInt(n) - preambleLines;
-          return adjusted > 0 ? `line ${adjusted}` : m;
+          const adj = parseInt(n) - offset;
+          return adj > 0 ? `line ${adj}` : m;
         });
       }
       textOut = msg;
@@ -388,13 +343,11 @@ for _fig_num in plt.get_fignums():
 
     outputEl.className = 'pyodide-output has-content' + (isError ? ' is-error' : '');
     outputEl.textContent = '';
-
     if (textOut.trim()) {
       outputEl.textContent = textOut;
     } else if (!plotImages.length && !isError) {
       outputEl.textContent = '✓ Done (no output)';
     }
-
     for (const b64 of plotImages) {
       const img = document.createElement('img');
       img.src = 'data:image/png;base64,' + b64;
@@ -452,7 +405,7 @@ for _fig_num in plt.get_fignums():
       const after = () => { btn.disabled = false; };
       if (!pyodideReady) {
         output.className = 'pyodide-output has-content is-loading';
-        output.textContent = '⏳ Loading Python runtime (one-time, ~10s)…';
+        output.textContent = '⏳ Loading Python runtime (one-time, ~15s)…';
         loadPyodideIfNeeded();
         whenReady(() => runCode(textarea.value, output, banner).then(after).catch(after));
         return;
@@ -478,33 +431,31 @@ for _fig_num in plt.get_fignums():
   function transformCells() {
     injectStyles();
 
-    // 1. Jupyter notebook cells (div.cell_input > .highlight-*)
+    // 1. Jupyter notebook cells
     document.querySelectorAll('div.cell_input').forEach(cellInput => {
       const highlight = cellInput.querySelector('.highlight-python, .highlight-ipython3, .highlight-default');
       if (!highlight) return;
       const code = extractCode(highlight);
       if (!code.trim()) return;
-      const editor = buildEditor(code);
-      highlight.parentNode.replaceChild(editor, highlight);
+      cellInput.querySelector('.cell_input div') && highlight.parentNode.replaceChild(buildEditor(code), highlight);
     });
 
-    // 2. Standalone Markdown code blocks NOT inside div.cell_input
-    const standaloneSelectors = [
+    // 2. Standalone Markdown code blocks (not inside div.cell_input)
+    const sel = [
       'div.highlight-python:not(.cell_input *)',
       'div.highlight-ipython3:not(.cell_input *)',
       'div.highlight-default:not(.cell_input *)',
       'div.highlight-shell:not(.cell_input *)',
-    ];
-    document.querySelectorAll(standaloneSelectors.join(',')).forEach(highlightDiv => {
-      if (highlightDiv.closest('.pyodide-editor-wrap')) return;
-      const outerWrap = highlightDiv.closest('.highlight-python, .highlight-ipython3, .highlight-default, .highlight-shell') || highlightDiv;
-      const code = extractCode(outerWrap);
+    ].join(',');
+    document.querySelectorAll(sel).forEach(el => {
+      if (el.closest('.pyodide-editor-wrap')) return;
+      const outer = el.closest('.highlight-python, .highlight-ipython3, .highlight-default, .highlight-shell') || el;
+      const code = extractCode(outer);
       if (!code.trim()) return;
-      const editor = buildEditor(code);
-      outerWrap.parentNode.replaceChild(editor, outerWrap);
+      outer.parentNode.replaceChild(buildEditor(code), outer);
     });
 
-    // Preload Pyodide in background
+    // Preload Pyodide + packages in background immediately
     loadPyodideIfNeeded();
   }
 
