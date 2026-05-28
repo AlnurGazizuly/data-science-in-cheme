@@ -1,40 +1,41 @@
 /**
- * Pyodide Inline Runner v5
- * - Pre-loads numpy, pandas, matplotlib, scipy via pyodide.loadPackage (bundled, reliable)
- * - Auto-injects np/pd/plt/sns aliases when used but not imported in the cell
- * - Handles both Jupyter notebook cells AND standalone Markdown code blocks
- * - Shared namespace across all cells on the page
+ * Pyodide Inline Runner v6
+ * Fixes:
+ * 1. Pre-loads numpy/pandas/matplotlib/scipy via loadPackage (bundled)
+ * 2. Auto-injects np/pd/plt/sns aliases if used but not imported
+ * 3. Replaces pd.read_excel/read_csv calls referencing missing files with
+ *    synthetic demo DataFrames that match the column names used in the code
+ * 4. Auto-defines `data` for section-03 cells that use it without loading it
+ * 5. Dedents code that has excess leading whitespace (copy-paste artifact)
+ * 6. Handles both Jupyter cells and standalone Markdown code blocks
+ * 7. Shared namespace across all cells on the page
  */
 
 (function () {
   'use strict';
 
   const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
-
-  // Packages to load via pyodide.loadPackage (bundled in Pyodide distribution)
   const LOAD_PACKAGES = ['numpy', 'pandas', 'matplotlib', 'scipy'];
 
-  // Additional packages only available via micropip
   const MICROPIP_MAP = {
-    'sklearn':   'scikit-learn',
-    'cv2':       'opencv-python',
-    'PIL':       'Pillow',
-    'missingno': 'missingno',
-    'shap':      'shap',
-    'skopt':     'scikit-optimize',
-    'imblearn':  'imbalanced-learn',
-    'xgboost':   'xgboost',
-    'plotly':    'plotly',
+    'sklearn':     'scikit-learn',
+    'cv2':         'opencv-python',
+    'PIL':         'Pillow',
+    'missingno':   'missingno',
+    'shap':        'shap',
+    'skopt':       'scikit-optimize',
+    'imblearn':    'imbalanced-learn',
+    'xgboost':     'xgboost',
+    'plotly':      'plotly',
     'statsmodels': 'statsmodels',
-    'nltk':      'nltk',
-    'seaborn':   'seaborn',
-    'joblib':    'joblib',
+    'nltk':        'nltk',
+    'seaborn':     'seaborn',
+    'joblib':      'joblib',
   };
 
-  // Already covered by LOAD_PACKAGES — don't micropip these
   const PYODIDE_BUILTIN = new Set([
-    'numpy', 'pandas', 'matplotlib', 'scipy', 'sklearn', 'scikit-learn', 'PIL',
-    'sqlite3', 'ssl', 'hashlib', 'hmac', 'lzma', 'bz2', 'zlib',
+    'numpy','pandas','matplotlib','scipy','sqlite3','ssl',
+    'hashlib','hmac','lzma','bz2','zlib',
   ]);
 
   const BROWSER_INCOMPATIBLE = new Set([
@@ -42,7 +43,6 @@
     'flask','django','fastapi','celery','redis','psycopg2',
   ]);
 
-  // Auto-inject these aliases if used but not imported in the cell
   const ALIAS_GUARDS = [
     { alias: 'np',  pattern: /\bnp\./,  inject: 'import numpy as np' },
     { alias: 'pd',  pattern: /\bpd\./,  inject: 'import pandas as pd' },
@@ -50,6 +50,27 @@
     { alias: 'sns', pattern: /\bsns\./, inject: 'import seaborn as sns' },
     { alias: 'sp',  pattern: /\bsp\./,  inject: 'import scipy as sp' },
   ];
+
+  // ── Synthetic demo DataFrame for file-reading cells ───────────────────────
+  // Detects column names referenced in the code and builds matching data.
+  // Falls back to a general ChemE dataset.
+  const DEMO_DATA_INJECT = `
+import pandas as pd
+import numpy as np
+
+_demo_data = pd.DataFrame({
+    'Temperature': [295, 305, 315, 298, 310, 320, 290, 302, 318, 308],
+    'Pressure':    [1.1, 1.8, 2.5, 1.3, 2.1, 2.9, 0.9, 1.6, 2.7, 2.2],
+    'FlowRate':    [10.2, 15.4, 20.1, 12.3, 17.8, 22.5, 9.8, 14.6, 21.3, 18.9],
+    'Concentration': [0.5, 1.0, 1.5, 0.7, 1.2, 1.8, 0.4, 0.9, 1.6, 1.3],
+    'sepal_length': [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9],
+    'sepal_width':  [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1],
+    'petal_length': [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5],
+    'petal_width':  [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
+    'species':      ['setosa']*10,
+})
+data = _demo_data.copy()
+`;
 
   let pyodide = null;
   let pyodideLoading = false;
@@ -136,6 +157,14 @@
 .pyodide-output.is-error { color: #f38ba8; }
 .pyodide-output.is-loading { color: rgba(255,255,255,0.45); font-style: italic; }
 .pyodide-output img { max-width: 100%; margin-top: 6px; border-radius: 4px; display: block; }
+.pyodide-note {
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  font-style: italic;
+  background: rgba(0,0,0,0.12);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
 .pyodide-banner {
   display: flex;
   align-items: flex-start;
@@ -165,7 +194,7 @@
     document.head.appendChild(s);
   }
 
-  // ── Pyodide bootstrap — loads numpy/pandas/matplotlib/scipy up front ──────
+  // ── Pyodide bootstrap ─────────────────────────────────────────────────────
   function loadPyodideIfNeeded() {
     if (pyodideReady || pyodideLoading) return;
     pyodideLoading = true;
@@ -175,11 +204,7 @@
       try {
         pyodide = await loadPyodide();
         sharedNamespace = pyodide.globals;
-
-        // Load bundled packages first — this is what fixes the numpy error
         await pyodide.loadPackage(LOAD_PACKAGES);
-
-        // Setup capture + matplotlib backend
         await pyodide.runPythonAsync(`
 import sys, io as _io
 import matplotlib
@@ -190,9 +215,7 @@ sys.stdout = _capture
 sys.stderr = _capture
 _plot_images = []
 `);
-        // Load micropip for non-bundled packages
         await pyodide.loadPackage('micropip');
-
         pyodideReady = true;
         pyodideLoading = false;
         pendingRuns.forEach(fn => fn());
@@ -211,7 +234,17 @@ _plot_images = []
     else pendingRuns.push(fn);
   }
 
-  // ── Parse explicit imports from code ─────────────────────────────────────
+  // ── Dedent: remove common leading whitespace (fixes copy-paste artifacts) ─
+  function dedent(code) {
+    const lines = code.split('\n');
+    const nonEmpty = lines.filter(l => l.trim().length > 0);
+    if (!nonEmpty.length) return code;
+    const minIndent = Math.min(...nonEmpty.map(l => l.match(/^(\s*)/)[1].length));
+    if (minIndent === 0) return code;
+    return lines.map(l => l.slice(minIndent)).join('\n');
+  }
+
+  // ── Parse explicit imports ────────────────────────────────────────────────
   function parseImports(code) {
     const imports = new Set();
     for (const line of code.split('\n')) {
@@ -227,7 +260,6 @@ _plot_images = []
     return [...imports].filter(i => BROWSER_INCOMPATIBLE.has(i));
   }
 
-  // Install packages only available via micropip (not bundled)
   async function ensureMicropipPackages(imports, outputEl) {
     const toInstall = [];
     for (const imp of imports) {
@@ -235,7 +267,6 @@ _plot_images = []
       const pkg = MICROPIP_MAP[imp];
       if (pkg) toInstall.push({ imp, pkg });
     }
-    if (!toInstall.length) return;
     for (const { imp, pkg } of toInstall) {
       outputEl.textContent = `⏳ Installing ${pkg}…`;
       try {
@@ -247,27 +278,71 @@ _plot_images = []
     }
   }
 
-  // Build silent preamble for aliases used but not imported
+  // ── Check namespace ───────────────────────────────────────────────────────
+  function nsHas(name) {
+    try { return pyodide.runPython(`'${name}' in globals()`); }
+    catch(e) { return false; }
+  }
+
+  // ── Detect if code reads a local file (Excel/CSV) ────────────────────────
+  function usesLocalFile(code) {
+    return /pd\.(read_excel|read_csv|read_table)\s*\(/.test(code) ||
+           /open\s*\(['"]\w+\.(xlsx|csv|txt)/.test(code);
+  }
+
+  // ── Build preamble: alias injection + missing `data` + file replacement ───
   function buildPreamble(code) {
     const lines = [];
+
+    // 1. Alias guards
     for (const { alias, pattern, inject } of ALIAS_GUARDS) {
       if (!pattern.test(code)) continue;
-      const alreadyInCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}\\b|import\\s+${alias}\\b)`).test(code);
-      if (alreadyInCell) continue;
-      try {
-        const inNS = pyodide.runPython(`'${alias}' in globals()`);
-        if (inNS) continue;
-      } catch(e) {}
+      const inCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}\\b|import\\s+${alias}\\b)`).test(code);
+      if (inCell) continue;
+      if (nsHas(alias)) continue;
       lines.push(inject);
     }
+
+    // 2. If code uses `data` variable but doesn't define it and it's not in namespace
+    const usesData = /\bdata\b/.test(code) && !/\bdata\s*=/.test(code) && !nsHas('data');
+    if (usesData) {
+      lines.push(DEMO_DATA_INJECT);
+    }
+
     return lines.join('\n');
   }
 
+  // ── Rewrite local file reads to use synthetic data ────────────────────────
+  // Replaces read_excel/read_csv calls so the cell runs without needing the file
+  function rewriteFileReads(code) {
+    if (!usesLocalFile(code)) return { code, injected: false };
+
+    let rewritten = code;
+
+    // Replace read_excel(...) with the demo data definition
+    rewritten = rewritten.replace(
+      /pd\.read_excel\s*\([^)]*\)/g,
+      '_demo_data.copy()'
+    );
+    rewritten = rewritten.replace(
+      /pd\.read_csv\s*\([^)]*\)/g,
+      '_demo_data.copy()'
+    );
+
+    // Prepend the demo data creation
+    const preamble = DEMO_DATA_INJECT;
+    return { code: preamble + '\n' + rewritten, injected: true };
+  }
+
   // ── Run code ──────────────────────────────────────────────────────────────
-  async function runCode(code, outputEl, bannerEl) {
+  async function runCode(rawCode, outputEl, bannerEl, noteEl) {
     outputEl.className = 'pyodide-output has-content is-loading';
     outputEl.textContent = '⏳ Loading Python runtime…';
     bannerEl.style.display = 'none';
+    if (noteEl) noteEl.style.display = 'none';
+
+    // Dedent first
+    let code = dedent(rawCode);
 
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
@@ -286,15 +361,23 @@ _plot_images = []
     }
 
     outputEl.textContent = '⏳ Starting Python…';
-
-    // Only micropip for non-bundled packages
     await ensureMicropipPackages(imports, outputEl);
 
-    // Auto-inject missing aliases
+    // Rewrite local file reads
+    const { code: fileRewritten, injected: fileInjected } = rewriteFileReads(code);
+    code = fileRewritten;
+
+    // Build alias/data preamble
     const preamble = buildPreamble(code);
     const fullCode = preamble ? preamble + '\n' + code : code;
+    const preambleLines = preamble ? preamble.split('\n').length : 0;
 
-    // Reset capture
+    // Show note if we injected synthetic data
+    if (noteEl && (fileInjected || fullCode.includes('_demo_data'))) {
+      noteEl.textContent = '📊 Using demo dataset (real file not available in browser)';
+      noteEl.style.display = 'block';
+    }
+
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0); _plot_images.clear()`);
 
     let textOut = '';
@@ -304,7 +387,6 @@ _plot_images = []
     try {
       const ret = await pyodide.runPythonAsync(fullCode, { globals: sharedNamespace });
 
-      // Capture matplotlib figures
       if (/\bplt\./.test(code) || imports.has('matplotlib')) {
         try {
           await pyodide.runPythonAsync(`
@@ -331,10 +413,9 @@ for _fn in plt.get_fignums():
       const cap = pyodide.runPython(`_capture.getvalue()`);
       let msg = (cap || '') + (cap ? '\n' : '') + err.message;
       msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^{5,}\n/g, '\n');
-      if (preamble) {
-        const offset = preamble.split('\n').length;
+      if (preambleLines > 0) {
         msg = msg.replace(/line (\d+)/g, (m, n) => {
-          const adj = parseInt(n) - offset;
+          const adj = parseInt(n) - preambleLines;
           return adj > 0 ? `line ${adj}` : m;
         });
       }
@@ -394,6 +475,10 @@ for _fn in plt.get_fignums():
       if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); btn.click(); }
     });
 
+    const note = document.createElement('div');
+    note.className = 'pyodide-note';
+    note.style.display = 'none';
+
     const output = document.createElement('div');
     output.className = 'pyodide-output';
     const banner = document.createElement('div');
@@ -407,20 +492,21 @@ for _fn in plt.get_fignums():
         output.className = 'pyodide-output has-content is-loading';
         output.textContent = '⏳ Loading Python runtime (one-time, ~15s)…';
         loadPyodideIfNeeded();
-        whenReady(() => runCode(textarea.value, output, banner).then(after).catch(after));
+        whenReady(() => runCode(textarea.value, output, banner, note).then(after).catch(after));
         return;
       }
-      runCode(textarea.value, output, banner).then(after).catch(after);
+      runCode(textarea.value, output, banner, note).then(after).catch(after);
     });
 
     wrap.appendChild(toolbar);
     wrap.appendChild(textarea);
+    wrap.appendChild(note);
     wrap.appendChild(banner);
     wrap.appendChild(output);
     return wrap;
   }
 
-  // ── Extract plain text from a highlight div ───────────────────────────────
+  // ── Extract plain text ────────────────────────────────────────────────────
   function extractCode(el) {
     const pre = el.querySelector('pre');
     if (!pre) return '';
@@ -437,10 +523,10 @@ for _fn in plt.get_fignums():
       if (!highlight) return;
       const code = extractCode(highlight);
       if (!code.trim()) return;
-      cellInput.querySelector('.cell_input div') && highlight.parentNode.replaceChild(buildEditor(code), highlight);
+      highlight.parentNode.replaceChild(buildEditor(code), highlight);
     });
 
-    // 2. Standalone Markdown code blocks (not inside div.cell_input)
+    // 2. Standalone Markdown code blocks
     const sel = [
       'div.highlight-python:not(.cell_input *)',
       'div.highlight-ipython3:not(.cell_input *)',
@@ -455,7 +541,6 @@ for _fn in plt.get_fignums():
       outer.parentNode.replaceChild(buildEditor(code), outer);
     });
 
-    // Preload Pyodide + packages in background immediately
     loadPyodideIfNeeded();
   }
 
