@@ -194,6 +194,39 @@ _plot_images = []
       .replace(/['"]column_name['"]/g, "'Temperature'");
   }
 
+  // ── Sanitizer 6b: Fix .hist() layout that's too small for actual columns ────
+  // Pattern: df.hist(..., layout=(r, c), ...) where r*c < num_columns
+  // Replace with auto-computed layout via Python math.ceil
+  function fixHistLayout(code) {
+    if (!/\.hist\s*\(/.test(code)) return code;
+    // Replace any layout=(N, M) inside a .hist() call with a safe computed version
+    // We inject a Python helper that computes the right layout
+    let c = code;
+    // Replace layout=(digits, digits) with a sentinel; inject helper
+    if (/layout\s*=\s*\(\s*\d+\s*,\s*\d+\s*\)/.test(c)) {
+      c = c.replace(/layout\s*=\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)/g, (match, r, c2) => {
+        // Keep original layout but add import math guard before the hist call
+        return match; // we'll handle it via Python preamble instead
+      });
+      // Prepend a Python snippet that will compute a safe layout at runtime
+      const guard = `import math as _math
+_hist_ncols = 3
+`;
+      c = guard + c;
+      // Replace the layout=(r,c) with a dynamically computed one
+      c = c.replace(/layout\s*=\s*\(\s*\d+\s*,\s*\d+\s*\)/g,
+        'layout=(_math.ceil(len([x for x in _hist_df.columns if _hist_df[x].dtype != object]) / _hist_ncols), _hist_ncols)');
+      // Capture the df variable used in .hist()
+      const dfHist = /\b(df_normalized|df_num|df|data)\s*\.hist/.exec(c);
+      if (dfHist) {
+        c = c.replace('_hist_df', dfHist[1]).replace('_hist_df', dfHist[1]);
+        // Replace all remaining _hist_df with actual df var
+        c = c.replace(/_hist_df/g, dfHist[1]);
+      }
+    }
+    return c;
+  }
+
   // ── Sanitizer 7: Fix numeric-only operations on mixed-type DataFrames ─────
   // Handles: .corr(), .quantile(), MinMaxScaler, StandardScaler, PCA
   // All fail when DataFrame has string/object columns.
@@ -216,7 +249,7 @@ _plot_images = []
       const dfVar = /\bdf\b/.test(c) ? 'df' : 'data';
       // Prepend numeric df extraction
       const numVar = `${dfVar}_num`;
-      const guard = `${numVar} = ${dfVar}.select_dtypes(include='number').dropna()\n`;
+      const guard = `${numVar} = ${dfVar}.select_dtypes(include='number').fillna(${dfVar}.select_dtypes(include='number').median())\n`;
       // Replace fit_transform(df) → fit_transform(df_num)
       c = c.replace(new RegExp(`\\.fit_transform\\s*\\(\\s*${dfVar}\\s*\\)`, 'g'), `.fit_transform(${numVar})`);
       // Replace fit_transform(df, columns=df.columns) → fit_transform(df_num, columns=df_num.columns)
@@ -309,6 +342,7 @@ _plot_images = []
     if (noteEl) noteEl.style.display = 'none';
 
     let code = dedent(rawCode);
+    code = fixHistLayout(code);
     code = removeOuterReturns(code);
     code = fixUnmatchedParens(code);
     code = fixNdarrayListMethods(code);
