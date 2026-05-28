@@ -1,15 +1,16 @@
 /**
- * Pyodide Inline Runner v7
- * Fixes applied before execution:
- *  1. Pre-loads numpy/pandas/matplotlib/scipy via loadPackage
- *  2. Auto-injects np/pd/plt/sns aliases if used but not imported
- *  3. Rewrites pd.read_excel/read_csv to use a synthetic demo DataFrame
- *  4. Auto-defines `data` if used but not in scope
- *  5. Dedents code with excess leading whitespace
- *  6. Removes bare `return` statements outside any function
- *  7. Fixes unmatched open parentheses at end of print/function-call lines
- *  8. Handles both Jupyter cells and standalone Markdown code blocks
- *  9. Shared namespace across all cells on the page
+ * Pyodide Inline Runner v8
+ * Sanitizers applied before execution:
+ *  1. Dedents code with excess leading whitespace
+ *  2. Removes bare `return` statements outside any function
+ *  3. Fixes unmatched open parentheses at end of lines (e.g. missing closing paren)
+ *  4. Rewrites pd.read_excel/read_csv to use a synthetic demo DataFrame
+ *  5. Auto-defines `data` if used but not in scope
+ *  6. Auto-injects np/pd/plt/sns aliases if used but not imported
+ *  7. Auto-converts numpy arrays to lists before .append()/.remove()/.insert() calls
+ *  8. Pre-loads numpy/pandas/matplotlib/scipy via loadPackage
+ *  9. Handles both Jupyter cells and standalone Markdown code blocks
+ * 10. Shared namespace across all cells on the page
  */
 
 (function () {
@@ -52,7 +53,6 @@
     { alias: 'sp',  pattern: /\bsp\./,  inject: 'import scipy as sp' },
   ];
 
-  // Demo DataFrame covering all column names used across sections 2 & 3
   const DEMO_DATA_PY = `
 import pandas as pd
 import numpy as np
@@ -164,15 +164,11 @@ data = _demo_data.copy()
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 .pyodide-banner {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  display: flex; align-items: flex-start; gap: 10px;
   padding: 10px 14px;
   background: rgba(243,139,168,0.08);
   border-top: 1px solid rgba(243,139,168,0.2);
-  color: #f5c2e7;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  color: #f5c2e7; font-size: 0.82rem; line-height: 1.5;
 }
 .pyodide-banner .banner-icon { font-size: 1.1rem; flex-shrink: 0; }
 .pyodide-banner code {
@@ -229,9 +225,7 @@ _plot_images = []
     else pendingRuns.push(fn);
   }
 
-  // ── Code sanitizers ───────────────────────────────────────────────────────
-
-  // 1. Dedent
+  // ── Sanitizer 1: Dedent ───────────────────────────────────────────────────
   function dedent(code) {
     const lines = code.split('\n');
     const nonEmpty = lines.filter(l => l.trim().length > 0);
@@ -240,29 +234,21 @@ _plot_images = []
     return minIndent === 0 ? code : lines.map(l => l.slice(minIndent)).join('\n');
   }
 
-  // 2. Remove bare `return expr` lines that are outside any function/class.
-  //    These appear in cells that were copy-pasted from inside a function body.
+  // ── Sanitizer 2: Remove bare `return` outside functions ───────────────────
   function removeOuterReturns(code) {
     const lines = code.split('\n');
-    let indentDepth = 0;   // track def/class nesting
+    let depth = 0;
     const result = [];
     for (const line of lines) {
       const stripped = line.trim();
-      // detect entering a function/class block
-      if (/^(def |class |async def )/.test(stripped)) {
-        indentDepth++;
-      }
-      // detect leaving (a non-empty, non-comment line at indent 0 after we were inside)
-      if (indentDepth > 0 && line.length > 0 && !stripped.startsWith('#')) {
-        const leadingSpaces = line.match(/^(\s*)/)[1].length;
-        if (leadingSpaces === 0 && !(/^(def |class |async def )/.test(stripped))) {
-          indentDepth = 0;
+      if (/^(def |class |async def )\w/.test(stripped)) depth++;
+      if (depth > 0 && stripped.length > 0 && !stripped.startsWith('#')) {
+        if (line.match(/^(\s*)/)[1].length === 0 && !/^(def |class |async def |else:|elif |except|finally)/.test(stripped)) {
+          depth = 0;
         }
       }
-      // Drop bare `return` at top level (indentDepth === 0)
-      if (indentDepth === 0 && /^\s*return\b/.test(line)) {
-        // Convert to a comment so the intent is preserved but syntax is valid
-        result.push(line.replace(/^\s*return\b/, '# return'));
+      if (depth === 0 && /^\s*return(\s|$)/.test(line)) {
+        result.push(line.replace(/(\s*)return(\s*)/, '$1# return$2'));
       } else {
         result.push(line);
       }
@@ -270,41 +256,59 @@ _plot_images = []
     return result.join('\n');
   }
 
-  // 3. Fix unmatched open parentheses: a line where open parens > close parens
-  //    at the END of the line (i.e., the closing paren is missing entirely).
-  //    Only fix lines that look like function calls (print, etc.) at top level.
+  // ── Sanitizer 3: Fix unmatched opening parens at end of line ─────────────
+  // Handles the case where a print( or function call is missing its closing )
   function fixUnmatchedParens(code) {
     const lines = code.split('\n');
-    const result = [];
-    for (const line of lines) {
+    return lines.map(line => {
+      if (line.trim().startsWith('#')) return line;
+      // Count only real parens (not inside strings) — simplified: count all
       const open = (line.match(/\(/g) || []).length;
       const close = (line.match(/\)/g) || []).length;
       const diff = open - close;
-      if (diff > 0 && !line.trim().startsWith('#')) {
-        // Only fix if the line ends with a quote or paren-like char
-        // (i.e. it looks truncated, not a multi-line expression)
-        const trimmed = line.trimEnd();
-        if (/["'\w\d]$/.test(trimmed)) {
-          result.push(line + ')'.repeat(diff));
-          continue;
+      if (diff > 0) {
+        // Only append if line appears to be a complete statement (ends with quote, word, digit, or °C-like chars)
+        const t = line.trimEnd();
+        if (t.length > 0 && !/[,(\[{\\]$/.test(t)) {
+          return line + ')'.repeat(diff);
         }
       }
-      result.push(line);
-    }
-    return result.join('\n');
+      return line;
+    }).join('\n');
   }
 
-  // 4. Rewrite file reads to use demo data
+  // ── Sanitizer 4: Rewrite file reads to demo data ─────────────────────────
   function rewriteFileReads(code) {
-    const hasFileRead = /pd\.(read_excel|read_csv|read_table)\s*\(/.test(code);
-    if (!hasFileRead) return { code, injected: false };
-
-    // Replace the assignment: `something = pd.read_*(...)` → `something = _demo_data.copy()`
-    let rewritten = code.replace(
-      /pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g,
-      '_demo_data.copy()'
-    );
+    if (!/pd\.(read_excel|read_csv|read_table)\s*\(/.test(code)) return { code, injected: false };
+    const rewritten = code.replace(/pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g, '_demo_data.copy()');
     return { code: DEMO_DATA_PY + '\n' + rewritten, injected: true };
+  }
+
+  // ── Sanitizer 5: Auto-convert ndarray to list before list-only methods ────
+  // Inserts a conversion line before any `varname.append/remove/insert/pop/sort(...)`
+  // call where varname might be a numpy array from the shared namespace.
+  function fixNdarrayListMethods(code) {
+    // Find all `varname.append(`, `varname.remove(`, `varname.insert(` patterns
+    const listMethods = ['append', 'remove', 'insert', 'pop'];
+    const pattern = new RegExp(`\\b(\\w+)\\.(${listMethods.join('|')})\\s*\\(`, 'g');
+    const varNames = new Set();
+    let m;
+    while ((m = pattern.exec(code)) !== null) {
+      varNames.add(m[1]);
+    }
+    if (!varNames.size) return code;
+
+    // For each variable, prepend a guard that converts ndarray → list if needed
+    // Only do it if the variable is NOT defined as a list literal in this cell
+    const guards = [];
+    for (const v of varNames) {
+      // Skip if this cell defines v as a list (v = [...])
+      if (new RegExp(`\\b${v}\\s*=\\s*\\[`).test(code)) continue;
+      // Skip common non-array names
+      if (['result', 'output', 'items', 'rows', 'cols'].includes(v)) continue;
+      guards.push(`if '${v}' in globals() and hasattr(globals()['${v}'], 'tolist'): ${v} = list(${v})`);
+    }
+    return guards.length ? guards.join('\n') + '\n' + code : code;
   }
 
   // ── Parse imports ─────────────────────────────────────────────────────────
@@ -332,9 +336,7 @@ _plot_images = []
       try {
         await pyodide.runPythonAsync(`import micropip\nawait micropip.install('${pkg}')`);
         installedPackages.add(imp);
-      } catch (e) {
-        console.warn(`micropip install ${pkg} failed:`, e.message);
-      }
+      } catch (e) { console.warn(`micropip install ${pkg} failed:`, e.message); }
     }
   }
 
@@ -343,7 +345,6 @@ _plot_images = []
     catch(e) { return false; }
   }
 
-  // Build preamble: alias guards + missing `data` injection
   function buildPreamble(code) {
     const lines = [];
     for (const { alias, pattern, inject } of ALIAS_GUARDS) {
@@ -352,7 +353,6 @@ _plot_images = []
       if (inCell || nsHas(alias)) continue;
       lines.push(inject);
     }
-    // Auto-inject `data` if used but not defined and not in namespace
     const usesData = /\bdata\b/.test(code) && !/\bdata\s*=/.test(code) && !nsHas('data');
     if (usesData) lines.push(DEMO_DATA_PY);
     return lines.join('\n');
@@ -365,10 +365,11 @@ _plot_images = []
     bannerEl.style.display = 'none';
     if (noteEl) noteEl.style.display = 'none';
 
-    // Apply all sanitizers in order
+    // Apply all sanitizers
     let code = dedent(rawCode);
     code = removeOuterReturns(code);
     code = fixUnmatchedParens(code);
+    code = fixNdarrayListMethods(code);
 
     const imports = parseImports(code);
     const incompatible = findIncompatible(imports);
@@ -376,18 +377,16 @@ _plot_images = []
       outputEl.className = 'pyodide-output';
       outputEl.textContent = '';
       bannerEl.style.display = 'flex';
-      bannerEl.innerHTML = `<span class="banner-icon">⚠️</span><div><strong>Browser-incompatible library:</strong> ${incompatible.map(l=>`<code>${l}</code>`).join(', ')} cannot run in the browser. Run locally with <code>pip install ${incompatible.join(' ')}</code>.</div>`;
+      bannerEl.innerHTML = `<span class="banner-icon">⚠️</span><div><strong>Browser-incompatible:</strong> ${incompatible.map(l=>`<code>${l}</code>`).join(', ')} can't run in browser. Use <code>pip install ${incompatible.join(' ')}</code> locally.</div>`;
       return;
     }
 
     outputEl.textContent = '⏳ Starting Python…';
     await ensureMicropipPackages(imports, outputEl);
 
-    // Rewrite file reads
     const { code: fileCode, injected: fileInjected } = rewriteFileReads(code);
     code = fileCode;
 
-    // Alias + data preamble
     const preamble = buildPreamble(code);
     const fullCode = preamble ? preamble + '\n' + code : code;
     const preambleLines = preamble ? preamble.split('\n').length : 0;
@@ -400,7 +399,6 @@ _plot_images = []
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0); _plot_images.clear()`);
 
     let textOut = '', isError = false, plotImages = [];
-
     try {
       const ret = await pyodide.runPythonAsync(fullCode, { globals: sharedNamespace });
 
@@ -431,9 +429,9 @@ for _fn in plt.get_fignums():
       let msg = (cap || '') + (cap ? '\n' : '') + err.message;
       msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^{5,}\n/g, '\n');
       if (preambleLines > 0) {
-        msg = msg.replace(/line (\d+)/g, (m, n) => {
+        msg = msg.replace(/line (\d+)/g, (_, n) => {
           const adj = parseInt(n) - preambleLines;
-          return adj > 0 ? `line ${adj}` : m;
+          return adj > 0 ? `line ${adj}` : `line ${n}`;
         });
       }
       textOut = msg;
@@ -534,7 +532,7 @@ for _fn in plt.get_fignums():
   function transformCells() {
     injectStyles();
 
-    // 1. Jupyter notebook cells (div.cell_input)
+    // 1. Jupyter notebook cells
     document.querySelectorAll('div.cell_input').forEach(cellInput => {
       const highlight = cellInput.querySelector('.highlight-python, .highlight-ipython3, .highlight-default');
       if (!highlight) return;
@@ -552,7 +550,7 @@ for _fn in plt.get_fignums():
     ].join(',');
     document.querySelectorAll(sel).forEach(el => {
       if (el.closest('.pyodide-editor-wrap')) return;
-      const outer = el.closest('.highlight-python, .highlight-ipython3, .highlight-default, .highlight-shell') || el;
+      const outer = el.closest('.highlight-python,.highlight-ipython3,.highlight-default,.highlight-shell') || el;
       const code = extractCode(outer);
       if (!code.trim()) return;
       outer.parentNode.replaceChild(buildEditor(code), outer);
