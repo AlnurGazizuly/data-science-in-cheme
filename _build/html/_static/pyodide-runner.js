@@ -32,23 +32,42 @@
   const DEMO_DATA_PY = `
 import pandas as pd
 import numpy as np
+# Demo dataset: 20 rows so sklearn cross-validation (cv=5 needs >=5 clean rows) works.
+# NaNs are intentionally placed in rows 0-9 for Section 3 missing-data exercises.
+# Rows 10-19 are fully complete so sklearn models always have enough clean samples.
 _demo_data = pd.DataFrame({
-    'Temperature':   [295, 305, np.nan, 298, 310, 320, np.nan, 302, 318, 308],
-    'Pressure':      [1.1, 1.8, 2.5, np.nan, 2.1, 2.9, 0.9, np.nan, 2.7, 2.2],
-    'FlowRate':      [10.2, 15.4, 20.1, 12.3, np.nan, 22.5, 9.8, 14.6, np.nan, 18.9],
-    'Concentration': [0.5, 1.0, 1.5, 0.7, 1.2, np.nan, 0.4, 0.9, 1.6, 1.3],
-    'Feature1':      [2.3, 4.1, 3.8, 5.2, 1.9, 6.7, 3.3, 4.8, 2.1, 5.5],
-    'Feature2':      [1.1, 3.9, 2.7, 4.5, 2.2, 5.1, 1.8, 3.6, 2.9, 4.2],
-    'Feature3':      [8.2, 6.4, 9.1, 5.7, 7.8, 4.3, 8.9, 6.1, 7.3, 5.2],
-    'Feature4':      [3.1, 5.5, 4.2, 6.8, 2.5, 7.3, 3.9, 5.1, 2.8, 6.2],
-    'sepal_length':  [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9],
-    'sepal_width':   [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1],
-    'petal_length':  [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5],
-    'petal_width':   [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1],
-    'Values':        [10, 12, 15, 18, 19, 120, 14, 13, 16, 17],
-    'Category':      [1, 2, 1, 3, 2, 1, 3, 2, 1, 2],
-    'target':        [2.1, 3.8, 5.2, 4.7, 6.3, 7.1, 3.5, 4.2, 5.8, 6.9],
-    'MSP':           [45.2, 62.1, 78.5, 55.3, 89.4, 103.2, 51.7, 67.8, 82.1, 94.6],
+    'Temperature':   [295, 305, np.nan, 298, 310, 320, np.nan, 302, 318, 308,
+                      291, 300, 315, 296, 307, 322, 299, 311, 304, 317],
+    'Pressure':      [1.1, 1.8, 2.5, np.nan, 2.1, 2.9, 0.9, np.nan, 2.7, 2.2,
+                      1.3, 1.6, 2.4, 1.0, 2.0, 3.0, 1.5, 2.3, 1.9, 2.6],
+    'FlowRate':      [10.2, 15.4, 20.1, 12.3, np.nan, 22.5, 9.8, 14.6, np.nan, 18.9,
+                      11.0, 13.5, 19.0, 10.8, 16.2, 21.0, 12.7, 17.4, 14.1, 20.5],
+    'Concentration': [0.5, 1.0, 1.5, 0.7, 1.2, np.nan, 0.4, 0.9, 1.6, 1.3,
+                      0.6, 0.8, 1.4, 0.5, 1.1, 1.7, 0.7, 1.3, 1.0, 1.5],
+    'Feature1':      [2.3, 4.1, 3.8, 5.2, 1.9, 6.7, 3.3, 4.8, 2.1, 5.5,
+                      2.8, 4.4, 3.6, 5.0, 2.2, 6.1, 3.7, 4.5, 2.6, 5.8],
+    'Feature2':      [1.1, 3.9, 2.7, 4.5, 2.2, 5.1, 1.8, 3.6, 2.9, 4.2,
+                      1.4, 3.3, 2.5, 4.8, 2.0, 5.4, 1.6, 3.8, 2.7, 4.6],
+    'Feature3':      [8.2, 6.4, 9.1, 5.7, 7.8, 4.3, 8.9, 6.1, 7.3, 5.2,
+                      8.5, 6.8, 9.3, 5.4, 7.6, 4.1, 8.7, 6.3, 7.0, 5.5],
+    'Feature4':      [3.1, 5.5, 4.2, 6.8, 2.5, 7.3, 3.9, 5.1, 2.8, 6.2,
+                      3.4, 5.8, 4.5, 6.5, 2.7, 7.0, 3.6, 5.3, 3.0, 6.7],
+    'sepal_length':  [5.1, 4.9, 4.7, 4.6, 5.0, 5.4, 4.6, 5.0, 4.4, 4.9,
+                      5.2, 4.8, 5.3, 4.5, 5.0, 5.5, 4.7, 5.1, 4.6, 5.2],
+    'sepal_width':   [3.5, 3.0, 3.2, 3.1, 3.6, 3.9, 3.4, 3.4, 2.9, 3.1,
+                      3.3, 3.2, 3.7, 3.0, 3.5, 3.8, 3.4, 3.6, 3.1, 3.3],
+    'petal_length':  [1.4, 1.4, 1.3, 1.5, 1.4, 1.7, 1.4, 1.5, 1.4, 1.5,
+                      1.3, 1.6, 1.4, 1.5, 1.3, 1.8, 1.4, 1.6, 1.5, 1.4],
+    'petal_width':   [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.3, 0.2, 0.2, 0.1,
+                      0.2, 0.3, 0.2, 0.1, 0.2, 0.4, 0.2, 0.3, 0.2, 0.2],
+    'Values':        [10, 12, 15, 18, 19, 120, 14, 13, 16, 17,
+                      11, 13, 14, 16, 18, 19, 15, 12, 17, 16],
+    'Category':      [1, 2, 1, 3, 2, 1, 3, 2, 1, 2,
+                      1, 3, 2, 1, 2, 3, 1, 2, 3, 1],
+    'target':        [2.1, 3.8, 5.2, 4.7, 6.3, 7.1, 3.5, 4.2, 5.8, 6.9,
+                      2.5, 4.0, 5.5, 4.3, 6.0, 7.4, 3.2, 4.8, 5.1, 6.6],
+    'MSP':           [45.2, 62.1, 78.5, 55.3, 89.4, 103.2, 51.7, 67.8, 82.1, 94.6,
+                      48.5, 60.3, 75.8, 58.1, 85.2, 99.7, 54.4, 70.1, 80.5, 92.3],
 })
 data = _demo_data.copy()
 df = _demo_data.copy()
@@ -348,15 +367,24 @@ _hist_ncols = 3
   // ── Run code ──────────────────────────────────────────────────────────────
   // Fix sklearn API compatibility issues (e.g. squared param removed in newer sklearn)
   function fixSklearnCompat(code) {
-    // make_scorer with squared= param removed in sklearn 1.4+
-    // Remove squared=True (it was the default — plain MSE)
-    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
-      'make_scorer(mean_squared_error,$1$2)');
-    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,\s*squared\s*=\s*True\s*\)/g,
-      'make_scorer(mean_squared_error, greater_is_better=False)');
-    // Remove squared=False (was sqrt(MSE) = RMSE) — replace whole make_scorer with RMSE scorer
-    code = code.replace(/make_scorer\s*\(\s*mean_squared_error\s*,([^)]*),\s*squared\s*=\s*False([^)]*)\)/g,
-      'make_scorer(lambda y,p: __import__("numpy").sqrt(mean_squared_error(y,p)), greater_is_better=False)');
+    // Remove squared=True or squared=False from make_scorer calls (param removed in sklearn 1.4+)
+    // Handle all orderings of parameters, e.g.:
+    //   make_scorer(mean_squared_error, greater_is_better=False, squared=True)
+    //   make_scorer(mean_squared_error, squared=True, greater_is_better=False)
+    //   make_scorer(mean_squared_error, squared=True)
+    code = code.replace(
+      /make_scorer\s*\(([^)]*?),?\s*squared\s*=\s*True\s*,?([^)]*)\)/g,
+      (match, before, after) => {
+        // Clean up any leading/trailing comma artifacts
+        const params = (before + ',' + after).replace(/,\s*,/g, ',').replace(/^\s*,|,\s*$/g, '').trim();
+        return params ? `make_scorer(${params})` : `make_scorer(mean_squared_error, greater_is_better=False)`;
+      }
+    );
+    // squared=False in make_scorer means RMSE — replace whole scorer
+    code = code.replace(
+      /make_scorer\s*\(([^)]*?),?\s*squared\s*=\s*False\s*,?([^)]*)\)/g,
+      'make_scorer(lambda y,p: __import__("numpy").sqrt(__import__("sklearn.metrics",fromlist=["mean_squared_error"]).mean_squared_error(y,p)), greater_is_better=False)'
+    );
     // Direct mean_squared_error(y,p, squared=True/False) calls
     code = code.replace(/mean_squared_error\s*\(([^)]*),\s*squared\s*=\s*True([^)]*)\)/g,
       'mean_squared_error($1$2)');
