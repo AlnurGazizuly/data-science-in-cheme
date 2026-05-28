@@ -249,7 +249,7 @@ _hist_ncols = 3
       const dfVar = /\bdf\b/.test(c) ? 'df' : 'data';
       // Prepend numeric df extraction
       const numVar = `${dfVar}_num`;
-      const guard = `${numVar} = ${dfVar}.select_dtypes(include='number').fillna(${dfVar}.select_dtypes(include='number').median())\n`;
+      const guard = `${numVar} = ${dfVar}.select_dtypes(include='number').fillna(${dfVar}.select_dtypes(include='number').median())\n_pca_ncomp = min(len(${numVar}.columns), len(${numVar}) - 1)\n`;
       // Replace fit_transform(df) → fit_transform(df_num)
       c = c.replace(new RegExp(`\\.fit_transform\\s*\\(\\s*${dfVar}\\s*\\)`, 'g'), `.fit_transform(${numVar})`);
       // Replace fit_transform(df, columns=df.columns) → fit_transform(df_num, columns=df_num.columns)
@@ -265,7 +265,7 @@ _hist_ncols = 3
       // Replace PCA(n_components=len(df.columns)) → PCA(n_components=len(df_num.columns))
       c = c.replace(
         new RegExp(`len\\(${dfVar}\\.columns\\)`, 'g'),
-        `len(${numVar}.columns)`
+        `_pca_ncomp`
       );
       // Replace df.columns[:-1] style references in correlation checks
       c = c.replace(
@@ -274,6 +274,8 @@ _hist_ncols = 3
       );
       // Replace correlation_matrix = df.corr() (already handled above but catch df_num.corr case)
       // Also fix: for col in correlation_matrix.columns: → works as-is after corr() patch
+      // Cap any remaining literal n_components referencing columns length
+      c = c.replace(/n_components\s*=\s*len\s*\([^)]+\.columns\)/g, 'n_components=_pca_ncomp');
       c = guard + c;
     }
 
