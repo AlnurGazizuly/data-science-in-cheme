@@ -1,7 +1,8 @@
 /**
- * Pyodide Inline Runner v3
+ * Pyodide Inline Runner v4
  * - Handles both Jupyter notebook cells (div.cell_input) AND
  *   standalone Markdown code blocks (div.highlight-default, div.highlight-shell, etc.)
+ * - Auto-injects common aliases (np, pd, plt) if used but not imported in the cell
  * - Auto-installs missing packages via micropip
  * - Captures matplotlib plots as inline images
  * - Shows helpful banner for browser-incompatible libraries
@@ -42,6 +43,16 @@
     'streamlit','torch','gradio','langchain','tensorflow','keras',
     'flask','django','fastapi','celery','redis','psycopg2',
   ]);
+
+  // Common aliases that are used in code without being imported in the same cell.
+  // If the code uses e.g. `np.` but doesn't import numpy, we prepend the import silently.
+  const ALIAS_GUARDS = [
+    { alias: 'np',  pattern: /\bnp\./,       inject: 'import numpy as np' },
+    { alias: 'pd',  pattern: /\bpd\./,       inject: 'import pandas as pd' },
+    { alias: 'plt', pattern: /\bplt\./,      inject: 'import matplotlib\nmatplotlib.use("Agg")\nimport matplotlib.pyplot as plt' },
+    { alias: 'sns', pattern: /\bsns\./,      inject: 'import seaborn as sns' },
+    { alias: 'sp',  pattern: /\bsp\./,       inject: 'import scipy as sp' },
+  ];
 
   let pyodide = null;
   let pyodideLoading = false;
@@ -140,10 +151,10 @@
   line-height: 1.5;
 }
 .pyodide-banner .banner-icon { font-size: 1.1rem; flex-shrink: 0; }
-.pyodide-banner code { 
-  background: rgba(255,255,255,0.1); 
-  border-radius: 3px; 
-  padding: 1px 5px; 
+.pyodide-banner code {
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  padding: 1px 5px;
   font-family: monospace;
 }
 .pyodide-textarea:focus { background: rgba(255,255,255,0.03); }
@@ -207,6 +218,35 @@ _plot_images = []
     return imports;
   }
 
+  // ── Check what aliases are defined in the shared namespace ───────────────
+  function namespaceHas(name) {
+    try {
+      return pyodide && pyodide.runPython(`'${name}' in dir()`);
+    } catch(e) { return false; }
+  }
+
+  // ── Build auto-inject preamble for missing aliases ────────────────────────
+  // Checks if an alias like `np` is used in the code but not imported there,
+  // and also not already present in the shared namespace from a prior cell.
+  function buildPreamble(code) {
+    const lines = [];
+    for (const { alias, pattern, inject } of ALIAS_GUARDS) {
+      if (!pattern.test(code)) continue;           // alias not used in this cell
+      // Check if it's already imported in this cell
+      const alreadyInCell = new RegExp(
+        `(import\\s+\\S+\\s+as\\s+${alias}|import\\s+${alias}\\b)`
+      ).test(code);
+      if (alreadyInCell) continue;
+      // Check if it's already in the shared namespace from a prior cell
+      try {
+        const inNS = pyodide.runPython(`'${alias}' in globals()`);
+        if (inNS) continue;
+      } catch(e) {}
+      lines.push(inject);
+    }
+    return lines.join('\n');
+  }
+
   function findIncompatible(imports) {
     return [...imports].filter(i => BROWSER_INCOMPATIBLE.has(i));
   }
@@ -249,7 +289,7 @@ await micropip.install('${pkg}')
       bannerEl.innerHTML = `
         <span class="banner-icon">⚠️</span>
         <div>
-          <strong>Browser-incompatible library:</strong> 
+          <strong>Browser-incompatible library:</strong>
           ${incompatible.map(l => `<code>${l}</code>`).join(', ')} cannot run in the browser.<br>
           ${incompatible.includes('streamlit') ? 'Streamlit apps need a server. Try the underlying Python logic without <code>st.*</code> calls.' : ''}
           ${incompatible.includes('torch') ? 'PyTorch requires a server environment. Run locally with <code>pip install torch</code>.' : ''}
@@ -260,9 +300,28 @@ await micropip.install('${pkg}')
     }
 
     outputEl.textContent = '⏳ Starting Python…';
+
+    // Install packages declared in this cell
     await ensurePackages(imports, outputEl);
 
-    if (imports.has('matplotlib') || imports.has('plt')) {
+    // Also pre-install packages for aliases we're about to auto-inject
+    const aliasPackages = new Set();
+    for (const { alias, pattern, inject } of ALIAS_GUARDS) {
+      if (!pattern.test(code)) continue;
+      const alreadyInCell = new RegExp(`(import\\s+\\S+\\s+as\\s+${alias}|import\\s+${alias}\\b)`).test(code);
+      if (alreadyInCell) continue;
+      try {
+        const inNS = pyodide.runPython(`'${alias}' in globals()`);
+        if (inNS) continue;
+      } catch(e) {}
+      // Extract the module name from the inject string
+      const modMatch = inject.match(/import\s+(\w+)/);
+      if (modMatch) aliasPackages.add(modMatch[1]);
+    }
+    await ensurePackages(aliasPackages, outputEl);
+
+    // Setup matplotlib backend if needed
+    if (imports.has('matplotlib') || /\bplt\./.test(code)) {
       try {
         await pyodide.runPythonAsync(`
 import matplotlib
@@ -273,6 +332,11 @@ _plot_images.clear()
       } catch(e) {}
     }
 
+    // Build and prepend auto-inject preamble
+    const preamble = buildPreamble(code);
+    const fullCode = preamble ? preamble + '\n' + code : code;
+
+    // Reset capture buffer
     await pyodide.runPythonAsync(`_capture.truncate(0); _capture.seek(0)`);
 
     let textOut = '';
@@ -280,9 +344,9 @@ _plot_images.clear()
     let plotImages = [];
 
     try {
-      const ret = await pyodide.runPythonAsync(code, { globals: sharedNamespace });
+      const ret = await pyodide.runPythonAsync(fullCode, { globals: sharedNamespace });
 
-      if (imports.has('matplotlib') || code.includes('plt.')) {
+      if (/\bplt\./.test(code) || imports.has('matplotlib')) {
         try {
           await pyodide.runPythonAsync(`
 import matplotlib.pyplot as plt
@@ -309,7 +373,16 @@ for _fig_num in plt.get_fignums():
       const cap = pyodide.runPython(`_capture.getvalue()`);
       let msg = cap ? cap : '';
       msg += (msg ? '\n' : '') + err.message;
+      // Strip internal Pyodide noise
       msg = msg.replace(/File "\/lib\/python[^"]*",\s*/g, '').replace(/\n\s*\^{5,}\n/g, '\n');
+      // Also strip the preamble line numbers from tracebacks so user sees their own line numbers
+      if (preamble) {
+        const preambleLines = preamble.split('\n').length;
+        msg = msg.replace(/line (\d+)/g, (m, n) => {
+          const adjusted = parseInt(n) - preambleLines;
+          return adjusted > 0 ? `line ${adjusted}` : m;
+        });
+      }
       textOut = msg;
     }
 
@@ -401,7 +474,7 @@ for _fig_num in plt.get_fignums():
     return pre.textContent.replace(/^\n/, '').replace(/\n$/, '');
   }
 
-  // ── Transform cells: both Jupyter-style AND standalone Markdown blocks ────
+  // ── Transform cells ───────────────────────────────────────────────────────
   function transformCells() {
     injectStyles();
 
@@ -415,10 +488,7 @@ for _fig_num in plt.get_fignums():
       highlight.parentNode.replaceChild(editor, highlight);
     });
 
-    // 2. Standalone Markdown code blocks (NOT inside div.cell_input)
-    //    These are the SHELL / plain code blocks shown in the screenshot.
-    //    They appear as: div.highlight-default, div.highlight-shell, etc.
-    //    that are NOT descendants of div.cell_input.
+    // 2. Standalone Markdown code blocks NOT inside div.cell_input
     const standaloneSelectors = [
       'div.highlight-python:not(.cell_input *)',
       'div.highlight-ipython3:not(.cell_input *)',
@@ -426,10 +496,7 @@ for _fig_num in plt.get_fignums():
       'div.highlight-shell:not(.cell_input *)',
     ];
     document.querySelectorAll(standaloneSelectors.join(',')).forEach(highlightDiv => {
-      // Skip if already replaced
       if (highlightDiv.closest('.pyodide-editor-wrap')) return;
-      // The outer wrapper may be div.highlight-XXX.notranslate > div.highlight > pre
-      // We want to replace the outermost highlight wrapper
       const outerWrap = highlightDiv.closest('.highlight-python, .highlight-ipython3, .highlight-default, .highlight-shell') || highlightDiv;
       const code = extractCode(outerWrap);
       if (!code.trim()) return;
