@@ -1,0 +1,643 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 9: Langchain &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-09';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 10: Accessibility in AI and ML" href="section-10.html" />
+    <link rel="prev" title="Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs)" href="section-08.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <script defer src="_static/pyodide-runner.js"></script>
+</head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DS in ChemE</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-09.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 9: Langchain</h1>
+
+<div style="margin: 16px 0;">
+  <a href="../lite/lab/index.html?path=section-09.ipynb" target="_blank"
+     style="display:inline-flex;align-items:center;gap:8px;background:#1565c0;color:#fff;
+            padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;
+            font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+    ▶&nbsp; Run Code in Browser
+  </a>
+  <span style="margin-left:12px;font-size:12px;color:#888;">Runs instantly — no install needed</span>
+</div>
+
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-langchain">9.1. Introduction to LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-langchain-works">9.2. How LangChain Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-langchain-is-important-for-chemical-engineering">9.3. Why LangChain is Important for Chemical Engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-langchain-in-google-colab">9.4. Setting Up LangChain in Google Colab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-9-langchain">
+<h1>Section 9: Langchain<a class="headerlink" href="#section-9-langchain" title="Link to this heading">#</a></h1>
+<p>LangChain is a framework for building applications with large language models (LLMs), enabling seamless integration with external tools and data sources. It provides modular components for prompt engineering, memory, and agent-based interactions, making it useful for developing AI-driven workflows and automation.</p>
+<section id="introduction-to-langchain">
+<h2>9.1. Introduction to LangChain<a class="headerlink" href="#introduction-to-langchain" title="Link to this heading">#</a></h2>
+<p>LangChain is an open-source framework designed to enhance the capabilities of Large Language Models (LLMs) by enabling them to interact with various data sources, perform complex reasoning tasks, and automate workflows. It is particularly useful for natural language processing (NLP) applications, question-answering systems, and decision-making tools in engineering fields.</p>
+<p>In chemical engineering, LangChain can be used to:</p>
+<ul class="simple">
+<li><p>Automate technical documentation (e.g., generating lab reports from raw data).</p></li>
+<li><p>Assist in troubleshooting chemical processes by providing AI-powered suggestions.</p></li>
+<li><p>Optimize process parameters by analyzing historical data and predicting outcomes.</p></li>
+</ul>
+<p>By integrating LangChain into machine learning workflows, engineers can build more interactive and intelligent systems that go beyond basic AI implementations.</p>
+</section>
+<section id="how-langchain-works">
+<h2>9.2. How LangChain Works<a class="headerlink" href="#how-langchain-works" title="Link to this heading">#</a></h2>
+<p>LangChain provides a modular framework with key components that allow engineers to build customized AI-powered tools. Some of the core modules include:</p>
+<p><strong>1. Prompt Templates</strong></p>
+<p>A prompt template allows users to structure input questions in a way that improves LLM responses.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>  
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Explain the following chemical process: </span><span class="si">{process}</span><span class="s2">&quot;</span><span class="p">)</span>  
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">process</span><span class="o">=</span><span class="s2">&quot;Ammonia production via the Haber-Bosch process&quot;</span><span class="p">)</span>  
+</pre></div>
+</div>
+<p>This ensures that input questions are always structured properly, leading to more consistent and reliable AI outputs.</p>
+<p><strong>2. Chains</strong></p>
+<p>Chains allow multiple LLM calls to be linked together to handle more complex tasks.</p>
+<p>For example, a chain can:</p>
+<ul class="simple">
+<li><p>First interpret process data,</p></li>
+<li><p>Then generate an analysis report,</p></li>
+<li><p>And finally suggest optimizations based on previous outputs.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p><strong>Agents</strong></p></li>
+</ol>
+<p>Agents give LLMs the ability to choose what actions to take by deciding between different available tools.</p>
+<p>Example:</p>
+<p>If given experimental data, an agent can choose whether to summarize it, graph it, or run calculations.</p>
+<ol class="arabic simple" start="4">
+<li><p><strong>Memory</strong></p></li>
+</ol>
+<p>LangChain can store past interactions, allowing models to reference previous context. This is useful for multi-step problem-solving in chemical engineering.</p>
+<ol class="arabic simple" start="5">
+<li><p><strong>Retrievers</strong></p></li>
+</ol>
+<p>Retrievers fetch relevant external documents, research papers, or process manuals to improve AI-generated responses.</p>
+<p>Example:</p>
+<p>An AI system can pull safety guidelines from a database when a user asks about chemical hazards.</p>
+</section>
+<section id="why-langchain-is-important-for-chemical-engineering">
+<h2>9.3. Why LangChain is Important for Chemical Engineering<a class="headerlink" href="#why-langchain-is-important-for-chemical-engineering" title="Link to this heading">#</a></h2>
+<p>Chemical engineering involves complex calculations, data interpretation, and process optimization, all of which require significant time and expertise. With the increasing volume of data generated in industrial settings, research labs, and production facilities, engineers must quickly analyze and extract insights to make informed decisions. LangChain provides an AI-driven approach to handling these tasks, improving efficiency, accuracy, and accessibility of critical information. By leveraging LangChain, chemical engineers can streamline workflows, automate technical documentation, and optimize chemical processes, ultimately leading to better productivity and innovation.</p>
+<hr class="docutils" />
+<p><strong>1. Automating Reports and Documentation</strong></p>
+<p>Chemical engineers often spend a large portion of their time compiling reports, analyzing lab results, and documenting process data. These reports can include reaction kinetics, heat transfer calculations, process design summaries, and compliance reports required by regulatory bodies such as the EPA or OSHA. Manually generating these documents is not only time-consuming but also prone to errors and inconsistencies.</p>
+<p>LangChain can automate the summarization and structuring of these reports by extracting key insights from raw data, standardizing formats, and even generating recommendations based on previous patterns. For instance, after running an HPLC (High-Performance Liquid Chromatography) analysis on a reaction sample, LangChain can process the chromatogram data and generate a structured report detailing compound identification, retention times, and potential impurities. By automating these tasks, engineers can focus on problem-solving and innovation rather than repetitive documentation.</p>
+<p><strong>2. Enhancing Process Optimization</strong></p>
+<p>Process optimization is a core focus in chemical engineering, as engineers continuously seek ways to improve yield, reduce waste, minimize energy consumption, and cut costs. Optimization requires analyzing vast amounts of data from sensors, control systems, and experimental trials to find the best operating conditions. This process is often iterative, involving trial and error, which can be both resource-intensive and time-consuming.</p>
+<p>LangChain can accelerate process optimization by integrating AI-powered analysis with historical process data, simulation results, and real-time sensor inputs. For example, in a distillation column operation, LangChain can analyze past performance data, identify inefficiencies in separation, and recommend optimal reflux ratios or pressure settings to enhance throughput while minimizing energy usage. Additionally, by integrating with real-time monitoring systems, LangChain-powered assistants can provide predictive maintenance alerts for equipment failure, reducing unplanned downtime and improving overall operational efficiency.</p>
+<p><strong>3. Assisting with Chemical Safety</strong></p>
+<p>Safety is paramount in chemical engineering, as engineers often work with hazardous materials, high-temperature processes, and pressurized systems. Chemical plants, laboratories, and production facilities must adhere to strict safety regulations to prevent accidents, equipment failures, and environmental damage. However, accessing and interpreting safety data can be cumbersome, especially when dealing with large chemical inventories, complex process hazards, or emergency scenarios.</p>
+<p>LangChain can serve as an intelligent safety assistant, allowing engineers to instantly retrieve critical safety information from Material Safety Data Sheets (MSDS), chemical compatibility databases, and standard operating procedures. Instead of manually searching through PDFs or databases, engineers can simply ask LangChain-powered assistants questions such as, “What are the proper storage conditions for hydrogen peroxide?” or “What protective measures should be taken when handling hydrofluoric acid?” The AI can then provide concise, context-aware responses, ensuring that safety guidelines are followed accurately. Additionally, LangChain can be integrated into emergency response protocols, providing step-by-step guidance in case of chemical spills, exposure incidents, or equipment malfunctions, ultimately enhancing workplace safety and compliance.</p>
+</section>
+<section id="setting-up-langchain-in-google-colab">
+<h2>9.4. Setting Up LangChain in Google Colab<a class="headerlink" href="#setting-up-langchain-in-google-colab" title="Link to this heading">#</a></h2>
+<p>Before using LangChain, we need to install and configure the framework.</p>
+<p>Step 1: Install Dependencies</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install langchain openai
+</pre></div>
+</div>
+<p>Step 2: Import Required Modules</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChain</span>
+</pre></div>
+</div>
+<p>Step 3: Set Up OpenAI API Key</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;your_openai_api_key&quot;</span>
+</pre></div>
+</div>
+<p><em>NOTE: Replace “your_openai_api_key” with an actual OpenAI API key. Never share your API key in public documents or with other poeple, as they can be stolen and used online by bots.</em></p>
+</section>
+<section id="task">
+<h2>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h2>
+<p>Objective:</p>
+<p>Take an input description of a chemical process (e.g., distillation, fermentation) and generate a structured summary report explaining:</p>
+<ul class="simple">
+<li><p>Overview of the process</p></li>
+<li><p>Key operational steps</p></li>
+<li><p>Potential improvements</p></li>
+</ul>
+<p>Instructions:</p>
+<ul class="simple">
+<li><p>Use a PromptTemplate to format input descriptions.</p></li>
+<li><p>Create an LLMChain to process prompts.
+Run the model on an example chemical process.</p></li>
+</ul>
+<hr class="docutils" />
+<p>Example Input:</p>
+<p>“Describe the key steps and optimizations for distillation of crude oil.”</p>
+<p>Expected Output:</p>
+<p>Overview: Crude oil distillation is a separation process that uses differences in boiling points to fractionate hydrocarbons.</p>
+<p>Steps: Heating in a furnace, vaporization, fractional distillation in a column, and condensation.</p>
+<p>Optimizations: Energy recovery via heat exchangers, use of vacuum distillation to improve yield.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="answer-key">
+<h2>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChain</span>
+
+<span class="c1"># Define the prompt template</span>
+<span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a chemical engineering assistant. Given the following process description, generate a structured summary report:</span>
+<span class="s2">Process: </span><span class="si">{process_description}</span>
+
+<span class="s2">Your report should include:</span>
+<span class="s2">1. Overview of the process</span>
+<span class="s2">2. Key operational steps</span>
+<span class="s2">3. Potential improvements for efficiency and sustainability&quot;&quot;&quot;</span>
+
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="n">template</span><span class="p">,</span> <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;process_description&quot;</span><span class="p">])</span>
+
+<span class="c1"># Set up the LLM</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1"># Create the chain</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">LLMChain</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+
+<span class="c1"># Example process description</span>
+<span class="n">process_description</span> <span class="o">=</span> <span class="s2">&quot;Fermentation of glucose to ethanol using yeast in a batch reactor.&quot;</span>
+
+<span class="c1"># Generate report</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">process_description</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Expected Output Example</p>
+<p>Overview:
+The fermentation of glucose to ethanol is a biochemical process where yeast cells metabolize glucose under anaerobic conditions, producing ethanol and carbon dioxide.</p>
+<p>Key Operational Steps:</p>
+<ol class="arabic simple">
+<li><p>Preparation of glucose solution and yeast culture.</p></li>
+<li><p>Batch reactor setup and inoculation with yeast.</p></li>
+<li><p>Controlled fermentation with temperature and pH monitoring.</p></li>
+<li><p>Separation of ethanol from byproducts via distillation.</p></li>
+</ol>
+<p>Potential Improvements:</p>
+<ul class="simple">
+<li><p>Using genetically modified yeast strains to increase ethanol yield.</p></li>
+<li><p>Implementing continuous fermentation to improve productivity.</p></li>
+<li><p>Recovering CO₂ as a byproduct for carbon capture applications.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-08.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-10.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 10: Accessibility in AI and ML</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-langchain">9.1. Introduction to LangChain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-langchain-works">9.2. How LangChain Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-langchain-is-important-for-chemical-engineering">9.3. Why LangChain is Important for Chemical Engineering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-langchain-in-google-colab">9.4. Setting Up LangChain in Google Colab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie — Bucknell University
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

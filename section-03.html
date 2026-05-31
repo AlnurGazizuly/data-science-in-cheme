@@ -1,0 +1,1581 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 3: Exploratory Data Analysis (EDA) &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-03';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 4: Introduction to Machine Learning" href="section-04.html" />
+    <link rel="prev" title="Section 2: Introduction to Python" href="section-02.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <script defer src="_static/pyodide-runner.js"></script>
+</head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DS in ChemE</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-03.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 3: Exploratory Data Analysis (EDA)</h1>
+
+<div style="margin: 16px 0;">
+  <a href="../lite/lab/index.html?path=section-03.ipynb" target="_blank"
+     style="display:inline-flex;align-items:center;gap:8px;background:#1565c0;color:#fff;
+            padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;
+            font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+    ▶&nbsp; Run Code in Browser
+  </a>
+  <span style="margin-left:12px;font-size:12px;color:#888;">Runs instantly — no install needed</span>
+</div>
+
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-eda">3.1. Why Use EDA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1-understanding-a-dataset">Exercise 3.1: Understanding a dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-structure">3.2. Dataset Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.3. Data Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-2-missing-values-and-duplicates">Exercise 3.2: Missing values and duplicates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-missing-values">3.5. Locating Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-missing-values">3.6. Removing Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#replacing-missing-values">3.7. Replacing Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-duplicates">3.8. Locating Duplicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-duplicates">3.9. Removing Duplicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-3-outliers">Exercise 3.3: Outliers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-outliers">3.10. Locating Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-outliers">3.11. Removing Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#replacing-outliers">3.12. Replacing Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-4-heat-maps">Exercise 3.4: Heat Maps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlations">3.13. Correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-you-visualize-correlations">3.14. Why You Visualize Correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-maps">3.15. Heat Maps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-5-data-scaling">Excercise 3.5: Data Scaling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-data-scaling">3.15. What is Data Scaling?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-scale-data">3.16. Why Scale Data?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-standardization-and-regularization">3.17. Normalization, Standardization, and Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-6-multi-collinearity">Exercise 3.6: Multi-Collinearity</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-multi-collinearity">3.18. What is Multi-Collinearity?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-deal-with-multi-collinearity">3.19. Why Deal with Multi-Collinearity?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pricipal-component-analysis-pca">3.20. Pricipal Component Analysis (PCA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Task:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-1">Excercise 3.1:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-2">Excercise 3.2:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-3">Excercise 3.3:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-4">Excercise 3.4:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-5">Excercise 3.5:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-6">Excercise 3.6:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-7">Excercise 3.7:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-3-exploratory-data-analysis-eda">
+<h1>Section 3: Exploratory Data Analysis (EDA)<a class="headerlink" href="#section-3-exploratory-data-analysis-eda" title="Link to this heading">#</a></h1>
+<p>Exploratory Data Analysis (EDA) is the process of understanding and summarizing data before building models or making predictions. This section covers key steps in EDA, including data processing, handling outliers, dealing with missing values, and creating insightful visualizations.</p>
+<section id="why-use-eda">
+<h2>3.1. Why Use EDA<a class="headerlink" href="#why-use-eda" title="Link to this heading">#</a></h2>
+<p>Exploratory Data Analysis (EDA) is a crucial step in any data science or machine learning project. It helps us understand the structure, quality, and key patterns in the data before applying models or algorithms. Here’s why EDA is essential:</p>
+<p><em>Understand the Data</em></p>
+<hr class="docutils" />
+<p>EDA provides a clear view of the dataset, including its dimensions, types of variables, and potential issues like missing or inconsistent values.</p>
+<p><em>Detect Outliers and Errors</em></p>
+<hr class="docutils" />
+<p>By visualizing data and summarizing statistics, we can spot anomalies or errors that could negatively impact model performance.</p>
+<p><em>Uncover Patterns and Relationships</em></p>
+<hr class="docutils" />
+<p>EDA helps identify trends, correlations, or groupings in the data, which can inform feature selection or engineering.</p>
+<p><em>Choose the Right Approach</em></p>
+<hr class="docutils" />
+<p>Insights gained during EDA can guide model selection, preprocessing steps, and hyperparameter tuning.</p>
+<p><em>Communicate Findings</em></p>
+<hr class="docutils" />
+<p>EDA results are often visualized and shared to help stakeholders understand the data and proposed solutions.</p>
+</section>
+<section id="exercise-3-1-understanding-a-dataset">
+<h2>Exercise 3.1: Understanding a dataset<a class="headerlink" href="#exercise-3-1-understanding-a-dataset" title="Link to this heading">#</a></h2>
+<section id="dataset-structure">
+<h3>3.2. Dataset Structure<a class="headerlink" href="#dataset-structure" title="Link to this heading">#</a></h3>
+<p>Understanding the structure of a dataset is an essential part of Exploratory Data Analysis (EDA). It helps us grasp how the data is organized and what kind of information is available for analysis. Key components of a dataset’s structure include <strong>rows</strong>, <strong>columns</strong>, and an overview of the data’s content using methods like <code class="docutils literal notranslate"><span class="pre">df.head()</span></code>, <code class="docutils literal notranslate"><span class="pre">df.info()</span></code>, and <code class="docutils literal notranslate"><span class="pre">df.describe()</span></code>.</p>
+<p><em>Rows and Columns</em></p>
+<hr class="docutils" />
+<ul class="simple">
+<li><p><strong>Rows</strong> represent individual observations or data points in the dataset. For example, in a dataset about cars, each row might represent a single car.</p></li>
+<li><p><strong>Columns</strong> represent variables or features. These can be numerical (e.g., engine size, mileage) or categorical (e.g., car brand, fuel type).</p></li>
+</ul>
+<p><em>Key Methods to Examine Dataset Structure</em></p>
+<hr class="docutils" />
+<ol class="arabic">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.head(n)</span></code></strong></p>
+<ul class="simple">
+<li><p>Displays the first <code class="docutils literal notranslate"><span class="pre">n</span></code> rows of the dataset (default is 5).</p></li>
+<li><p>Useful for a quick look at the data to understand the column names, variable types, and values.</p></li>
+</ul>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic" start="2">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.info()</span></code></strong></p>
+<ul class="simple">
+<li><p>Provides a summary of the dataset, including:</p>
+<ul>
+<li><p>Number of rows and columns.</p></li>
+<li><p>Column names and their data types (e.g., integer, float, object).</p></li>
+<li><p>Non-null value counts for each column (helps identify missing data).</p></li>
+</ul>
+</li>
+<li><p>Essential for understanding the dataset’s overall structure.</p></li>
+</ul>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic" start="3">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.describe()</span></code></strong></p>
+<ul class="simple">
+<li><p>Generates summary statistics for numerical columns, such as mean, standard deviation, minimum, maximum, and quartiles.</p></li>
+<li><p>Useful for spotting trends or outliers in numerical data.</p></li>
+</ul>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>Output Analysis</em></p>
+<hr class="docutils" />
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.head()</span></code></strong> shows the actual data and helps verify the column names and the format of values. For instance, we might see columns like <code class="docutils literal notranslate"><span class="pre">sepal_length</span></code>, <code class="docutils literal notranslate"><span class="pre">sepal_width</span></code>, and <code class="docutils literal notranslate"><span class="pre">species</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.info()</span></code></strong> reveals critical details, like whether all values in <code class="docutils literal notranslate"><span class="pre">species</span></code> are non-null or if <code class="docutils literal notranslate"><span class="pre">sepal_length</span></code> is stored as a <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">df.describe()</span></code></strong> highlights statistics such as the mean sepal length or the range of petal widths.</p></li>
+</ul>
+<p>Understanding dataset structure allows us to identify potential issues (like missing values or incorrect data types) and helps us prepare the data for deeper analysis or modeling.</p>
+</section>
+<section id="data-types">
+<h3>3.3. Data Types<a class="headerlink" href="#data-types" title="Link to this heading">#</a></h3>
+<p>Data types define the kind of values stored in a dataset and determine what kind of operations can be performed on them. Understanding data types is crucial for data analysis and machine learning because models and preprocessing techniques often require specific data types.</p>
+<p><em>Common Data Types</em></p>
+<hr class="docutils" />
+<ol class="arabic simple">
+<li><p><strong>Numerical</strong></p>
+<ul class="simple">
+<li><p><strong>Integer (<code class="docutils literal notranslate"><span class="pre">int</span></code>)</strong>: Whole numbers (e.g., 1, 42, -3).</p></li>
+<li><p><strong>Float (<code class="docutils literal notranslate"><span class="pre">float</span></code>)</strong>: Numbers with decimals (e.g., 3.14, -0.001).</p></li>
+<li><p>These are often used for features like counts, measurements, or continuous values.</p></li>
+</ul>
+</li>
+<li><p><strong>Categorical</strong></p>
+<ul class="simple">
+<li><p><strong>Object (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</strong>: Text or string data (e.g., “cat”, “apple”).</p></li>
+<li><p>Useful for labels or qualitative features.</p></li>
+</ul>
+</li>
+<li><p><strong>Boolean (<code class="docutils literal notranslate"><span class="pre">bool</span></code>)</strong></p>
+<ul class="simple">
+<li><p>Represents binary values: <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p>Often used for flags or binary classification.</p></li>
+</ul>
+</li>
+<li><p><strong>Datetime</strong></p>
+<ul class="simple">
+<li><p>Represents dates or timestamps (e.g., <code class="docutils literal notranslate"><span class="pre">2025-01-01</span></code>, <code class="docutils literal notranslate"><span class="pre">2025-01-01</span> <span class="pre">14:30</span></code>).</p></li>
+<li><p>Useful for time-series data or analyzing temporal trends.</p></li>
+</ul>
+</li>
+<li><p><strong>Lists</strong></p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A list is an ordered, mutable collection of elements. Lists can store mixed data types (e.g., numbers, strings, other lists).</p></li>
+<li><p><strong>Usage in ML</strong>: Lists are often used for storing collections of features, labels, or intermediate results.</p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Access first element</span>
+     <span class="n">my_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Add an element</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p><strong>Tuples</strong></p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A tuple is an ordered, immutable collection of elements. Tuples are like lists but cannot be modified after creation.</p></li>
+<li><p><strong>Usage in ML</strong>: Tuples are used when you need to group data that should not change, such as storing dataset dimensions or coordinates.</p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Access second element</span>
+     <span class="c1"># my_tuple[1] = 4  # This will raise an error because tuples are immutable</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p><strong>Dictionaries</strong></p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A dictionary is an unordered collection of key-value pairs. Keys must be unique, and values can be of any data type.</p></li>
+<li><p><strong>Usage in ML</strong>: Dictionaries are useful for storing metadata, mapping column names to descriptions, or configuring model parameters.</p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="s1">&#39;New York&#39;</span><span class="p">}</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>  <span class="c1"># Access value by key</span>
+     <span class="n">my_dict</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">26</span>  <span class="c1"># Update value</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p><strong>Sets</strong></p>
+<ul class="simple">
+<li><p><strong>Definition</strong>: A set is an unordered collection of unique elements. Duplicate values are automatically removed.</p></li>
+<li><p><strong>Usage in ML</strong>: Sets are often used for finding unique labels or removing duplicates.</p></li>
+<li><p><strong>Example</strong>:</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_set</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+     <span class="nb">print</span><span class="p">(</span><span class="n">my_set</span><span class="p">)</span>  <span class="c1"># Output: {1, 2, 3}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>How to Check Data Types</em></p>
+<hr class="docutils" />
+<ol class="arabic">
+<li><p><strong>Check the data type of an entire column</strong><br />
+Use <code class="docutils literal notranslate"><span class="pre">df.dtypes</span></code> to see the data types of all columns or <code class="docutils literal notranslate"><span class="pre">df['column_name'].dtype</span></code> for a specific column.</p>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>  <span class="c1"># Check all column data types</span>
+   <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>  <span class="c1"># Check data type of &#39;sepal_length&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic" start="2">
+<li><p><strong>Check the data type of a specific data point</strong><br />
+Use Python’s built-in <code class="docutils literal notranslate"><span class="pre">type()</span></code> function to check the type of a single value.</p>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the type of the first value in &#39;sepal_length&#39;</span>
+   <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic" start="3">
+<li><p><strong>Convert data types</strong><br />
+Sometimes, data might be incorrectly typed (e.g., numbers stored as strings). You can convert types using <code class="docutils literal notranslate"><span class="pre">pd.to_numeric()</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.to_datetime()</span></code>, or <code class="docutils literal notranslate"><span class="pre">.astype()</span></code>.</p>
+<p>Example:</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a column to float</span>
+   <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;sepal_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="correcting-the-dataset-formatting">
+<h3>3.4. Correcting the Dataset Formatting<a class="headerlink" href="#correcting-the-dataset-formatting" title="Link to this heading">#</a></h3>
+</section>
+<section id="task">
+<h3>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Import the dataset titled ‘Section3.xlsx’</p></li>
+<li><p>Print the first five rows of the spreadsheet</p></li>
+<li><p>Print the type of data in each column</p></li>
+<li><p>If any columns contain the incorrect type of data, explain what type the column should be and write code to correct the error (Hint: one column should be fixed)</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-3-2-missing-values-and-duplicates">
+<h2>Exercise 3.2: Missing values and duplicates<a class="headerlink" href="#exercise-3-2-missing-values-and-duplicates" title="Link to this heading">#</a></h2>
+<section id="locating-missing-values">
+<h3>3.5. Locating Missing Values<a class="headerlink" href="#locating-missing-values" title="Link to this heading">#</a></h3>
+<p>Missing values are a common issue in datasets and need to be identified before deciding how to handle them. In Python, the pandas library provides tools to locate missing values.</p>
+<p>How to Locate Missing Values:</p>
+<hr class="docutils" />
+<p>Using <code class="docutils literal notranslate"><span class="pre">isna()</span></code> or <code class="docutils literal notranslate"><span class="pre">isnull()</span></code></p>
+<p>These methods return a DataFrame of the same shape, indicating where values are missing (True for missing, False for not missing).</p>
+<p>Summing Missing Values:</p>
+<hr class="docutils" />
+<p>Count missing values in each column using <code class="docutils literal notranslate"><span class="pre">isna().sum()</span></code></p>
+<p>Visualizing Missing Values:</p>
+<hr class="docutils" />
+<p>Libraries like matplotlib and seaborn can visualize missing values for better understanding.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Missing Values Heatmap&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="removing-missing-values">
+<h3>3.6. Removing Missing Values<a class="headerlink" href="#removing-missing-values" title="Link to this heading">#</a></h3>
+<p>Sometimes it’s best to remove rows or columns with missing values, especially if the missing data is sparse or cannot be reasonably filled.</p>
+<p>Remove Rows with Missing Values:</p>
+<hr class="docutils" />
+<p>Use .dropna() to remove rows containing any missing values.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop rows with missing values</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Remove Columns with Missing Values</p>
+<hr class="docutils" />
+<p>Use .dropna(axis=1) to remove columns with missing values.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop columns with missing values</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Removing Only Fully Missing Rows or Columns</p>
+<hr class="docutils" />
+<p>Specify how=’all’ to remove rows or columns only if all values are missing.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop rows where all values are missing</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="replacing-missing-values">
+<h3>3.7. Replacing Missing Values<a class="headerlink" href="#replacing-missing-values" title="Link to this heading">#</a></h3>
+<p>Instead of removing missing values, you can replace them with meaningful values based on the dataset.</p>
+<p>Replace with a Fixed Value</p>
+<hr class="docutils" />
+<p>Use .fillna() to replace missing values with a specific value.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace missing values with 0</span>
+<span class="n">data_filled</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_filled</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Replace with Statistical Measures</p>
+<hr class="docutils" />
+<p>Fill numerical data with the column mean, median, or mode.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace missing values with the mean of &#39;Feature1&#39;</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Feature1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Feature1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Feature1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Forward or Backward Filling</p>
+<hr class="docutils" />
+<p>Use .fillna(method=’ffill’) (forward fill) or .fillna(method=’bfill’) (backward fill) to propagate non-missing values.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forward fill missing values</span>
+<span class="n">data_filled</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_filled</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="locating-duplicates">
+<h3>3.8. Locating Duplicates<a class="headerlink" href="#locating-duplicates" title="Link to this heading">#</a></h3>
+<p>3.8. Locating Duplicates
+Duplicate rows in a dataset can skew analysis and must be identified.</p>
+<p>Using duplicated()</p>
+<hr class="docutils" />
+<p>This method returns a Boolean Series indicating whether a row is a duplicate (i.e., has appeared earlier in the dataset).
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a dataset with duplicates</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]})</span>
+
+<span class="c1"># Locate duplicates</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">duplicated</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Use .duplicated().sum() to count the total number of duplicate rows.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of duplicate rows: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="removing-duplicates">
+<h3>3.9. Removing Duplicates<a class="headerlink" href="#removing-duplicates" title="Link to this heading">#</a></h3>
+<p>Once duplicates are identified, they can be removed to ensure the dataset contains unique rows.</p>
+<p>Removing Duplicate Rows</p>
+<hr class="docutils" />
+<p>Use .drop_duplicates() to remove duplicate rows.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove duplicates</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Keeping Specific Duplicates</p>
+<hr class="docutils" />
+<p>Use the keep parameter to specify whether to keep the first (keep=’first’), last (keep=’last’), or no duplicate rows (keep=False).
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove duplicates but keep the last occurrence</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">keep</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Removing Duplicates from Specific Columns</p>
+<hr class="docutils" />
+<p>Use the subset parameter to check for duplicates only in specific columns.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove duplicates based on column &#39;A&#39; only</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>Task:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Check for missing data and remove any rows that contain missing values</p></li>
+<li><p>Check for duplicate rows and remove them</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-3-3-outliers">
+<h2>Exercise 3.3: Outliers<a class="headerlink" href="#exercise-3-3-outliers" title="Link to this heading">#</a></h2>
+<section id="locating-outliers">
+<h3>3.10. Locating Outliers<a class="headerlink" href="#locating-outliers" title="Link to this heading">#</a></h3>
+<p>Outliers are data points that significantly differ from other observations. They can result from measurement errors or be legitimate extreme values. Detecting outliers is crucial as they can heavily influence statistical models and analyses.</p>
+<p>Using Descriptive Statistics:</p>
+<hr class="docutils" />
+<p>Outliers can be identified using the Interquartile Range (IQR) method:</p>
+<ul class="simple">
+<li><p>Calculate the 25th percentile (Q1) and 75th percentile (Q3).</p></li>
+<li><p>Compute the IQR as Q3 - Q1.</p></li>
+<li><p>Any value below Q1 - 1.5<em>IQR or above Q3 + 1.5</em>IQR is considered an outlier.
+Example:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Create a sample dataset</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">120</span><span class="p">]})</span>
+
+<span class="c1"># Calculate IQR</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+<span class="c1"># Identify outliers</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outliers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using Z-Scores:</p>
+<hr class="docutils" />
+<p>The Z-score measures how many standard deviations a data point is from the mean. A common threshold for identifying outliers is a Z-score greater than 3 or less than -3.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">zscore</span>
+
+<span class="c1"># Calculate Z-scores</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Z-Score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">zscore</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">])</span>
+
+<span class="c1"># Identify outliers based on Z-score</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Z-Score&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Z-Score&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">3</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outliers</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="removing-outliers">
+<h3>3.11. Removing Outliers<a class="headerlink" href="#removing-outliers" title="Link to this heading">#</a></h3>
+<p>Once outliers are identified, they can be removed if they are likely to skew the analysis. You can either remove outliers using the IQR method.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove outliers based on IQR</span>
+<span class="n">data_cleaned</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data_cleaned</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="replacing-outliers">
+<h3>3.12. Replacing Outliers<a class="headerlink" href="#replacing-outliers" title="Link to this heading">#</a></h3>
+<p>In some cases, removing outliers might not be ideal, especially if they are legitimate extreme values. Instead, they can be replaced with more reasonable values. Usually, outliers can be replaced with values like the mean or median, depending on the dataset presented and. your interpreation of the descriptive statistics.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace outliers with the median</span>
+<span class="n">median</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">),</span>
+    <span class="n">median</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Values&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Task:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Use the IQR method to locate outliers</p></li>
+<li><p>Use a box and whisker plot to visualize any outliers</p></li>
+<li><p>Remove outliers</p></li>
+<li><p>COnfirm that outliers have been successfully removed by checking for outliers after they have been removed. Print a message showing their are no outliers present</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-3-4-heat-maps">
+<h2>Exercise 3.4: Heat Maps<a class="headerlink" href="#exercise-3-4-heat-maps" title="Link to this heading">#</a></h2>
+<section id="correlations">
+<h3>3.13. Correlations<a class="headerlink" href="#correlations" title="Link to this heading">#</a></h3>
+<p>A correlation measures the relationship between two variables. It shows whether an increase in one variable is associated with an increase or decrease in another.</p>
+<p>Correlation coefficients range from -1 to 1:</p>
+<ul class="simple">
+<li><p>1: Perfect positive correlation (as one variable increases, the other also increases).</p></li>
+<li><p>0: No correlation (no relationship between the variables).</p></li>
+<li><p>-1: Perfect negative correlation (as one variable increases, the other decreases).</p></li>
+</ul>
+<p>Correlation is a fundamental concept in machine learning to understand how features interact and contribute to the target variable.</p>
+</section>
+<section id="why-you-visualize-correlations">
+<h3>3.14. Why You Visualize Correlations<a class="headerlink" href="#why-you-visualize-correlations" title="Link to this heading">#</a></h3>
+<p>Visualizing correlations helps you:</p>
+<ul class="simple">
+<li><p>Quickly identify relationships between variables.</p></li>
+<li><p>Spot patterns that may not be evident in numerical data</p></li>
+<li><p>Detect multicollinearity, which occurs when variables are too closely related (a potential issue for some machine learning models).</p></li>
+<li><p>Understand which features may be important for predicting your target variable.</p></li>
+<li><p>Common visualization tools include scatter plots and heatmaps, which provide an intuitive way to interpret correlations.</p></li>
+</ul>
+</section>
+<section id="heat-maps">
+<h3>3.15. Heat Maps<a class="headerlink" href="#heat-maps" title="Link to this heading">#</a></h3>
+<p>A heatmap is a visualization tool that uses colors to represent the magnitude of values in a matrix. In the context of correlations, heatmaps can show relationships between features in a dataset.</p>
+<p>Heatmaps simplify interpreting large correlation matrices.
+Colors make it easier to identify strong positive or negative correlations. Patterns become apparent, helping to decide which features to include in a model.</p>
+<p>Creating a Heatmap for Correlations
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Create a sample dataset</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Feature1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="s1">&#39;Feature2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="s1">&#39;Feature3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Compute the correlation matrix</span>
+<span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+
+<span class="c1"># Plot the heatmap</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Correlation Heatmap&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This heatmap visually represents correlations, where:</p>
+<ul class="simple">
+<li><p>Strong positive correlations are shown in deep red.</p></li>
+<li><p>Strong negative correlations are shown in deep blue.</p></li>
+<li><p>Near-zero correlations are light-colored.</p></li>
+</ul>
+<p>By using heatmaps, you can easily identify which features are highly correlated, aiding in feature selection for machine learning models.</p>
+</section>
+<section id="id3">
+<h3>Task:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Generate a heatmap for the dataset</p></li>
+<li><p>What are the strongest positive correlations in the dataset?</p></li>
+<li><p>What are the strongest negative correlations in the dataset?</p></li>
+<li><p>Are there any factors (independant variables) that don’t correlate with the target (dependant variable)?</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="excercise-3-5-data-scaling">
+<h2>Excercise 3.5: Data Scaling<a class="headerlink" href="#excercise-3-5-data-scaling" title="Link to this heading">#</a></h2>
+<section id="what-is-data-scaling">
+<h3>3.15. What is Data Scaling?<a class="headerlink" href="#what-is-data-scaling" title="Link to this heading">#</a></h3>
+<p>Data scaling is the process of transforming the features in your dataset so that they are represented on a similar scale. Scaling ensures that the range of values for each feature does not vary widely. For example, one feature might represent income in dollars (ranging from thousands to millions), while another might represent age (ranging from 0 to 100). Without scaling, the feature with the larger range can dominate the results of machine learning algorithms that rely on distance or gradient descent.</p>
+</section>
+<section id="why-scale-data">
+<h3>3.16. Why Scale Data?<a class="headerlink" href="#why-scale-data" title="Link to this heading">#</a></h3>
+<p>Data scaling is crucial for many machine learning algorithms, especially those that calculate distances between data points or use gradient-based optimization. Here are some reasons why scaling is important:</p>
+<ol class="arabic simple">
+<li><p><strong>Improved Model Performance:</strong>
+Algorithms like Support Vector Machines (SVM) and K-Nearest Neighbors (KNN) use distance metrics that are sensitive to scale. Without scaling, features with larger ranges can disproportionately affect model decisions.</p></li>
+<li><p><strong>Faster Convergence:</strong>
+Gradient-based algorithms, such as those used in neural networks or logistic regression, perform better when all features are on similar scales, as this ensures smoother gradients.</p></li>
+<li><p><strong>Avoiding Bias:</strong>
+Features with larger scales can bias models, especially when interpreting coefficients in regression models.</p></li>
+<li><p><strong>Compatibility with Regularization:</strong>
+Regularization techniques like L1 and L2 penalize weights. Without scaling, these penalties can become inconsistent due to varying magnitudes of feature values.</p></li>
+</ol>
+</section>
+<section id="normalization-standardization-and-regularization">
+<h3>3.17. Normalization, Standardization, and Regularization<a class="headerlink" href="#normalization-standardization-and-regularization" title="Link to this heading">#</a></h3>
+<hr class="docutils" />
+<p>Normalization transforms data to fit within a specific range, typically [0, 1]. This is done by rescaling each feature so that the minimum value becomes 0 and the maximum becomes 1.</p>
+<p>Formula:
+$$
+X’ = \frac{X-X_{min}}{X_{max}-X_{min}}
+$$</p>
+<p>When to Use:</p>
+<p>When you know the data has a specific range or when dealing with algorithms that rely on bounded distances, like KNN or Neural Networks.</p>
+<hr class="docutils" />
+<p>Standardization centers the data around 0 and scales it to have a standard deviation of 1.</p>
+<p>Formula:
+$$
+X’ = \frac{X-𝜇}{σ}
+$$</p>
+<p>Where:</p>
+<ul class="simple">
+<li><p>μ is the mean and</p></li>
+<li><p>σ is the standard deviation.</p></li>
+</ul>
+<p>When to Use:</p>
+<p>When you need data with a Gaussian-like distribution or when the algorithm (e.g., PCA, SVM) assumes data to be standardized.</p>
+<hr class="docutils" />
+<p>Regularization refers to techniques used to reduce overfitting by penalizing large model coefficients during training. While it’s not directly related to scaling, scaling ensures that regularization penalties (like L1 or L2) are applied consistently across all features.</p>
+</section>
+<section id="id4">
+<h3>Task:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Normalize the dataset</p></li>
+<li><p>Plot a histogram of each variable to ensure it falls between 0 and 1</p></li>
+<li><p>Why do you think it was important to normalize this dataset?</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-3-6-multi-collinearity">
+<h2>Exercise 3.6: Multi-Collinearity<a class="headerlink" href="#exercise-3-6-multi-collinearity" title="Link to this heading">#</a></h2>
+<section id="what-is-multi-collinearity">
+<h3>3.18. What is Multi-Collinearity?<a class="headerlink" href="#what-is-multi-collinearity" title="Link to this heading">#</a></h3>
+<p>Multi-collinearity occurs when two or more independent variables in a dataset are highly correlated with each other. This means that one variable can be linearly predicted from another with a high degree of accuracy. While correlations describe relationships between two variables, multi-collinearity refers specifically to strong correlations between predictors (independent variables) in a model.</p>
+<p>For example, in a dataset with height in inches and height in centimeters, these two variables would be perfectly collinear because one is a direct conversion of the other.</p>
+<p>Multi-collinearity can be detected using statistical methods like correlation matrices to find highly correlated variables.</p>
+<p>Types of Multi-Collinearity</p>
+<hr class="docutils" />
+<ol class="arabic simple">
+<li><p>Perfect Multi-Collinearity: When one variable is a perfect linear function of another (e.g., total price = price per item × number of items).</p></li>
+<li><p>Imperfect Multi-Collinearity: When variables are strongly correlated but not perfectly.
+Detecting Multi-Collinearity</p></li>
+</ol>
+</section>
+<section id="why-deal-with-multi-collinearity">
+<h3>3.19. Why Deal with Multi-Collinearity?<a class="headerlink" href="#why-deal-with-multi-collinearity" title="Link to this heading">#</a></h3>
+<p>Multi-collinearity can negatively affect machine learning models and statistical analyses, especially regression models. Here’s why it’s important to address it:</p>
+<p>Unstable Coefficients:</p>
+<hr class="docutils" />
+<p>When predictors are highly correlated, it becomes difficult for the model to determine which variable is contributing to the outcome. This can lead to unreliable or fluctuating coefficient estimates.</p>
+<p>Inflated Standard Errors:</p>
+<hr class="docutils" />
+<p>Multi-collinearity increases the standard errors of the estimated coefficients, making it harder to assess their statistical significance.</p>
+<p>Reduced Interpretability:</p>
+<hr class="docutils" />
+<p>In cases of multi-collinearity, the relationship between predictors and the target variable can become less clear, complicating interpretation.</p>
+<p>Overfitting Risks:</p>
+<hr class="docutils" />
+<p>Strong correlations between features can lead to redundancy in the model, which increases the risk of overfitting, particularly in machine learning.</p>
+<p>Consequences of Ignoring Multi-Collinearity</p>
+<hr class="docutils" />
+<ul class="simple">
+<li><p>Models may produce counterintuitive or nonsensical results, such as a positive coefficient for one predictor and a negative coefficient for another predictor that measures a similar concept.</p></li>
+<li><p>Predictions may remain accurate, but the ability to understand or explain the model is compromised.
+By identifying and addressing multi-collinearity (e.g., through feature selection, dimensionality reduction, or combining correlated features), you can ensure a more stable and interpretable model.</p></li>
+</ul>
+</section>
+<section id="pricipal-component-analysis-pca">
+<h3>3.20. Pricipal Component Analysis (PCA)<a class="headerlink" href="#pricipal-component-analysis-pca" title="Link to this heading">#</a></h3>
+<p>Principal Component Analysis (PCA) is a dimensionality reduction technique used to simplify a dataset while retaining as much of the original information as possible. PCA works by transforming the original features into a new set of features, called principal components, which are uncorrelated and capture the maximum variance in the data.</p>
+<p>Why Use PCA?</p>
+<ul class="simple">
+<li><p>Reduce Dimensionality: Simplify datasets with many features, making them easier to visualize and analyze.</p></li>
+<li><p>Remove Redundancy: Address multi-collinearity by combining correlated variables into fewer components.</p></li>
+<li><p>Improve Model Performance: Reduce noise in the dataset, which can help improve the performance and generalization of machine learning models.</p></li>
+<li><p>Visualization: PCA enables visualization of high-dimensional data in 2D or 3D.</p></li>
+</ul>
+<p>How Does PCA Work?</p>
+<ul class="simple">
+<li><p>Standardize the Data: PCA works best when data is standardized to have a mean of 0 and a standard deviation of 1.</p></li>
+<li><p>Compute the Covariance Matrix: PCA evaluates the relationships between variables.</p></li>
+<li><p>Calculate Eigenvectors and Eigenvalues: Eigenvectors define the directions of the new components, while eigenvalues represent the magnitude of variance captured by each component.</p></li>
+<li><p>Select Principal Components: Choose the top components that explain the majority of the variance.</p></li>
+<li><p>Transform the Data: Project the original data onto the selected principal components.</p></li>
+</ul>
+<p>Code Example: PCA with Python</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Sample dataset</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Feature1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;Feature2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="s1">&#39;Feature3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+    <span class="s1">&#39;Feature4&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Step 1: Standardize the data</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaled_data</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Apply PCA</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Reduce to 2 components</span>
+<span class="n">principal_components</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">scaled_data</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Create a DataFrame with the principal components</span>
+<span class="n">pca_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">principal_components</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PC1&#39;</span><span class="p">,</span> <span class="s1">&#39;PC2&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Principal Components:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pca_df</span><span class="p">)</span>
+
+<span class="c1"># Step 4: Explained Variance Ratio</span>
+<span class="n">explained_variance</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Explained Variance Ratio:&quot;</span><span class="p">,</span> <span class="n">explained_variance</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Plot the principal components</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pca_df</span><span class="p">[</span><span class="s1">&#39;PC1&#39;</span><span class="p">],</span> <span class="n">pca_df</span><span class="p">[</span><span class="s1">&#39;PC2&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PCA: First Two Principal Components&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Principal Component 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Principal Component 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Explanation of the Output</p>
+<ul class="simple">
+<li><p>Principal Components: The transformed data in terms of the two selected components, PC1 and PC2.
+Explained Variance Ratio: The proportion of variance captured by each principal component. Use this to decide how many components to retain.</p></li>
+<li><p>Scatter Plot: Visualizes the data in terms of the top two principal components, which often reveals clusters or patterns.
+When to Use PCA?</p></li>
+<li><p>When you have a large number of features, and many of them are correlated.</p></li>
+<li><p>When you need to visualize high-dimensional data.</p></li>
+<li><p>When you want to reduce the complexity of your dataset without losing much information.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Task:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Identify variables that have a high correlation which could skew the model.</p></li>
+<li><p>Use PCA to rewrite the variables</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="answer-key">
+<h3>Answer Key:<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h3>
+</section>
+<section id="excercise-3-1">
+<h3>Excercise 3.1:<a class="headerlink" href="#excercise-3-1" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Print the first five rows of the spreadsheet</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;First 5 rows of the dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Step 3: Print the type of data in each column</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data types of each column:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+
+<span class="c1"># Step 4: Check for incorrect data types and fix them</span>
+<span class="c1"># For each issue with a column, e.g., &#39;ColumnName&#39; being interpreted as a string instead of a numeric type</span>
+<span class="c1"># Let&#39;s say &#39;ColumnName&#39; should be of type float, but it&#39;s being read as object (string).</span>
+
+<span class="k">if</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ColumnName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ColumnName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;ColumnName&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+<span class="c1"># After correcting, check the data types again</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data types after correction:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+
+<span class="c1"># Optional: Print the corrected first 5 rows</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Corrected first 5 rows of the dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="excercise-3-2">
+<h3>Excercise 3.2:<a class="headerlink" href="#excercise-3-2" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Check for missing data and remove any rows that contain missing values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing data before removal:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  <span class="c1"># Shows the count of missing values per column</span>
+
+<span class="c1"># Remove rows with missing data</span>
+<span class="n">df_cleaned</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+<span class="c1"># Verify that missing data has been removed</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Missing data after removal:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cleaned</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="c1"># Step 3: Check for duplicate rows and remove them</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Duplicate rows before removal:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cleaned</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  <span class="c1"># Shows the count of duplicate rows</span>
+
+<span class="c1"># Remove duplicate rows</span>
+<span class="n">df_cleaned</span> <span class="o">=</span> <span class="n">df_cleaned</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+
+<span class="c1"># Verify that duplicates have been removed</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Duplicate rows after removal:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cleaned</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="c1"># Optional: Show the cleaned dataset (first 5 rows)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 5 rows of the cleaned dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cleaned</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="excercise-3-3">
+<h3>Excercise 3.3:<a class="headerlink" href="#excercise-3-3" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Use the IQR method to locate outliers</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>  <span class="c1"># 25th percentile</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>  <span class="c1"># 75th percentile</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>  <span class="c1"># Interquartile range</span>
+
+<span class="c1"># Define outlier condition</span>
+<span class="n">outliers_condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span><span class="p">))</span>
+
+<span class="c1"># Step 3: Use a box and whisker plot to visualize any outliers</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">boxplot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Box and Whisker Plot to Visualize Outliers&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Step 4: Remove outliers</span>
+<span class="n">df_no_outliers</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">outliers_condition</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>  <span class="c1"># Keep rows without any outliers</span>
+
+<span class="c1"># Step 5: Confirm that outliers have been successfully removed</span>
+<span class="c1"># Check for outliers in the cleaned dataset</span>
+<span class="n">Q1_cleaned</span> <span class="o">=</span> <span class="n">df_no_outliers</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">Q3_cleaned</span> <span class="o">=</span> <span class="n">df_no_outliers</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">IQR_cleaned</span> <span class="o">=</span> <span class="n">Q3_cleaned</span> <span class="o">-</span> <span class="n">Q1_cleaned</span>
+
+<span class="n">outliers_condition_cleaned</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_no_outliers</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">Q1_cleaned</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR_cleaned</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">df_no_outliers</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">Q3_cleaned</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR_cleaned</span><span class="p">))</span>
+
+<span class="c1"># Check if any outliers remain</span>
+<span class="k">if</span> <span class="n">outliers_condition_cleaned</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outliers still exist in the cleaned dataset.&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outliers have been successfully removed from the dataset.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Optional: Show the first 5 rows of the dataset without outliers</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 5 rows of the dataset without outliers:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_no_outliers</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="excercise-3-4">
+<h3>Excercise 3.4:<a class="headerlink" href="#excercise-3-4" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Generate a correlation matrix for the dataset</span>
+<span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+
+<span class="c1"># Step 3: Create a heatmap to visualize the correlations</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Correlation Heatmap&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Step 4: Find the strongest positive correlations</span>
+<span class="n">positive_corr</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="p">[</span><span class="n">correlation_matrix</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">]</span>  <span class="c1"># Adjust threshold as needed</span>
+<span class="n">strongest_positive_corr</span> <span class="o">=</span> <span class="n">positive_corr</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Strongest Positive Correlations:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">strongest_positive_corr</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Find the strongest negative correlations</span>
+<span class="n">negative_corr</span> <span class="o">=</span> <span class="n">correlation_matrix</span><span class="p">[</span><span class="n">correlation_matrix</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">]</span>  <span class="c1"># Adjust threshold as needed</span>
+<span class="n">strongest_negative_corr</span> <span class="o">=</span> <span class="n">negative_corr</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Strongest Negative Correlations:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">strongest_negative_corr</span><span class="p">)</span>
+
+<span class="c1"># Step 6: Check if any independent variables don&#39;t correlate with the target (assumed to be the last column)</span>
+<span class="n">target_column</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Assuming target is the last column</span>
+<span class="n">independent_vars</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">no_corr_with_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">independent_vars</span> <span class="k">if</span> <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">target_column</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Independent Variables with No Correlation to the Target Variable:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">no_corr_with_target</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="excercise-3-5">
+<h3>Excercise 3.5:<a class="headerlink" href="#excercise-3-5" title="Link to this heading">#</a></h3>
+</section>
+<section id="excercise-3-6">
+<h3>Excercise 3.6:<a class="headerlink" href="#excercise-3-6" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Normalize the dataset using MinMaxScaler</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">df_normalized</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Plot histograms of each variable to ensure it falls between 0 and 1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">df_normalized</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Histograms of Normalized Variables&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Optional: Print the first 5 rows of the normalized dataset to verify</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 5 rows of the normalized dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_normalized</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="excercise-3-7">
+<h3>Excercise 3.7:<a class="headerlink" href="#excercise-3-7" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Step 1: Import the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;Section3.xlsx&#39;</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Compute the correlation matrix to identify highly correlated variables</span>
+<span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+
+<span class="c1"># Step 3: Visualize the correlation matrix using a heatmap</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Correlation Heatmap&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Step 4: Identify pairs of variables that have a high correlation (e.g., above 0.9)</span>
+<span class="n">high_corr_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># You can adjust this threshold as needed</span>
+
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">correlation_matrix</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">threshold</span> <span class="ow">and</span> <span class="n">row</span> <span class="o">!=</span> <span class="n">col</span><span class="p">:</span>
+            <span class="n">high_corr_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">))</span>
+
+<span class="c1"># Print the high correlation pairs</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">High Correlation Pairs:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">high_corr_pairs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+
+<span class="c1"># Step 5: Apply PCA to reduce the dimensionality and rewrite the variables</span>
+<span class="c1"># Standardize the data before PCA (important for PCA)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">df_standardized</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Apply PCA</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>  <span class="c1"># You can specify the number of components you want</span>
+<span class="n">pca_result</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_standardized</span><span class="p">)</span>
+
+<span class="c1"># Create a DataFrame of the PCA components</span>
+<span class="n">pca_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pca_result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;PC</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))])</span>
+
+<span class="c1"># Step 6: Explain the explained variance ratio for each principal component</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Explained Variance Ratio of each Principal Component:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span><span class="p">)</span>
+
+<span class="c1"># Optional: Show the first few rows of the PCA-rewritten dataset</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">First 5 rows of the PCA-transformed dataset:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pca_df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-02.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 2: Introduction to Python</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-04.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 4: Introduction to Machine Learning</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-use-eda">3.1. Why Use EDA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-1-understanding-a-dataset">Exercise 3.1: Understanding a dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-structure">3.2. Dataset Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">3.3. Data Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correcting-the-dataset-formatting">3.4. Correcting the Dataset Formatting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-2-missing-values-and-duplicates">Exercise 3.2: Missing values and duplicates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-missing-values">3.5. Locating Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-missing-values">3.6. Removing Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#replacing-missing-values">3.7. Replacing Missing Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-duplicates">3.8. Locating Duplicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-duplicates">3.9. Removing Duplicates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-3-outliers">Exercise 3.3: Outliers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locating-outliers">3.10. Locating Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-outliers">3.11. Removing Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#replacing-outliers">3.12. Replacing Outliers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-4-heat-maps">Exercise 3.4: Heat Maps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#correlations">3.13. Correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-you-visualize-correlations">3.14. Why You Visualize Correlations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#heat-maps">3.15. Heat Maps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-5-data-scaling">Excercise 3.5: Data Scaling</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-data-scaling">3.15. What is Data Scaling?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-scale-data">3.16. Why Scale Data?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalization-standardization-and-regularization">3.17. Normalization, Standardization, and Regularization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-3-6-multi-collinearity">Exercise 3.6: Multi-Collinearity</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-multi-collinearity">3.18. What is Multi-Collinearity?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-deal-with-multi-collinearity">3.19. Why Deal with Multi-Collinearity?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pricipal-component-analysis-pca">3.20. Pricipal Component Analysis (PCA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Task:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-1">Excercise 3.1:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-2">Excercise 3.2:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-3">Excercise 3.3:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-4">Excercise 3.4:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-5">Excercise 3.5:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-6">Excercise 3.6:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#excercise-3-7">Excercise 3.7:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie — Bucknell University
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

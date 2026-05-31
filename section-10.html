@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 10: Accessibility in AI and ML &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-10';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 11a: Student Machine Learning Projects in Chemical Engineering" href="section-11a.html" />
+    <link rel="prev" title="Section 9: Langchain" href="section-09.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <script defer src="_static/pyodide-runner.js"></script>
+</head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DS in ChemE</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-10.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 10: Accessibility in AI and ML</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-accessibility-in-ai-and-ml">10.1. Introduction to Accessibility in AI and ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-accessible-graphical-user-interfaces-guis">10.2. Designing Accessible Graphical User Interfaces (GUIs)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-accessible-chatbots-and-voice-assistants">10.3. Creating Accessible Chatbots and Voice Assistants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-accessibility-for-users-with-low-income-or-limited-internet-access">10.4.Improving Accessibility for Users with Low-Income or Limited Internet Access</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessible-data-collection-and-processing">10.5. Accessible Data Collection and Processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusive-machine-learning-models">10.6. Inclusive Machine Learning Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-and-frameworks-for-building-accessible-ai-systems">10.7. Tools and Frameworks for Building Accessible AI Systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-and-evaluating-accessibility-in-ai-projects">10.8. Testing and Evaluating Accessibility in AI Projects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-10-accessibility-in-ai-and-ml">
+<h1>Section 10: Accessibility in AI and ML<a class="headerlink" href="#section-10-accessibility-in-ai-and-ml" title="Link to this heading">#</a></h1>
+<p>Accessibility in AI and ML focuses on making artificial intelligence tools and technologies usable for diverse populations, including individuals with disabilities. This section explores inclusive model design, bias mitigation, and adaptive interfaces that enhance usability and ensure equitable access to AI-driven solutions.</p>
+<section id="introduction-to-accessibility-in-ai-and-ml">
+<h2>10.1. Introduction to Accessibility in AI and ML<a class="headerlink" href="#introduction-to-accessibility-in-ai-and-ml" title="Link to this heading">#</a></h2>
+<p>AI and ML technologies are revolutionizing many industries, including chemical engineering, by automating processes, optimizing systems, and enabling new capabilities. However, while these advancements are transformative, it is essential to ensure they are accessible to a broad range of users. Accessibility in AI and ML goes beyond just making software available; it ensures that these technologies are usable by individuals with different abilities, technological access, and backgrounds. This principle is not only about helping people with disabilities but also includes people with limited internet access, those using older hardware, or those from non-technical backgrounds.</p>
+<p>When developing AI systems, it’s crucial to consider the diversity of users who will interact with the technology. Individuals with visual impairments, motor challenges, and cognitive disabilities face significant barriers when using poorly designed AI tools. Moreover, accessibility also encompasses economic constraints, as users in lower-income communities may not have access to high-speed internet, modern devices, or even the technical knowledge to understand complex AI models. AI systems must be designed with these varying needs in mind to ensure that they can be useful, understandable, and functional for everyone.</p>
+<p>Common examples of AI systems for accessibility include:</p>
+<p><strong>1. Visual impairments</strong></p>
+<ul class="simple">
+<li><p>Includes blindness, low vision, and color blindness.</p></li>
+<li><p>AI examples:</p>
+<ul>
+<li><p>Computer vision models can generate <em>alt text</em> or captions for images.</p></li>
+<li><p>Text-to-speech systems help read on-screen content aloud.</p></li>
+</ul>
+</li>
+<li><p>Accessibility needs:</p>
+<ul>
+<li><p>Ensure all visual content (plots, figures, images) includes textual descriptions or alternative formats.</p></li>
+<li><p>Use high-contrast, color-blind-friendly palettes in plots (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> supports <code class="docutils literal notranslate"><span class="pre">colorblind=True</span></code> palettes).</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>2. Hearing impairments</strong></p>
+<ul class="simple">
+<li><p>Includes deafness and partial hearing loss.</p></li>
+<li><p>AI examples:</p>
+<ul>
+<li><p>Automatic Speech Recognition (ASR) models can provide real-time captions or subtitles.</p></li>
+<li><p>NLP models can summarize meeting transcripts for review.</p></li>
+</ul>
+</li>
+<li><p>Accessibility needs:</p>
+<ul>
+<li><p>Always offer captioning or transcripts for audio or video content in apps or dashboards.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>3. Motor or mobility impairments</strong></p>
+<ul class="simple">
+<li><p>Includes conditions that affect fine motor control or the ability to use a mouse.</p></li>
+<li><p>Accessibility needs:</p>
+<ul>
+<li><p>All interactions should be possible using a keyboard.</p></li>
+<li><p>Avoid interfaces that depend on dragging or hovering only.</p></li>
+<li><p>Streamlit tip: every interactive widget should have a keyboard-accessible alternative.</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>4. Cognitive and learning disabilities</strong></p>
+<ul class="simple">
+<li><p>Includes dyslexia, ADHD, or cognitive fatigue.</p></li>
+<li><p>Accessibility needs:</p>
+<ul>
+<li><p>Present information in short, clear sections with consistent structure.</p></li>
+<li><p>Offer customizable text size, spacing, or simplified summaries.</p></li>
+<li><p>AI models can provide adaptive text simplification or concept explanations on demand.</p></li>
+</ul>
+</li>
+</ul>
+<p>For AI models to be truly accessible, inclusivity must be integrated at every stage, from data collection and training to interface design and deployment. This involves adopting inclusive design principles, providing multiple ways to access and interact with AI systems, and ensuring that all potential users can benefit from them. By fostering accessible AI, we create more equitable and widespread opportunities for innovation and learning across diverse groups of people, benefiting the field of chemical engineering and other industries alike.</p>
+<p>Incorporating accessibility into AI is not just about meeting compliance standards but about fostering an ethical responsibility to create technologies that serve a diverse global population. By the end of this section, you should be able to recognize the importance of accessibility and how it can be applied within your own AI/ML projects, ensuring that your models and tools are accessible and useful to everyone.</p>
+</section>
+<section id="designing-accessible-graphical-user-interfaces-guis">
+<h2>10.2. Designing Accessible Graphical User Interfaces (GUIs)<a class="headerlink" href="#designing-accessible-graphical-user-interfaces-guis" title="Link to this heading">#</a></h2>
+<p>Graphical User Interfaces (GUIs) are an essential part of AI/ML applications as they serve as the primary method for user interaction. A well-designed GUI can make an AI system more approachable and easier to use, while a poorly designed interface can create significant barriers. For individuals with visual impairments, it is crucial to use high contrast color schemes and provide the ability to adjust text sizes. Users with color blindness may struggle with traditional color-coded interfaces, so it is essential to choose colors that are distinguishable for all users, or to rely on patterns and text-based cues rather than colors alone.</p>
+<p>In addition to color, accessibility can be improved by allowing for keyboard navigation. Many users with motor impairments rely on keyboard shortcuts to navigate through software. Ensuring that all aspects of your GUI are accessible via the keyboard, including buttons, menus, and input fields, makes the system more inclusive. Incorporating alternative input devices, like switches or adaptive keyboards, can also improve accessibility for users with motor difficulties.</p>
+<p>Another critical element of an accessible GUI is compatibility with screen readers, which help users with visual impairments navigate the interface. Screen readers translate text on the screen into speech or Braille output. To make sure your interface is compatible with these tools, you need to provide meaningful labels for buttons and input fields and avoid relying solely on visual cues. For instance, an image button should have an alt text description that explains its function, and forms should have properly labeled fields.</p>
+<p>Finally, offering users the ability to customize the interface can further enhance accessibility. Providing options to adjust font sizes, color schemes, and layout elements allows users to tailor the interface to their needs. Some users may prefer a minimalist design, while others may benefit from larger text or more distinct navigation options. By considering these principles when designing a GUI, you can create an environment that is usable by a wider audience, making AI more accessible.</p>
+</section>
+<section id="creating-accessible-chatbots-and-voice-assistants">
+<h2>10.3. Creating Accessible Chatbots and Voice Assistants<a class="headerlink" href="#creating-accessible-chatbots-and-voice-assistants" title="Link to this heading">#</a></h2>
+<p>Chatbots and voice assistants are AI systems that can provide accessible and interactive experiences. For users with visual impairments or those unable to use a keyboard, chatbots with text-to-speech (TTS) capabilities can provide essential functionality. TTS converts written text into spoken words, making it easier for individuals with visual disabilities to interact with the system. To make a chatbot more accessible, ensure that it responds promptly and clearly, using natural language and avoiding overly complex sentence structures that could be difficult for some users to understand.</p>
+<p>In addition to TTS, speech-to-text (STT) technology can help users who cannot type. This feature enables users to speak to the system and have their words converted into text. By incorporating STT, chatbots can be made more accessible to individuals with motor impairments or those who struggle with typing. It is also important to ensure that your chatbot recognizes various accents and dialects to serve a broader user base.</p>
+<p>Moreover, a well-designed chatbot should provide clear and concise responses, especially for users with cognitive disabilities. Complex language or convoluted answers can create confusion. Therefore, design your chatbot to offer simple, direct responses and provide clarifications when necessary. It’s also essential to consider providing options for users to repeat or rephrase their queries, as this can be especially helpful for those with cognitive or hearing impairments.</p>
+<p>Including multilingual support is another way to improve accessibility. People who speak languages other than the default language of the system should be able to use the chatbot in their native tongue. This is particularly important in global AI applications, where users from various linguistic backgrounds will interact with the system. By ensuring that your chatbot is both voice-friendly and culturally inclusive, you can greatly enhance its accessibility.</p>
+</section>
+<section id="improving-accessibility-for-users-with-low-income-or-limited-internet-access">
+<h2>10.4.Improving Accessibility for Users with Low-Income or Limited Internet Access<a class="headerlink" href="#improving-accessibility-for-users-with-low-income-or-limited-internet-access" title="Link to this heading">#</a></h2>
+<p>AI applications can sometimes require high-speed internet and powerful computing resources, which are not accessible to all users. To make AI more inclusive, developers must consider ways to optimize their models and applications for individuals with limited internet access or older computing devices. One technique for achieving this is model compression, which reduces the size of AI models without significantly impacting their performance. Methods like pruning, quantization, and knowledge distillation can make models more lightweight, enabling them to run efficiently on devices with limited memory and processing power.</p>
+<p>Edge computing is another approach that can help make AI applications more accessible to users with limited internet access. Instead of relying on cloud servers for heavy computations, edge computing allows devices to process data locally, reducing the need for continuous internet connectivity. This is particularly beneficial for users in rural or low-income areas where stable internet access may be unreliable. By performing processing on the device, applications can continue to function even with limited or no internet connection, improving overall accessibility.</p>
+<p>To further reduce data usage, consider using data-efficient models that require minimal bandwidth and computing power. For example, AI models can be designed to send only the most essential data to the server, reducing the load on both the internet connection and the device. This is particularly important in areas where data plans may be limited or costly.</p>
+<p>Lastly, offering offline versions of AI applications can ensure that users without reliable internet access can still benefit from AI technologies. By allowing users to download AI models and run them locally, you can ensure that they are not excluded due to connectivity issues. By considering these factors, AI applications can become more accessible to a broader and more diverse audience, especially those with economic constraints.</p>
+</section>
+<section id="accessible-data-collection-and-processing">
+<h2>10.5. Accessible Data Collection and Processing<a class="headerlink" href="#accessible-data-collection-and-processing" title="Link to this heading">#</a></h2>
+<p>The data collection phase is crucial in any AI/ML project, as it directly impacts the quality and fairness of the resulting models. Ensuring that data collection is accessible is vital for ensuring that your AI model is representative of all potential users. One way to improve accessibility is by using simple language in surveys, questionnaires, and forms. This makes it easier for people with varying literacy levels to provide data. You can also offer multiple input methods, such as voice recording or video responses, to cater to users who may find it difficult to type or read.</p>
+<p>Inclusivity in data collection also means ensuring that you gather diverse data from different communities, backgrounds, and abilities. AI models trained on biased or non-representative data can lead to inaccurate or unfair predictions. For instance, if a facial recognition model is primarily trained on data from white individuals, it may perform poorly for people of color. To avoid these pitfalls, it is essential to collect data that represents various demographics, including people with disabilities, individuals from different ethnic backgrounds, and those from various socioeconomic statuses.</p>
+<p>Furthermore, accessibility in data collection extends to ethical concerns, such as ensuring that personal data is collected and used in a way that respects privacy and dignity. For example, voice and biometric data should be handled carefully to prevent misuse, and users should have control over what data they share and how it is used. Providing clear opt-in options and transparency about data usage is crucial for maintaining user trust and ensuring ethical practices in data handling.</p>
+<p>Lastly, processing data in an accessible way also means considering the cognitive load on users when they interact with AI tools. For instance, complex data input forms or ambiguous questions can discourage users from providing useful data. By simplifying the data collection process and providing helpful guidance along the way, you make it easier for all users to contribute to the AI project.</p>
+</section>
+<section id="inclusive-machine-learning-models">
+<h2>10.6. Inclusive Machine Learning Models<a class="headerlink" href="#inclusive-machine-learning-models" title="Link to this heading">#</a></h2>
+<p>Creating inclusive machine learning models involves designing algorithms that serve a diverse range of users while minimizing bias. One of the primary challenges in AI and ML is the presence of bias in training data. Bias can manifest in many ways, from gender and racial bias to economic and geographic biases. To ensure that your model is inclusive, you should work to identify and mitigate these biases throughout the development process. This starts with ensuring that your training data is diverse and representative of all groups, and that it doesn’t inadvertently favor one group over another.</p>
+<p>Fairness in machine learning is an important aspect of inclusivity. There are several techniques and tools available to audit and mitigate bias in AI models. Frameworks like AI Fairness 360 from IBM and Fairness Indicators from TensorFlow offer methods to evaluate fairness across different demographic groups and identify areas where the model may be unfairly biased. These tools help to ensure that the AI system produces equitable outcomes for all users, regardless of gender, race, or other demographic factors.</p>
+<p>Explainability and interpretability are also vital when creating inclusive AI models. Users, especially those from non-technical backgrounds, should understand how a model makes decisions. This is particularly crucial in areas such as healthcare or criminal justice, where AI systems can have life-changing consequences. Using techniques like LIME and SHAP can help make machine learning models more transparent by showing how individual features contribute to predictions.</p>
+<p>By focusing on these factors—diverse training data, fairness auditing, and explainability—you can build machine learning models that are not only technically robust but also socially responsible and inclusive. This ensures that your AI systems serve a wider variety of people, making them more accessible and trustworthy in a broader context.</p>
+</section>
+<section id="tools-and-frameworks-for-building-accessible-ai-systems">
+<h2>10.7. Tools and Frameworks for Building Accessible AI Systems<a class="headerlink" href="#tools-and-frameworks-for-building-accessible-ai-systems" title="Link to this heading">#</a></h2>
+<p>There are numerous tools and frameworks available to assist in building accessible AI systems, many of which come with built-in features to help developers create inclusive applications. TensorFlow and PyTorch are two of the most popular machine learning frameworks, both of which support features like model explainability, fairness auditing, and integration with accessibility tools. TensorFlow Lite, for example, is a lightweight version of TensorFlow designed specifically for mobile and embedded devices, allowing models to run efficiently on devices with limited computational resources. This is an essential feature for users in low-resource environments.</p>
+<p>Jupyter Notebooks are another powerful tool for creating interactive and accessible AI projects. They allow users to write, run, and visualize code in an accessible format, which is ideal for educational purposes and hands-on learning. Additionally, Jupyter Notebooks are compatible with a wide range of accessibility tools, such as screen readers and code assistants, which help make the environment more accessible to users with disabilities.</p>
+<p>There are also specialized tools designed to help you understand and interpret machine learning models. LIME (Local Interpretable Model-agnostic Explanations) and SHAP (Shapley Additive Explanations) are examples of libraries that provide model-agnostic explanations of predictions. These tools can be particularly useful for making complex models more understandable and transparent, helping users with limited technical expertise comprehend how decisions are made by the AI.</p>
+<p>Lastly, accessibility tools like axe and WAVE allow you to test the accessibility of your web applications and GUIs. These tools can identify issues like missing alt text, poor contrast ratios, and other common accessibility problems, ensuring that your AI models and tools are fully accessible to all users. Using these tools and frameworks will make it easier for you to create inclusive AI applications that cater to a broad range of users.</p>
+</section>
+<section id="testing-and-evaluating-accessibility-in-ai-projects">
+<h2>10.8. Testing and Evaluating Accessibility in AI Projects<a class="headerlink" href="#testing-and-evaluating-accessibility-in-ai-projects" title="Link to this heading">#</a></h2>
+<p>Testing accessibility in AI projects is a critical step in ensuring that your systems are usable by everyone. This process involves evaluating both the functionality and the user experience across a diverse range of users. It’s essential to conduct usability testing with individuals who have different disabilities and come from various demographic backgrounds. This helps uncover potential barriers that may not be immediately obvious during development.</p>
+<p>User feedback is invaluable when testing for accessibility. Engaging real users in the testing phase allows you to identify problems that automated tools might miss. For example, a tool might indicate that your interface is technically accessible, but users with specific needs may still struggle to navigate it effectively. Conducting user interviews and usability testing sessions can provide insight into these issues.</p>
+<p>Additionally, it’s important to regularly evaluate your AI systems for bias, fairness, and transparency. As AI models evolve, they may unintentionally start favoring certain groups or producing less accurate predictions for others. By continuously monitoring these models and updating them with diverse, representative data, you can ensure that your AI remains fair and inclusive.</p>
+<p>Finally, it’s essential to make accessibility a core part of your development cycle. Accessibility should not be an afterthought but rather an ongoing commitment throughout the entire design and deployment process. By prioritizing accessibility from the outset, you can create more equitable AI systems that benefit everyone.</p>
+</section>
+<section id="task">
+<h2>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h2>
+<p><strong>Evaluating Your Past AI/ML Project for Accessibility</strong></p>
+<hr class="docutils" />
+<p>Think back to a previous AI or ML project you’ve worked on. In this task, you will reflect on the accessibility of your project and consider the following questions:</p>
+<ul class="simple">
+<li><p>Did your project include any accessibility features for users with disabilities (e.g., screen reader support, voice input/output)?</p></li>
+<li><p>Was your project optimized for users with low internet bandwidth or outdated devices?</p></li>
+<li><p>How did you ensure that your dataset was diverse and representative of marginalized groups?</p></li>
+<li><p>Can you identify any areas where your project might cause discomfort or exclusion for certain users?</p></li>
+</ul>
+<p><strong>Reflection:</strong> Based on your answers, identify at least three ways you could modify or improve your project to make it more accessible. Provide specific recommendations and explain how these changes would benefit different user groups (e.g., those with visual impairments, low-income users, or those with limited technical knowledge).</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-09.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 9: Langchain</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-11a.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 11a: Student Machine Learning Projects in Chemical Engineering</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-accessibility-in-ai-and-ml">10.1. Introduction to Accessibility in AI and ML</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#designing-accessible-graphical-user-interfaces-guis">10.2. Designing Accessible Graphical User Interfaces (GUIs)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-accessible-chatbots-and-voice-assistants">10.3. Creating Accessible Chatbots and Voice Assistants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#improving-accessibility-for-users-with-low-income-or-limited-internet-access">10.4.Improving Accessibility for Users with Low-Income or Limited Internet Access</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#accessible-data-collection-and-processing">10.5. Accessible Data Collection and Processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inclusive-machine-learning-models">10.6. Inclusive Machine Learning Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-and-frameworks-for-building-accessible-ai-systems">10.7. Tools and Frameworks for Building Accessible AI Systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-and-evaluating-accessibility-in-ai-projects">10.8. Testing and Evaluating Accessibility in AI Projects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie — Bucknell University
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

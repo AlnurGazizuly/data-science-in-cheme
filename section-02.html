@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 2: Introduction to Python &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-02';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 3: Exploratory Data Analysis (EDA)" href="section-03.html" />
+    <link rel="prev" title="Section 1: Foundations of Data Science" href="section-01.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <script defer src="_static/pyodide-runner.js"></script>
+</head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DS in ChemE</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-07.html">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-02.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 2: Introduction to Python</h1>
+
+<div style="margin: 16px 0;">
+  <a href="../lite/lab/index.html?path=section-02.ipynb" target="_blank"
+     style="display:inline-flex;align-items:center;gap:8px;background:#1565c0;color:#fff;
+            padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;
+            font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+    ▶&nbsp; Run Code in Browser
+  </a>
+  <span style="margin-left:12px;font-size:12px;color:#888;">Runs instantly — no install needed</span>
+</div>
+
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1-variables-and-data-types">Exercise 2.1: Variables and Data Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-variables">2.1. Understanding Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">2.2. Data Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-formatting-code">2.3. Best Practices for Formatting Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-and-debugging">2.4. Printing and Debugging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-python">2.5. Installing Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-and-running-code">2.6. Writing and Running Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">2.7. Error Handling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2-basic-operations">Exercise 2.2: Basic Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-arithmetic-operations">2.8. Basic Arithmetic Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-math-module">2.9. Using the math Module</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3-lists-and-loops">Exercise 2.3: Lists and Loops</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-lists">2.10. Working with Lists</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loops">2.11. Using Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-4-functions">Exercise 2.4: Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">2.12. Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-5-numpy-basics">Exercise 2.5: Numpy Basics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numpy">2.13. NumPy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-6-importing-and-manipulating-an-excel-spreadsheet">Exercise 2.6: Importing and Manipulating an Excel Spreadsheet</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-and-importing-spreadsheets">2.14. Pandas and Importing Spreadsheets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-7-data-visualization-with-matplotlib-and-seaborn">Exercise 2.7: Data Visualization with Matplotlib and Seaborn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-and-seaborn">2.15. Matplotlib and Seaborn</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-4">Exercise 2.4:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-5">Exercise 2.5:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-7">Exercise 2.7:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-2-introduction-to-python">
+<h1>Section 2: Introduction to Python<a class="headerlink" href="#section-2-introduction-to-python" title="Link to this heading">#</a></h1>
+<p>Python is a versatile and beginner-friendly programming language widely used for various applications, including web development, data analysis, artificial intelligence, and scientific computing. In this section, you’ll learn the fundamentals of Python, including its syntax, core concepts, and how to write basic programs.</p>
+<section id="exercise-2-1-variables-and-data-types">
+<h2>Exercise 2.1: Variables and Data Types<a class="headerlink" href="#exercise-2-1-variables-and-data-types" title="Link to this heading">#</a></h2>
+<section id="explanation">
+<h3>Explanation:<a class="headerlink" href="#explanation" title="Link to this heading">#</a></h3>
+<p>Variables are like storage containers for data in your program. In Python, you can store different types of data such as numbers (integers, floats), text (strings), and truth values (booleans). These data types are essential for performing calculations, managing conditions, and organizing information in programs. For example, in chemical engineering, you might use variables to store temperatures, pressures, or flow rates.</p>
+<p>Python automatically determines the type of data you assign to a variable, so you don’t need to declare the type explicitly.</p>
+</section>
+<section id="understanding-variables">
+<h3>2.1. Understanding Variables<a class="headerlink" href="#understanding-variables" title="Link to this heading">#</a></h3>
+<p>A variable is a name that refers to a value stored in your program. In Python, you can assign values to variables using the <code class="docutils literal notranslate"><span class="pre">=</span></code> operator. Python automatically determines the type of the variable based on the value you assign.</p>
+<p><strong>Example:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defining variables</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># Temperature in Kelvin</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p><strong>Variable Naming:</strong> Use descriptive names (e.g., <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">pressure</span></code>, <code class="docutils literal notranslate"><span class="pre">flowrate</span></code>) that make your code easy to read and understand.</p></li>
+<li><p><strong>Comments:</strong> Use the <code class="docutils literal notranslate"><span class="pre">#</span></code> symbol to add comments that explain what your code does.</p></li>
+</ul>
+</section>
+<section id="data-types">
+<h3>2.2. Data Types<a class="headerlink" href="#data-types" title="Link to this heading">#</a></h3>
+<p>Python supports various data types. In the example above:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">20</span></code> is an integer (<code class="docutils literal notranslate"><span class="pre">int</span></code>). An integer is a whole number that contains no decimal points.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code> is a floating-point number (<code class="docutils literal notranslate"><span class="pre">float</span></code>). A float is a number that contains a decimal point.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code> is a boolean (<code class="docutils literal notranslate"><span class="pre">bool</span></code>), which can be either <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Flowrate&quot;</span></code> is a string (<code class="docutils literal notranslate"><span class="pre">str</span></code>), used for text. Strings can also contain numbers, but they are represented as a text when there are surrounded by either ‘’ or “”. So while 1 is an integer, ‘1’ is a string.</p></li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>Strings must be enclosed in single (<code class="docutils literal notranslate"><span class="pre">'</span></code>) or double (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>) quotes.</p></li>
+<li><p>Boolean values are case-sensitive and must be written as <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</section>
+<section id="best-practices-for-formatting-code">
+<h3>2.3. Best Practices for Formatting Code<a class="headerlink" href="#best-practices-for-formatting-code" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Indentation:</strong> Python relies on indentation (typically 4 spaces) to define blocks of code.</p></li>
+<li><p><strong>PEP 8 Guidelines:</strong> Follow Python’s official style guide, which promotes readability and consistency.</p></li>
+<li><p><strong>Whitespace:</strong> Use spaces around operators (<code class="docutils literal notranslate"><span class="pre">=</span></code>) for clarity.</p></li>
+</ul>
+</section>
+<section id="printing-and-debugging">
+<h3>2.4. Printing and Debugging<a class="headerlink" href="#printing-and-debugging" title="Link to this heading">#</a></h3>
+<p>To check the values of your variables or output information, use the <code class="docutils literal notranslate"><span class="pre">print()</span></code> function.</p>
+<p><strong>Example:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reactor temperature:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature: </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">f</span></code> before the string enables <strong>f-strings</strong>, which allow you to include variable values directly within the string using curly braces (<code class="docutils literal notranslate"><span class="pre">{}</span></code>).</p></li>
+</ul>
+</section>
+<section id="installing-python">
+<h3>2.5. Installing Python<a class="headerlink" href="#installing-python" title="Link to this heading">#</a></h3>
+<p>Before writing any code, ensure Python is installed on your computer. You can download it from <a class="reference external" href="https://www.python.org/">python.org</a>. It’s recommended to use Python 3.x, as Python 2.x is no longer supported.</p>
+</section>
+<section id="writing-and-running-code">
+<h3>2.6. Writing and Running Code<a class="headerlink" href="#writing-and-running-code" title="Link to this heading">#</a></h3>
+<p>You can write Python code in:</p>
+<ul>
+<li><p><strong>Interactive Mode:</strong> Open a terminal and type <code class="docutils literal notranslate"><span class="pre">python</span></code> (or <code class="docutils literal notranslate"><span class="pre">python3</span></code> depending on your system).</p></li>
+<li><p><strong>Scripts:</strong> Use a text editor (e.g., VS Code, PyCharm, or Jupyter Notebook) to write your code and save it with a <code class="docutils literal notranslate"><span class="pre">.py</span></code> extension. Run it in a terminal using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>your_script.py
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="error-handling">
+<h3>2.7. Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading">#</a></h3>
+<p>If you make a mistake, Python will provide an error message. Read the error carefully to understand what went wrong and how to fix it.</p>
+<p><strong>Common Errors:</strong></p>
+<ul class="simple">
+<li><p><strong>SyntaxError:</strong> Missing or misplaced punctuation, such as forgetting quotes or parentheses.</p></li>
+<li><p><strong>NameError:</strong> Using a variable that hasn’t been defined.</p></li>
+</ul>
+<p>By practicing these basics, you’ll build a strong foundation for using Python to solve chemical engineering problems effectively.</p>
+</section>
+<section id="task">
+<h3>Task:<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Define a variable <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and assign it the value 300 (Kelvin).</p></li>
+<li><p>Define a variable <code class="docutils literal notranslate"><span class="pre">pressure</span></code> and assign it the value 1.0 (atm).</p></li>
+<li><p>Define a variable <code class="docutils literal notranslate"><span class="pre">is_reactor_on</span></code> and assign it the value <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p>Define a string variable <code class="docutils literal notranslate"><span class="pre">reactor_status</span></code> with the value “Active”.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-2-basic-operations">
+<h2>Exercise 2.2: Basic Operations<a class="headerlink" href="#exercise-2-2-basic-operations" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h3>Explanation:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Python allows basic mathematical operations such as addition (<code class="docutils literal notranslate"><span class="pre">+</span></code>), subtraction (<code class="docutils literal notranslate"><span class="pre">-</span></code>), multiplication (<code class="docutils literal notranslate"><span class="pre">*</span></code>), and division (<code class="docutils literal notranslate"><span class="pre">/</span></code>). These operations are used to calculate values and model relationships between variables. For example, the Ideal Gas Law (PV = nRT) relates pressure, volume, and temperature to the amount of gas in a system.</p>
+<p>Python follows the standard mathematical order of operations (PEMDAS): Parentheses, Exponents, Multiplication/Division, and Addition/Subtraction.</p>
+</section>
+<section id="basic-arithmetic-operations">
+<h3>2.8. Basic Arithmetic Operations<a class="headerlink" href="#basic-arithmetic-operations" title="Link to this heading">#</a></h3>
+<p>Python provides built-in operators and functions for performing a variety of mathematical calculations. These are essential for solving engineering problems.</p>
+<p>Addition: +</p>
+<p>Subtraction: -</p>
+<p>Multiplication: *</p>
+<p>Division: /</p>
+<p>Exponentiation: **</p>
+<p>Modulus (remainder): %</p>
+<p><strong>Example:</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic operations</span>
+<span class="n">sum_value</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span>      <span class="c1"># 8</span>
+<span class="n">difference</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">4</span>    <span class="c1"># 6</span>
+<span class="n">product</span> <span class="o">=</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">2</span>        <span class="c1"># 14</span>
+<span class="n">quotient</span> <span class="o">=</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">3</span>       <span class="c1"># 3.0</span>
+<span class="n">power</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">3</span>         <span class="c1"># 8</span>
+<span class="n">remainder</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">%</span> <span class="mi">3</span>     <span class="c1"># 1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sum: </span><span class="si">{</span><span class="n">sum_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference: </span><span class="si">{</span><span class="n">difference</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Product: </span><span class="si">{</span><span class="n">product</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quotient: </span><span class="si">{</span><span class="n">quotient</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Power: </span><span class="si">{</span><span class="n">power</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remainder: </span><span class="si">{</span><span class="n">remainder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Python follows the standard mathematical order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction.</p>
+<p>Example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 5 + (3 * 2) = 11</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># (5 + 3) * 2 = 16</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-the-math-module">
+<h3>2.9. Using the math Module<a class="headerlink" href="#using-the-math-module" title="Link to this heading">#</a></h3>
+<p>The math module provides additional mathematical functions, including trigonometric, logarithmic, and advanced calculations.</p>
+<p>Example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="c1"># Trigonometric functions</span>
+<span class="n">angle_rad</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>  <span class="c1"># Convert degrees to radians</span>
+<span class="n">sin_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
+<span class="n">cos_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_rad</span><span class="p">)</span>
+
+<span class="c1"># Logarithmic functions</span>
+<span class="n">log_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>      <span class="c1"># Natural log</span>
+<span class="n">log10_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="c1"># Base-10 log</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sin(45°): </span><span class="si">{</span><span class="n">sin_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cos(45°): </span><span class="si">{</span><span class="n">cos_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ln(10): </span><span class="si">{</span><span class="n">log_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;log10(100): </span><span class="si">{</span><span class="n">log10_value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>These operations and functions provide the foundation for performing numerical calculations in Python, enabling you to solve complex engineering problems efficiently.</p>
+</section>
+<section id="id2">
+<h3>Task:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Calculate the moles of a gas using the Ideal Gas Law: PV = nRT. Assume:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">=</span> <span class="pre">1</span></code> atm</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">V</span> <span class="pre">=</span> <span class="pre">22.4</span></code> L</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">R</span> <span class="pre">=</span> <span class="pre">0.0821</span></code> L.atm/(mol.K)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">=</span> <span class="pre">300</span></code> K
+Assign the result to a variable <code class="docutils literal notranslate"><span class="pre">moles</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Compute the work done by a system using W = -PΔV, where:</p>
+<ul class="simple">
+<li><p>P = 2 atm</p></li>
+<li><p>ΔV = 5 L.</p></li>
+</ul>
+</li>
+<li><p>Calculate the energy required to heat a substance using Q = mcΔT, where:</p>
+<ul class="simple">
+<li><p>m = 10 kg</p></li>
+<li><p>c = 4.18 J/g.K</p></li>
+<li><p>ΔT = 30 K.</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-3-lists-and-loops">
+<h2>Exercise 2.3: Lists and Loops<a class="headerlink" href="#exercise-2-3-lists-and-loops" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h3>Explanation:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>Lists are used to store multiple values in a single variable. This is useful when working with repeated measurements or datasets. Loops, like <code class="docutils literal notranslate"><span class="pre">for</span></code> loops, allow you to process each value in a list, making it easy to apply calculations or transformations to multiple values.</p>
+<p>In chemical engineering, you might use lists to store data such as temperature readings at different times or flow rates for different streams.</p>
+</section>
+<section id="working-with-lists">
+<h3>2.10. Working with Lists<a class="headerlink" href="#working-with-lists" title="Link to this heading">#</a></h3>
+<p>Lists are a versatile data structure in Python that can store multiple values in a single variable. Lists can hold items of any data type and are commonly used for organizing and manipulating data.</p>
+<p>You can create a list using square brackets [] and separate items with commas.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a list of reactor temperatures</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">450</span><span class="p">]</span>
+
+<span class="c1"># Accessing elements</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">temperatures</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># First element: 300</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">temperatures</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Last element: 450</span>
+</pre></div>
+</div>
+<p>Lists are mutable, meaning you can change their contents.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Updating a value</span>
+<span class="n">temperatures</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">360</span>
+
+<span class="c1"># Adding values</span>
+<span class="n">temperatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>  <span class="c1"># Add 500 to the end</span>
+
+<span class="c1"># Removing values</span>
+<span class="n">temperatures</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>  <span class="c1"># Remove the value 400</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use a for loop to iterate through a list and process each element.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Printing all temperatures</span>
+<span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temperatures</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature: </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-loops">
+<h3>2.11. Using Loops<a class="headerlink" href="#using-loops" title="Link to this heading">#</a></h3>
+<p>Loops allow you to repeat a block of code multiple times. Python supports two main types of loops: for loops and while loops.</p>
+<p>for loops are used to iterate over a sequence (e.g., a list or a range of numbers).</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculating the square of each number in a list</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+    <span class="n">square</span> <span class="o">=</span> <span class="n">num</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The square of </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">square</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>while loops execute as long as a specified condition is True.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Countdown from 5</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="k">while</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Countdown: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Decrease count by 1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Blast off!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are control statements that you can use to edit the function of a loop. If you want a loop to either skip and iteration or break entirely once it has reached a certain condition, you can use the following control statements:</p>
+<p>break: Exit the loop entirely.</p>
+<p>continue: Skip to the next iteration.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Printing odd numbers only</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>  <span class="c1"># Skip even numbers</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lists and loops are powerful tools for managing and processing data in Python. By combining them, you can efficiently handle large datasets and automate repetitive tasks.</p>
+</section>
+<section id="id4">
+<h3>Task:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Create a list <code class="docutils literal notranslate"><span class="pre">temperatures</span></code> with values [300, 310, 320, 330]. Then use a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop to convert each temperature to Celsius (C = K - 273.15). Finally, print each converted value.</p></li>
+<li><p>Create a list of pressures [1.0, 1.5, 2.0, 2.5] and calculate the corresponding volumes for a fixed number of moles (n = 1) and temperature (T = 298 K) using PV = nRT.</p></li>
+<li><p>Create a list of flow rates [5, 10, 15] and double each value using a loop.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-4-functions">
+<h2>Exercise 2.4: Functions<a class="headerlink" href="#exercise-2-4-functions" title="Link to this heading">#</a></h2>
+<section id="id5">
+<h3>Explanation:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>Functions are reusable blocks of code that perform a specific task. They make your code more organized and efficient, especially for repeated calculations. Functions can take inputs (parameters), perform computations, and return outputs.</p>
+<p>For instance, in engineering, you can use functions to calculate properties like enthalpy, entropy, or reaction rates given certain parameters.</p>
+</section>
+<section id="functions">
+<h3>2.12. Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h3>
+<p>Functions are reusable blocks of code designed to perform a specific task. They allow you to organize your code, avoid repetition, and improve readability.</p>
+<p>Use the def keyword to define a function, followed by the function name and parentheses. Parameters can be included within the parentheses.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a function to calculate pressure using the Ideal Gas Law</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_pressure</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mf">0.0821</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate pressure using PV = nRT.&quot;&quot;&quot;</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">V</span>
+    <span class="k">return</span> <span class="n">P</span>
+
+<span class="c1"># Call the function</span>
+<span class="n">pressure</span> <span class="o">=</span> <span class="n">calculate_pressure</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="mf">22.4</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pressure: </span><span class="si">{</span><span class="n">pressure</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> atm&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In a function, the default arguments allow you to specify default values for parameters. Keyword arguments let you call a function with parameters in any order.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using default and keyword arguments</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">greeting</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">greeting</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+
+<span class="n">greet</span><span class="p">(</span><span class="s2">&quot;Maya&quot;</span><span class="p">)</span>  <span class="c1"># Output: Hello, Maya!</span>
+<span class="n">greet</span><span class="p">(</span><span class="s2">&quot;Maya&quot;</span><span class="p">,</span> <span class="n">greeting</span><span class="o">=</span><span class="s2">&quot;Hi&quot;</span><span class="p">)</span>  <span class="c1"># Output: Hi, Maya!</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h3>Task:<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">ideal_gas_law</span></code> that calculates moles given P, V, R, and T. Call the function with P = 2 atm, V = 10 L, R = 0.0821, and T = 298 K.</p></li>
+<li><p>Write a function to calculate the density of a substance given mass and volume.</p></li>
+<li><p>Write a function to calculate Reynolds number given velocity, characteristic length, density, and viscosity.</p></li>
+</ol>
+<p>When using functions, make sure to use <code class="docutils literal notranslate"><span class="pre">return</span></code> instead of just<code class="docutils literal notranslate"><span class="pre">print</span></code>. If you don’t return the variable out of the funciton, it will just be floating around in space! You cannot use a variable outside of a function unless you return it.</p>
+<p>Just be careful, using return is always the last thing you do! If you write code in a funciton after the return, then that code will <strong>not run.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-5-numpy-basics">
+<h2>Exercise 2.5: Numpy Basics<a class="headerlink" href="#exercise-2-5-numpy-basics" title="Link to this heading">#</a></h2>
+<section id="id7">
+<h3>Explanation:<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<p>Numpy is a Python library that allows efficient operations on arrays and matrices. It’s particularly useful in engineering and data science for handling numerical data, performing mathematical operations, and working with multidimensional datasets.</p>
+<p>Using numpy arrays is faster and more memory-efficient than using lists, especially for large datasets.</p>
+</section>
+<section id="numpy">
+<h3>2.13. NumPy<a class="headerlink" href="#numpy" title="Link to this heading">#</a></h3>
+<p>NumPy is a powerful library for numerical computing. It provides support for arrays, matrices, and mathematical functions.</p>
+<p>You must first import the library, typically using the alias np, which should look like: <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">numpy</span> <span class="pre">as</span> <span class="pre">np</span></code></p>
+<p>NumPy can be used for a variety of operations, but is most commonly used to make arrays. Arrays are the core of NumPy and are more efficient than Python lists.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a NumPy array</span>
+<span class="n">pressures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+
+<span class="c1"># Perform operations on the array</span>
+<span class="n">pressures_in_pascals</span> <span class="o">=</span> <span class="n">pressures</span> <span class="o">*</span> <span class="mi">101325</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pressures_in_pascals</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>NumPy arrays support element-wise operations.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Temperature in Kelvin</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">])</span>
+
+<span class="c1"># Convert to Celsius</span>
+<span class="n">temperatures_celsius</span> <span class="o">=</span> <span class="n">temperatures</span> <span class="o">-</span> <span class="mf">273.15</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">temperatures_celsius</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>Task:<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Import numpy as <code class="docutils literal notranslate"><span class="pre">np</span></code>. Create a numpy array <code class="docutils literal notranslate"><span class="pre">pressures</span></code> with values [1, 2, 3, 4] atm. Finally, multiply the array by 101.325 to convert pressures to kPa. Return the new array.</p></li>
+<li><p>Create a numpy array for temperatures in Celsius [25, 50, 75, 100] and convert them to Kelvin. Return the new array.</p></li>
+<li><p>Calculate the mean and standard deviation of an array representing flow rates [10, 20, 30, 40]. Retyrn the new array.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-6-importing-and-manipulating-an-excel-spreadsheet">
+<h2>Exercise 2.6: Importing and Manipulating an Excel Spreadsheet<a class="headerlink" href="#exercise-2-6-importing-and-manipulating-an-excel-spreadsheet" title="Link to this heading">#</a></h2>
+<section id="id9">
+<h3>Explanation:<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<p>Chemical engineers often work with data in Excel spreadsheets. Python’s <code class="docutils literal notranslate"><span class="pre">pandas</span></code> library makes it easy to import, manipulate, and analyze data. Pandas can read data directly from Excel files into a DataFrame, which is a structured format similar to a table.</p>
+<p>A DataFrame allows you to filter rows, compute statistics, and transform data efficiently.</p>
+</section>
+<section id="pandas-and-importing-spreadsheets">
+<h3>2.14. Pandas and Importing Spreadsheets<a class="headerlink" href="#pandas-and-importing-spreadsheets" title="Link to this heading">#</a></h3>
+<p>Pandas is a library for data manipulation and analysis, especially useful for working with tabular data. You need to import it as <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pandas</span> <span class="pre">as</span> <span class="pre">pd</span></code>.</p>
+<p>Using pandas, you can read data from Excel or CSV files into a DataFrame. This is one of the most useful tools in Python, as it allows you to take pre-existing datasets and do analysis with them in Python.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read an Excel file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;data.xlsx&quot;</span><span class="p">)</span>
+
+<span class="c1"># Display the first few rows</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Use built-in methods to explore and analyze your data.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summarize data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+<span class="c1"># Select a column</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Temperature&quot;</span><span class="p">]</span>
+
+<span class="c1"># Filter rows</span>
+<span class="n">high_pressure</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Pressure&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">high_pressure</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h3>Task:<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Import the pandas library. Load an Excel spreadsheet named <code class="docutils literal notranslate"><span class="pre">Section2.xlsx</span></code> into a DataFrame. Assume the file has a sheet named “Sheet1”.Display the first five rows of the DataFrame.</p></li>
+<li><p>Calculate the mean of a column named <code class="docutils literal notranslate"><span class="pre">FlowRate</span></code>.</p></li>
+<li><p>Filter rows where <code class="docutils literal notranslate"><span class="pre">Temperature</span> <span class="pre">&gt;</span> <span class="pre">300</span></code>.</p></li>
+<li><p>Create a new column <code class="docutils literal notranslate"><span class="pre">Pressure_kPa</span></code> by converting a column <code class="docutils literal notranslate"><span class="pre">Pressure</span></code> from atm to kPa.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-7-data-visualization-with-matplotlib-and-seaborn">
+<h2>Exercise 2.7: Data Visualization with Matplotlib and Seaborn<a class="headerlink" href="#exercise-2-7-data-visualization-with-matplotlib-and-seaborn" title="Link to this heading">#</a></h2>
+<section id="id11">
+<h3>Explanation:<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<p>Visualization is crucial for understanding trends and patterns in data. <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> is a Python library for creating static, interactive, and animated visualizations. <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> builds on matplotlib and provides a high-level interface for creating informative and attractive statistical graphics.</p>
+</section>
+<section id="matplotlib-and-seaborn">
+<h3>2.15. Matplotlib and Seaborn<a class="headerlink" href="#matplotlib-and-seaborn" title="Link to this heading">#</a></h3>
+<p>Matplotlib and Seaborn are libraries for data visualization. Follow the same procedure to import libraries as before, where:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+</pre></div>
+</div>
+<p>You can use Matplotlib for simple plots. This allows you to visualize your dataset.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot temperature vs. pressure</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">]</span>
+<span class="n">pressures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">pressures</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Temperature (K)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Pressure (atm)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Temperature vs. Pressure&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Seaborn builds on Matplotlib and provides beautiful default styles. Both tools can be used together in order to create nice plots that clearly show your data.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a scatterplot with Seaborn</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Temperature&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
+    <span class="s2">&quot;Pressure&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pressure&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Temperature vs. Pressure&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id12">
+<h3>Task:<a class="headerlink" href="#id12" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Import <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.</p></li>
+<li><p>Create a line plot for a dataset where <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">4,</span> <span class="pre">9]</span></code>.</p></li>
+<li><p>Use seaborn to create a scatterplot of <code class="docutils literal notranslate"><span class="pre">Temperature</span></code> vs <code class="docutils literal notranslate"><span class="pre">Pressure</span></code> from the DataFrame <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
+<li><p>Plot a histogram of the <code class="docutils literal notranslate"><span class="pre">FlowRate</span></code> column.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your code goes here</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="answer-key">
+<h2>Answer Key<a class="headerlink" href="#answer-key" title="Link to this heading">#</a></h2>
+<section id="exercise-2-1">
+<h3>Exercise 2.1:<a class="headerlink" href="#exercise-2-1" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">temperature</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">pressure</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">is_reactor_on</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">reactor_status</span> <span class="o">=</span> <span class="s2">&quot;Active&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-2">
+<h3>Exercise 2.2:<a class="headerlink" href="#exercise-2-2" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Moles of an ideal gas</span>
+<span class="n">P</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">V</span> <span class="o">=</span> <span class="mf">22.4</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">0.0821</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">moles</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Moles of gas:&quot;</span><span class="p">,</span> <span class="n">moles</span><span class="p">)</span>
+
+<span class="c1"># Work done by a system</span>
+<span class="n">P</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">delta_V</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">work</span> <span class="o">=</span> <span class="o">-</span><span class="n">P</span> <span class="o">*</span> <span class="n">delta_V</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Work done:&quot;</span><span class="p">,</span> <span class="n">work</span><span class="p">)</span>
+
+<span class="c1"># Energy required for heating</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1000</span>  <span class="c1"># Convert kg to grams</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">4.18</span>
+<span class="n">delta_T</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">m</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">delta_T</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy required (Q):&quot;</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="s2">&quot;Joules&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-3">
+<h3>Exercise 2.3:<a class="headerlink" href="#exercise-2-3" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Converting temperatures</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">310</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">330</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temperatures</span><span class="p">:</span>
+    <span class="n">celsius</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="mf">273.15</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2"> K = </span><span class="si">{</span><span class="n">celsius</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> °C&quot;</span>
+
+<span class="c1"># List of pressures</span>
+<span class="n">pressures</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">]</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">0.0821</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">298</span>
+<span class="n">volumes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">P</span> <span class="ow">in</span> <span class="n">pressures</span><span class="p">:</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span>
+    <span class="n">volumes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Volumes:&quot;</span><span class="p">,</span> <span class="n">volumes</span><span class="p">)</span>
+
+<span class="c1"># Double flow rates</span>
+<span class="n">flow_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">flow_rates</span><span class="p">:</span>
+    <span class="n">doubled_rate</span> <span class="o">=</span> <span class="n">rate</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original: </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2"> L/s, Doubled: </span><span class="si">{</span><span class="n">doubled_rate</span><span class="si">}</span><span class="s2"> L/s&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-4">
+<h3>Exercise 2.4:<a class="headerlink" href="#exercise-2-4" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ideal gas law function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ideal_gas_law</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
+
+<span class="n">moles</span> <span class="o">=</span> <span class="n">ideal_gas_law</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.0821</span><span class="p">,</span> <span class="mi">298</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculated moles:&quot;</span><span class="p">,</span> <span class="n">moles</span><span class="p">)</span>
+
+<span class="c1"># Density function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_density</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">volume</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mass</span> <span class="o">/</span> <span class="n">volume</span>
+
+<span class="n">density</span> <span class="o">=</span> <span class="n">calculate_density</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Density:&quot;</span><span class="p">,</span> <span class="n">density</span><span class="p">)</span>
+
+<span class="c1"># Reynolds number function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">reynolds_number</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">viscosity</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">velocity</span> <span class="o">*</span> <span class="n">length</span> <span class="o">*</span> <span class="n">density</span><span class="p">)</span> <span class="o">/</span> <span class="n">viscosity</span>
+
+<span class="n">Re</span> <span class="o">=</span> <span class="n">reynolds_number</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reynolds Number:&quot;</span><span class="p">,</span> <span class="n">Re</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-5">
+<h3>Exercise 2.5:<a class="headerlink" href="#exercise-2-5" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pressures to kPA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">pressures</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="n">pressures_kpa</span> <span class="o">=</span> <span class="n">pressures</span> <span class="o">*</span> <span class="mf">101.325</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pressures in kPa:&quot;</span><span class="p">,</span> <span class="n">pressures_kpa</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">pressures_kpa</span>
+
+<span class="c1"># Temperatures in Kelvin</span>
+<span class="n">temps_celsius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+<span class="n">temps_kelvin</span> <span class="o">=</span> <span class="n">temps_celsius</span> <span class="o">+</span> <span class="mf">273.15</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Temperatures in Kelvin:&quot;</span><span class="p">,</span> <span class="n">temps_kelvin</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">temps_kelvin</span>
+
+<span class="c1"># Flow rates</span>
+<span class="n">flow_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
+<span class="n">mean_flow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">flow_rates</span><span class="p">)</span>
+<span class="n">std_flow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">flow_rates</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean flow rate:&quot;</span><span class="p">,</span> <span class="n">mean_flow</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard deviation of flow rates:&quot;</span><span class="p">,</span> <span class="n">std_flow</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">std_flow</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<span class="c1">#### Exercise 2.6:</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load Excel file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;data.xlsx&quot;</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;Sheet1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Calculate the mean of FlowRate</span>
+<span class="n">mean_flowrate</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;FlowRate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean FlowRate:&quot;</span><span class="p">,</span> <span class="n">mean_flowrate</span><span class="p">)</span>
+
+<span class="c1"># Filter rows</span>
+<span class="n">temp_filtered</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Temperature&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">300</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">temp_filtered</span><span class="p">)</span>
+
+<span class="c1"># Convert Pressure to kPa</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;Pressure_kPa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Pressure&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">101.325</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2-7">
+<h3>Exercise 2.7:<a class="headerlink" href="#exercise-2-7" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Line plot</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Line Plot&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;x-axis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;y-axis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Scatterplot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Temperature&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Pressure&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Temperature vs Pressure&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Histogram</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;FlowRate&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;FlowRate Distribution&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-01.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 1: Foundations of Data Science</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-03.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 3: Exploratory Data Analysis (EDA)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1-variables-and-data-types">Exercise 2.1: Variables and Data Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explanation">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-variables">2.1. Understanding Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-types">2.2. Data Types</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-formatting-code">2.3. Best Practices for Formatting Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printing-and-debugging">2.4. Printing and Debugging</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-python">2.5. Installing Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-and-running-code">2.6. Writing and Running Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">2.7. Error Handling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#task">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2-basic-operations">Exercise 2.2: Basic Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-arithmetic-operations">2.8. Basic Arithmetic Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-math-module">2.9. Using the math Module</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3-lists-and-loops">Exercise 2.3: Lists and Loops</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#working-with-lists">2.10. Working with Lists</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-loops">2.11. Using Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-4-functions">Exercise 2.4: Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">2.12. Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-5-numpy-basics">Exercise 2.5: Numpy Basics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numpy">2.13. NumPy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-6-importing-and-manipulating-an-excel-spreadsheet">Exercise 2.6: Importing and Manipulating an Excel Spreadsheet</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pandas-and-importing-spreadsheets">2.14. Pandas and Importing Spreadsheets</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-7-data-visualization-with-matplotlib-and-seaborn">Exercise 2.7: Data Visualization with Matplotlib and Seaborn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Explanation:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-and-seaborn">2.15. Matplotlib and Seaborn</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Task:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#answer-key">Answer Key</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-1">Exercise 2.1:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-2">Exercise 2.2:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-3">Exercise 2.3:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-4">Exercise 2.4:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-5">Exercise 2.5:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise-2-7">Exercise 2.7:</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie — Bucknell University
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

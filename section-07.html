@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Section 7: Ethics &#8212; Data Science in Chemical Engineering</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'section-07';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs)" href="section-08.html" />
+    <link rel="prev" title="Section 6: Deploying a Graphical User Inteface (GUI)" href="section-06.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <script defer src="_static/pyodide-runner.js"></script>
+</head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">DS in ChemE</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="section-01.html">Section 1: Foundations of Data Science</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-02.html">Section 2: Introduction to Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-03.html">Section 3: Exploratory Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-04.html">Section 4: Introduction to Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-05.html">Section 5: GitHub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-06.html">Section 6: Deploying a GUI</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Section 7: Ethics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-08.html">Section 8: Transformers &amp; GPTs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-09.html">Section 9: LangChain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-10.html">Section 10: Accessibility in AI &amp; ML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11a.html">Section 11a: Student ML Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="section-11b.html">Section 11b: Machine Learning Projects in Chemical Engineering Research</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/section-07.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Section 7: Ethics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-ethics-in-machine-learning">7.1 Introduction to Ethics in Machine Learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-ethics-and-why-does-it-matter">What is ethics, and why does it matter?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-care-about-ethics-in-machine-learning">Why do we care about ethics in machine learning?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary-ethical-concerns-in-ai-deployment">Primary ethical concerns in AI deployment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explainability-and-interpretability">7.2 Explainability and Interpretability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environmental-impact-of-ai-models">7.3 Environmental Impact of AI Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-privacy-and-security">7.4 Data Privacy and Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fairness-in-model-predictions">7.5 Fairness in Model Predictions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ethical-decision-making-in-ml-deployment">7.6 Ethical Decision-Making in ML Deployment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ethics-datacad-and-deon-ethics-checklist">7.7 Ethics DataCAD and Deon Ethics Checklist</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responding-to-unethical-use-of-ai">7.8 Responding to Unethical Use of AI</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-and-assess-the-ethical-concern">1. Identify and assess the ethical concern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refer-to-professional-codes-and-organizational-policies">2. Refer to professional codes and organizational policies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communicate-concerns-clearly-and-constructively">3. Communicate concerns clearly and constructively</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#escalate-if-necessary">4. Escalate if necessary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protect-yourself-and-stakeholders">5. Protect yourself and stakeholders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-ethical-ai-practices-proactively">6. Promote ethical AI practices proactively</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-ethics-in-chemical-engineering-data-science">7.9 Examples of Ethics in Chemical Engineering Data Science</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#biased-dataset-in-a-chemical-safety-model">1. Biased Dataset in a Chemical Safety Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#black-box-model-in-high-risk-decision-making">2. Black-Box Model in High-Risk Decision Making</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-optimization-that-ignores-environmental-impact">3. Model Optimization That Ignores Environmental Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#misuse-of-predictive-models-for-employee-monitoring">4. Misuse of Predictive Models for Employee Monitoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-system-reinforcing-stereotypes-in-hiring">5. AI System Reinforcing Stereotypes in Hiring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unvalidated-model-used-outside-intended-domain">6. Unvalidated Model Used Outside Intended Domain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-predictions-used-without-communicating-uncertainty">7. AI Predictions Used Without Communicating Uncertainty</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collected-without-user-awareness-in-a-lab">8. Data Collected Without User Awareness in a Lab</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-chatbot-giving-unsafe-experimental-advice">9. AI Chatbot Giving Unsafe Experimental Advice</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automation-that-displaces-workers-without-planning">10. Automation That Displaces Workers Without Planning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-ended-questions">Open-Ended Questions</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="section-7-ethics">
+<h1>Section 7: Ethics<a class="headerlink" href="#section-7-ethics" title="Link to this heading">#</a></h1>
+<p>Ethics are the backbone of chemical engineering. It is important that all machine learning applications are considered through an ethical framework to ensure that the outputs are safe, equitable, and trustworthy.</p>
+<section id="introduction-to-ethics-in-machine-learning">
+<h2>7.1 Introduction to Ethics in Machine Learning<a class="headerlink" href="#introduction-to-ethics-in-machine-learning" title="Link to this heading">#</a></h2>
+<p>Machine learning models are increasingly being used in chemical engineering applications, ranging from optimizing reaction conditions to predicting equipment failures. These models offer immense potential to enhance efficiency, reduce costs, and improve safety. However, their deployment also raises important ethical considerations. Engineers must carefully evaluate the impact of model biases, transparency, safety, and environmental consequences before implementing AI-driven solutions. Unlike traditional engineering models, which are grounded in first-principles physics and chemistry, machine learning models derive patterns directly from data. This characteristic means that their reliability, fairness, and ethical soundness depend heavily on the quality and comprehensiveness of the data they are trained on.</p>
+<section id="what-is-ethics-and-why-does-it-matter">
+<h3>What is ethics, and why does it matter?<a class="headerlink" href="#what-is-ethics-and-why-does-it-matter" title="Link to this heading">#</a></h3>
+<p>Ethics is the branch of philosophy concerned with distinguishing right from wrong and determining the principles that govern moral behavior. In the context of engineering, ethics guides professionals in making decisions that protect public safety, promote fairness, and minimize harm to society and the environment. Ethical considerations are not abstract; they have tangible implications. For instance, deploying a flawed AI model could not only lead to economic losses but also jeopardize worker safety, harm the environment, or exacerbate social inequalities. By adhering to ethical principles, engineers ensure that technological advances benefit society as a whole rather than creating unintended harm.</p>
+</section>
+<section id="why-do-we-care-about-ethics-in-machine-learning">
+<h3>Why do we care about ethics in machine learning?<a class="headerlink" href="#why-do-we-care-about-ethics-in-machine-learning" title="Link to this heading">#</a></h3>
+<p>Machine learning differs from traditional modeling in that it relies on historical data rather than explicitly programmed rules. This data-driven approach can inadvertently encode biases present in the training data, leading to models that are unfair, unsafe, or environmentally damaging. For example, if historical process data overrepresents certain operating conditions while underrepresenting others, the AI may favor some conditions over others, leading to suboptimal or even dangerous outcomes. Without ethical scrutiny, AI systems risk perpetuating mistakes, inefficiencies, and inequities.</p>
+</section>
+<section id="primary-ethical-concerns-in-ai-deployment">
+<h3>Primary ethical concerns in AI deployment<a class="headerlink" href="#primary-ethical-concerns-in-ai-deployment" title="Link to this heading">#</a></h3>
+<p>Bias: Bias arises when a model systematically favors certain outcomes due to skewed or incomplete training data. In chemical engineering, this could manifest in models optimized for specific temperature ranges or catalysts, which may not generalize well to different operating conditions. Such biases can reduce efficiency, increase costs, and potentially introduce safety hazards.</p>
+<p>Explainability and transparency: Many advanced machine learning models, particularly deep learning networks, operate as “black boxes,” offering accurate predictions without clear explanations. In safety-critical industries like petrochemical or pharmaceutical manufacturing, a lack of interpretability can hinder trust and adoption. Engineers need models whose decisions can be justified, audited, and understood. Transparency is essential not only for technical validation but also for regulatory compliance and public confidence.</p>
+<p>Accountability and responsibility: Ethical AI deployment involves clearly defining responsibility. If a model fails—resulting in suboptimal yields, accidents, or environmental harm—who is accountable? Engineers and decision-makers must establish protocols for validating, monitoring, and updating AI models before they are deployed. Ethical machine learning is not just about technical excellence; it requires a human-centered approach where responsibility, oversight, and societal impact are integral to every stage of the modeling process.</p>
+</section>
+</section>
+<section id="explainability-and-interpretability">
+<h2>7.2 Explainability and Interpretability<a class="headerlink" href="#explainability-and-interpretability" title="Link to this heading">#</a></h2>
+<p>A key challenge in AI ethics is ensuring that models remain explainable and interpretable. Engineers must be able to trust the outputs of machine learning models, especially when the models influence safety, environmental impact, or financial decisions. Unlike classical engineering models, which rely on well-defined equations, ML models use statistical correlations that may not always align with real-world causation.</p>
+<p>When a model suggests an optimal operating temperature for a chemical process, how can we be sure it’s reliable? If an AI model suggests increasing the temperature in a reactor but doesn’t explain why, should an engineer trust it? These are critical ethical questions. The lack of transparency in many ML models is a significant barrier to adoption, as stakeholders are less likely to trust systems they do not understand.</p>
+<p>Explainability tools like SHAP (SHapley Additive exPlanations) can help bridge this gap. These tools provide insights into which features most influence a model’s predictions, allowing engineers to validate the reasoning behind AI-driven recommendations. For example, if a model predicts that an increase in pressure will enhance yield, SHAP can reveal whether this conclusion is based on robust data or just a statistical artifact.</p>
+<p>Beyond technical concerns, explainability also intersects with legal and regulatory frameworks. Regulatory bodies may require AI models in chemical engineering applications to be auditable, meaning engineers must justify AI-driven decisions in a clear and interpretable manner. Failure to ensure explainability could result in regulatory violations or safety risks.</p>
+</section>
+<section id="environmental-impact-of-ai-models">
+<h2>7.3 Environmental Impact of AI Models<a class="headerlink" href="#environmental-impact-of-ai-models" title="Link to this heading">#</a></h2>
+<p>As machine learning and artificial intelligence become more integral to chemical engineering, their environmental impact is a growing concern. AI models, particularly those built on deep learning architectures, can have significant carbon footprints due to the computational resources required for training and deploying these models. While AI can enhance sustainability in processes such as energy optimization, predictive maintenance, and waste reduction, it is essential to consider the environmental costs of running AI models. This section discusses the carbon footprint of AI, strategies to mitigate environmental impact, and how to integrate sustainability into AI development in chemical engineering.</p>
+<p>The environmental impact of AI stems primarily from the computational power needed for training and inference. Training deep learning models often requires vast amounts of energy due to the high number of computations involved, especially when using powerful hardware like GPUs and TPUs. Studies have shown that training a large AI model can emit as much carbon dioxide (CO₂) as five cars over their entire lifetimes. This becomes a critical issue when considering large-scale deployments in chemical engineering, where AI can be used for process optimization, predictive maintenance, and other applications that require significant computational resources.</p>
+<p>In chemical engineering, the environmental impact of AI is especially relevant when using AI to optimize chemical processes, design energy-efficient systems, or reduce material waste. While these applications can lead to long-term sustainability gains, engineers must also assess the initial carbon footprint of training and running AI models.</p>
+</section>
+<section id="data-privacy-and-security">
+<h2>7.4 Data Privacy and Security<a class="headerlink" href="#data-privacy-and-security" title="Link to this heading">#</a></h2>
+<p>Machine learning models in chemical engineering often rely on sensitive industrial data, such as proprietary chemical compositions, operational parameters, and equipment performance metrics. Ensuring data privacy and security is critical, as breaches can have significant consequences—ranging from financial losses to safety hazards. Ethical AI use requires engineers to protect confidential data while maintaining model performance.</p>
+<p>One key ethical concern is data ownership. Who owns the data used to train machine learning models? In industrial settings, this data may belong to private companies, research institutions, or even regulatory bodies. Using such data without clear ownership agreements can lead to legal and ethical violations. Companies must establish policies to ensure data is collected, shared, and processed responsibly.</p>
+<p>Another issue is data anonymization. If a dataset contains sensitive industrial information—such as plant efficiency metrics or proprietary reaction conditions—it must be anonymized before being used in machine learning models. This prevents unauthorized access to trade secrets while still allowing for useful model training. However, anonymization is not foolproof; sophisticated attacks, such as re-identification methods, can sometimes reveal hidden patterns that link anonymized data back to specific sources.</p>
+<p>Beyond ownership and anonymization, cybersecurity is a growing concern in AI-driven chemical engineering applications. Many models are deployed in cloud environments, making them vulnerable to cyberattacks. If an adversary manipulates input data, they can trigger incorrect model predictions, potentially causing unsafe operating conditions in industrial plants. Implementing encryption and access controls is essential to ensure that only authorized users can access and modify AI models.</p>
+</section>
+<section id="fairness-in-model-predictions">
+<h2>7.5 Fairness in Model Predictions<a class="headerlink" href="#fairness-in-model-predictions" title="Link to this heading">#</a></h2>
+<p>Fairness in machine learning means ensuring that models perform consistently across different conditions and do not disproportionately favor or disadvantage specific cases. In chemical engineering, fairness can be thought of in terms of operational generalizability—whether a model works well across all relevant conditions, including different temperatures, pressures, raw material qualities, and production scales.</p>
+<p>One major fairness issue is biased training data. If a dataset predominantly represents high-temperature reaction conditions, the model may not generalize well to lower temperatures, leading to inaccurate predictions. This could result in suboptimal decision-making, such as inefficient catalyst usage or improper reactor settings. Engineers must ensure that training data includes a broad range of operational conditions.</p>
+<p>Fairness also applies to resource allocation. In process optimization, AI models may recommend adjustments to maximize efficiency. However, these recommendations might favor certain chemical plants or processes while neglecting others. For example, a model optimizing energy consumption might prioritize large-scale plants, leaving small-scale operations with less effective guidance. Ethical AI deployment requires balancing performance improvements across all stakeholders.</p>
+<p>A third fairness concern is model robustness. If a model performs well under normal conditions but fails unpredictably under rare but critical scenarios, it poses ethical and operational risks. This issue is particularly important in safety-critical applications, such as leak detection in pipelines or anomaly detection in reactors. Engineers should conduct stress testing to evaluate model performance under extreme conditions.</p>
+</section>
+<section id="ethical-decision-making-in-ml-deployment">
+<h2>7.6 Ethical Decision-Making in ML Deployment<a class="headerlink" href="#ethical-decision-making-in-ml-deployment" title="Link to this heading">#</a></h2>
+<p>While machine learning can optimize chemical processes and improve efficiency, ethical challenges arise when AI-driven models are used for decision-making in critical industrial settings. Engineers must consider whether AI models should have full autonomy over process changes or whether human oversight is necessary.</p>
+<p>One ethical dilemma is human accountability vs. AI automation. If a model suggests a change in reactor temperature to improve yield, but that change leads to unexpected side effects—such as equipment corrosion or safety hazards—who is responsible? Should engineers trust model predictions without question, or should they always verify outputs with traditional chemical engineering principles? Ethical AI use requires a balance between automation and human expertise.</p>
+<p>Another challenge is risk assessment in uncertain scenarios. AI models rely on historical data, but what happens if a new material is introduced or a plant experiences an unexpected operating condition? A model might extrapolate beyond its training data, leading to unreliable predictions. Engineers must establish clear guidelines for when AI recommendations should be followed and when they should be overridden by human judgment.</p>
+<p>Cost vs. safety trade-offs also pose ethical concerns. A model optimizing energy consumption might recommend reducing reaction times to save costs, but this could compromise product quality or increase defect rates. Ethical AI implementation must prioritize process safety over profit-driven decisions. Engineers should integrate fail-safe mechanisms into AI models, ensuring that recommendations never compromise safety or regulatory compliance.</p>
+</section>
+<section id="ethics-datacad-and-deon-ethics-checklist">
+<h2>7.7 Ethics DataCAD and Deon Ethics Checklist<a class="headerlink" href="#ethics-datacad-and-deon-ethics-checklist" title="Link to this heading">#</a></h2>
+<p>In the context of AI and machine learning in chemical engineering, it is critical to adopt ethical frameworks to guide the development, deployment, and monitoring of models. One such framework is Ethics DataCAD, which emphasizes the importance of data stewardship, accountability, and transparency throughout the AI lifecycle. Alongside this, the Deon Ethics Checklist provides a practical set of guidelines to ensure that AI models adhere to ethical principles, particularly regarding fairness, privacy, safety, and environmental impact.</p>
+<hr class="docutils" />
+<p><strong>Ethics DataCAD Framework</strong></p>
+<p>The Ethics DataCAD (Data and AI-driven Decisions) framework is designed to help engineers navigate the ethical challenges of using AI models in the chemical engineering field. It provides a comprehensive guide to understanding the key ethical issues and integrating solutions into the AI model’s lifecycle. The framework includes the following principles:</p>
+<p><strong>A. Data Collection</strong></p>
+<ul class="simple">
+<li><p><strong>A.1 Informed consent</strong>: If there are human subjects, have they given informed consent, where subjects affirmatively opt-in and have a clear understanding of the data uses to which they consent?</p></li>
+<li><p><strong>A.2 Collection bias</strong>: Have we considered sources of bias that could be introduced during data collection and survey design and taken steps to mitigate those?</p></li>
+<li><p><strong>A.3 Limit PII exposure</strong>: Have we considered ways to minimize exposure of personally identifiable information (PII) for example through anonymization or not collecting information that isn’t relevant for analysis?</p></li>
+<li><p><strong>A.4 Downstream bias mitigation</strong>: Have we considered ways to enable testing downstream results for biased outcomes (e.g., collecting data on protected group status like race or gender)?</p></li>
+</ul>
+<p><strong>B. Data Storage</strong></p>
+<ul class="simple">
+<li><p><strong>B.1 Data security</strong>: Do we have a plan to protect and secure data (e.g., encryption at rest and in transit, access controls on internal users and third parties, access logs, and up-to-date software)?</p></li>
+<li><p><strong>B.2 Right to be forgotten</strong>: Do we have a mechanism through which an individual can request their personal information be removed?</p></li>
+<li><p><strong>B.3 Data retention plan</strong>: Is there a schedule or plan to delete the data after it is no longer needed?</p></li>
+</ul>
+<p><strong>C. Analysis</strong></p>
+<ul class="simple">
+<li><p><strong>C.1 Missing perspectives</strong>: Have we sought to address blindspots in the analysis through engagement with relevant stakeholders (e.g., checking assumptions and discussing implications with affected communities and subject matter experts)?</p></li>
+<li><p><strong>C.2 Dataset bias</strong>: Have we examined the data for possible sources of bias and taken steps to mitigate or address these biases (e.g., stereotype perpetuation, confirmation bias, imbalanced classes, or omitted confounding variables)?</p></li>
+<li><p><strong>C.3 Honest representation</strong>: Are our visualizations, summary statistics, and reports designed to honestly represent the underlying data?</p></li>
+<li><p><strong>C.4 Privacy in analysis</strong>: Have we ensured that data with PII are not used or displayed unless necessary for the analysis?</p></li>
+<li><p><strong>C.5 Auditability</strong>: Is the process of generating the analysis well documented and reproducible if we discover issues in the future?</p></li>
+</ul>
+<p><strong>D. Modeling</strong></p>
+<ul class="simple">
+<li><p><strong>D.1 Proxy discrimination</strong>: Have we ensured that the model does not rely on variables or proxies for variables that are unfairly discriminatory?</p></li>
+<li><p><strong>D.2 Fairness across groups</strong>: Have we tested model results for fairness with respect to different affected groups (e.g., tested for disparate error rates)?</p></li>
+<li><p><strong>D.3 Metric selection</strong>: Have we considered the effects of optimizing for our defined metrics and considered additional metrics?</p></li>
+<li><p><strong>D.4 Explainability</strong>: Can we explain in understandable terms a decision the model made in cases where a justification is needed?</p></li>
+<li><p><strong>D.5 Communicate bias</strong>: Have we communicated the shortcomings, limitations, and biases of the model to relevant stakeholders in ways that can be generally understood?</p></li>
+</ul>
+<p><strong>E. Deployment</strong></p>
+<ul class="simple">
+<li><p><strong>E.1 Redress</strong>: Have we discussed with our organization a plan for response if users are harmed by the results (e.g., how does the data science team evaluate these cases and update analysis and models to prevent future harm)?</p></li>
+<li><p><strong>E.2 Roll back</strong>: Is there a way to turn off or roll back the model in production if necessary?</p></li>
+<li><p><strong>E.3 Concept drift</strong>: Do we test and monitor for concept drift to ensure the model remains fair over time?</p></li>
+<li><p><strong>E.4 Unintended use</strong>: Have we taken steps to identify and prevent unintended uses and abuse of the model and do we have a plan to monitor these once the model is deployed?</p></li>
+</ul>
+<p>Data Science Ethics Checklist generated with <a class="reference external" href="http://deon.drivendata.org">deon</a>.</p>
+</section>
+<section id="responding-to-unethical-use-of-ai">
+<h2>7.8 Responding to Unethical Use of AI<a class="headerlink" href="#responding-to-unethical-use-of-ai" title="Link to this heading">#</a></h2>
+<p>As machine learning and AI become more integrated into chemical engineering processes, engineers may encounter situations where AI is being used—or proposed for use—in ways that are unethical. Ethical dilemmas can arise from biased models, unsafe implementations, lack of transparency, or decisions that prioritize profit over safety, fairness, or environmental responsibility. Knowing how to respond is crucial to uphold professional integrity and protect both people and the environment.</p>
+<section id="identify-and-assess-the-ethical-concern">
+<h3>1. Identify and assess the ethical concern<a class="headerlink" href="#identify-and-assess-the-ethical-concern" title="Link to this heading">#</a></h3>
+<p>The first step is recognizing that a situation is potentially unethical. Ask questions such as:</p>
+<ul class="simple">
+<li><p>Does the AI system create unfair outcomes for certain processes, workers, or communities?</p></li>
+<li><p>Could its use compromise safety, environmental sustainability, or regulatory compliance?</p></li>
+<li><p>Is the system transparent and interpretable enough for decisions to be justified?</p></li>
+</ul>
+<p>Document any observations with evidence—such as test results, model performance reports, or instances of bias. Clear documentation helps communicate concerns effectively.</p>
+</section>
+<section id="refer-to-professional-codes-and-organizational-policies">
+<h3>2. Refer to professional codes and organizational policies<a class="headerlink" href="#refer-to-professional-codes-and-organizational-policies" title="Link to this heading">#</a></h3>
+<p>Chemical engineers are often guided by codes of ethics provided by professional organizations, such as the AI-specific principles from the IEEE or general engineering ethics codes from bodies like AIChE. These codes typically emphasize safety, fairness, transparency, and accountability. Review organizational policies on AI, data use, and compliance, which may provide formal procedures for reporting concerns.</p>
+</section>
+<section id="communicate-concerns-clearly-and-constructively">
+<h3>3. Communicate concerns clearly and constructively<a class="headerlink" href="#communicate-concerns-clearly-and-constructively" title="Link to this heading">#</a></h3>
+<p>Raise the issue with supervisors, project leads, or ethics committees. When doing so:</p>
+<ul class="simple">
+<li><p>Focus on factual evidence rather than assumptions or emotions.</p></li>
+<li><p>Explain the potential risks and consequences of continuing unethical practices.</p></li>
+<li><p>Suggest alternative approaches, such as retraining the model, diversifying data sources, or adding monitoring mechanisms.</p></li>
+</ul>
+</section>
+<section id="escalate-if-necessary">
+<h3>4. Escalate if necessary<a class="headerlink" href="#escalate-if-necessary" title="Link to this heading">#</a></h3>
+<p>If internal reporting does not lead to action, it may be necessary to escalate concerns to higher management, regulatory bodies, or professional organizations. Escalation should be done in a professional manner and with thorough documentation.</p>
+</section>
+<section id="protect-yourself-and-stakeholders">
+<h3>5. Protect yourself and stakeholders<a class="headerlink" href="#protect-yourself-and-stakeholders" title="Link to this heading">#</a></h3>
+<p>While reporting unethical AI use is critical, engineers must also ensure their own protection by following organizational procedures and whistleblower protections. At the same time, prioritizing the safety of colleagues, end-users, and the environment is paramount.</p>
+</section>
+<section id="promote-ethical-ai-practices-proactively">
+<h3>6. Promote ethical AI practices proactively<a class="headerlink" href="#promote-ethical-ai-practices-proactively" title="Link to this heading">#</a></h3>
+<p>Encountering unethical AI use is also an opportunity to advocate for better practices:</p>
+<ul class="simple">
+<li><p>Encourage diversity and fairness in data collection.</p></li>
+<li><p>Implement explainable and transparent models wherever possible.</p></li>
+<li><p>Establish monitoring and auditing frameworks to detect bias or unsafe behavior early.</p></li>
+</ul>
+<p>Encountering unethical AI use is a serious responsibility for engineers. Acting decisively, transparently, and ethically not only safeguards safety and societal welfare but also strengthens trust in AI technologies. Ethical vigilance ensures that the transformative potential of AI in chemical engineering is realized responsibly, minimizing harm while maximizing benefits.</p>
+</section>
+</section>
+<section id="examples-of-ethics-in-chemical-engineering-data-science">
+<h2>7.9 Examples of Ethics in Chemical Engineering Data Science<a class="headerlink" href="#examples-of-ethics-in-chemical-engineering-data-science" title="Link to this heading">#</a></h2>
+<section id="biased-dataset-in-a-chemical-safety-model">
+<h3>1. Biased Dataset in a Chemical Safety Model<a class="headerlink" href="#biased-dataset-in-a-chemical-safety-model" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A model predicts chemical exposure risks using historical incident reports, but most data comes from facilities in high-income regions.<br />
+<strong>Ethical issue:</strong><br />
+Bias — the model may underestimate risks in low-resource regions.<br />
+<strong>Solution:</strong><br />
+Diversify the dataset, document gaps, and re-evaluate model performance across geographic subsets. Provide uncertainty warnings when data is incomplete.</p>
+</section>
+<hr class="docutils" />
+<section id="black-box-model-in-high-risk-decision-making">
+<h3>2. Black-Box Model in High-Risk Decision Making<a class="headerlink" href="#black-box-model-in-high-risk-decision-making" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A black-box ML model recommends chemical process adjustments, but engineers cannot interpret why it makes certain recommendations.<br />
+<strong>Ethical issue:</strong><br />
+Lack of transparency in a safety-critical context.<br />
+<strong>Solution:</strong><br />
+Use interpretable models where possible, or apply explainability tools (e.g., SHAP, LIME). Require human review before implementation.</p>
+</section>
+<hr class="docutils" />
+<section id="model-optimization-that-ignores-environmental-impact">
+<h3>3. Model Optimization That Ignores Environmental Impact<a class="headerlink" href="#model-optimization-that-ignores-environmental-impact" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A manufacturing optimization model reduces cost but increases hazardous waste output.<br />
+<strong>Ethical issue:</strong><br />
+Optimizing only for profit without considering environmental or community impact.<br />
+<strong>Solution:</strong><br />
+Add environmental metrics into the objective function. Use multi-objective optimization including safety and sustainability.</p>
+</section>
+<hr class="docutils" />
+<section id="misuse-of-predictive-models-for-employee-monitoring">
+<h3>4. Misuse of Predictive Models for Employee Monitoring<a class="headerlink" href="#misuse-of-predictive-models-for-employee-monitoring" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A plant uses an ML model to flag “inefficient workers” based on wearable sensors without employee consent.<br />
+<strong>Ethical issue:</strong><br />
+Privacy violation and potential misuse of personal data.<br />
+<strong>Solution:</strong><br />
+Obtain informed consent, anonymize data, and limit model use to safety—not productivity policing. Create clear governance policies.</p>
+</section>
+<hr class="docutils" />
+<section id="ai-system-reinforcing-stereotypes-in-hiring">
+<h3>5. AI System Reinforcing Stereotypes in Hiring<a class="headerlink" href="#ai-system-reinforcing-stereotypes-in-hiring" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A résumé-screening model learns from past hiring practices that favored applicants from certain universities.<br />
+<strong>Ethical issue:</strong><br />
+Algorithmic discrimination.<br />
+<strong>Solution:</strong><br />
+Debias training data, include diverse features, perform fairness audits, and maintain human oversight for final decisions.</p>
+</section>
+<hr class="docutils" />
+<section id="unvalidated-model-used-outside-intended-domain">
+<h3>6. Unvalidated Model Used Outside Intended Domain<a class="headerlink" href="#unvalidated-model-used-outside-intended-domain" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A model trained for pharmaceutical reactions is repurposed for agrochemical reactions without testing.<br />
+<strong>Ethical issue:</strong><br />
+Misapplication of a model beyond its validated scope.<br />
+<strong>Solution:</strong><br />
+Conduct domain validation, document model limitations, and require approval for off-label use.</p>
+</section>
+<hr class="docutils" />
+<section id="ai-predictions-used-without-communicating-uncertainty">
+<h3>7. AI Predictions Used Without Communicating Uncertainty<a class="headerlink" href="#ai-predictions-used-without-communicating-uncertainty" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+An ML tool forecasts reaction yields but displays only the point estimate and not uncertainty.<br />
+<strong>Ethical issue:</strong><br />
+Misleading users and creating false confidence in predictions.<br />
+<strong>Solution:</strong><br />
+Provide confidence intervals, probabilistic outputs, and clear warnings for high-uncertainty predictions.</p>
+</section>
+<hr class="docutils" />
+<section id="data-collected-without-user-awareness-in-a-lab">
+<h3>8. Data Collected Without User Awareness in a Lab<a class="headerlink" href="#data-collected-without-user-awareness-in-a-lab" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A lab monitoring system logs audio and video “for safety,” but students were not informed.<br />
+<strong>Ethical issue:</strong><br />
+Non-consensual surveillance.<br />
+<strong>Solution:</strong><br />
+Provide transparent disclosure, explain purpose, restrict access, and allow opt-out where possible.</p>
+</section>
+<hr class="docutils" />
+<section id="ai-chatbot-giving-unsafe-experimental-advice">
+<h3>9. AI Chatbot Giving Unsafe Experimental Advice<a class="headerlink" href="#ai-chatbot-giving-unsafe-experimental-advice" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A student asks an AI assistant for synthesis steps, and it suggests a procedure that could produce toxic byproducts.<br />
+<strong>Ethical issue:</strong><br />
+AI generating unsafe or harmful content.<br />
+<strong>Solution:</strong><br />
+Implement safety filters, restrict hazardous chemistry outputs, and reinforce that experimental protocols must be reviewed by qualified personnel.</p>
+</section>
+<hr class="docutils" />
+<section id="automation-that-displaces-workers-without-planning">
+<h3>10. Automation That Displaces Workers Without Planning<a class="headerlink" href="#automation-that-displaces-workers-without-planning" title="Link to this heading">#</a></h3>
+<p><strong>Scenario:</strong><br />
+A predictive maintenance model reduces the need for manual inspections, threatening technician jobs.<br />
+<strong>Ethical issue:</strong><br />
+Social and economic downsides of automation.<br />
+<strong>Solution:</strong><br />
+Provide retraining opportunities, involve workers in decision-making, and implement gradual transitions rather than abrupt displacement.</p>
+</section>
+</section>
+<section id="open-ended-questions">
+<h2>Open-Ended Questions<a class="headerlink" href="#open-ended-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>How can engineers ensure that machine learning models in chemical processes do not unintentionally favor certain operating conditions or outcomes, and what strategies could be used to mitigate bias?</p></li>
+<li><p>Why is explainability important in AI models, especially in safety-critical chemical engineering applications, and how might a lack of transparency affect decision-making?</p></li>
+<li><p>Who should be held accountable if a machine learning model fails in an industrial setting, and how can engineers balance innovation with ethical responsibility?</p></li>
+<li><p>In what ways can AI and machine learning contribute to more sustainable chemical engineering practices, and what ethical considerations should guide their use to prevent environmental harm?</p></li>
+<li><p>How should engineers integrate human judgment with AI predictions in decision-making processes, and what measures can ensure that AI serves as a helpful tool rather than replacing critical human oversight?</p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="section-06.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Section 6: Deploying a Graphical User Inteface (GUI)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="section-08.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Section 8: Transformers &amp; Generative Pre-trained Transformers (GPTs)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-ethics-in-machine-learning">7.1 Introduction to Ethics in Machine Learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-ethics-and-why-does-it-matter">What is ethics, and why does it matter?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-do-we-care-about-ethics-in-machine-learning">Why do we care about ethics in machine learning?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primary-ethical-concerns-in-ai-deployment">Primary ethical concerns in AI deployment</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explainability-and-interpretability">7.2 Explainability and Interpretability</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environmental-impact-of-ai-models">7.3 Environmental Impact of AI Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-privacy-and-security">7.4 Data Privacy and Security</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fairness-in-model-predictions">7.5 Fairness in Model Predictions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ethical-decision-making-in-ml-deployment">7.6 Ethical Decision-Making in ML Deployment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ethics-datacad-and-deon-ethics-checklist">7.7 Ethics DataCAD and Deon Ethics Checklist</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#responding-to-unethical-use-of-ai">7.8 Responding to Unethical Use of AI</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identify-and-assess-the-ethical-concern">1. Identify and assess the ethical concern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refer-to-professional-codes-and-organizational-policies">2. Refer to professional codes and organizational policies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#communicate-concerns-clearly-and-constructively">3. Communicate concerns clearly and constructively</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#escalate-if-necessary">4. Escalate if necessary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protect-yourself-and-stakeholders">5. Protect yourself and stakeholders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#promote-ethical-ai-practices-proactively">6. Promote ethical AI practices proactively</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-of-ethics-in-chemical-engineering-data-science">7.9 Examples of Ethics in Chemical Engineering Data Science</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#biased-dataset-in-a-chemical-safety-model">1. Biased Dataset in a Chemical Safety Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#black-box-model-in-high-risk-decision-making">2. Black-Box Model in High-Risk Decision Making</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-optimization-that-ignores-environmental-impact">3. Model Optimization That Ignores Environmental Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#misuse-of-predictive-models-for-employee-monitoring">4. Misuse of Predictive Models for Employee Monitoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-system-reinforcing-stereotypes-in-hiring">5. AI System Reinforcing Stereotypes in Hiring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unvalidated-model-used-outside-intended-domain">6. Unvalidated Model Used Outside Intended Domain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-predictions-used-without-communicating-uncertainty">7. AI Predictions Used Without Communicating Uncertainty</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-collected-without-user-awareness-in-a-lab">8. Data Collected Without User Awareness in a Lab</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ai-chatbot-giving-unsafe-experimental-advice">9. AI Chatbot Giving Unsafe Experimental Advice</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automation-that-displaces-workers-without-planning">10. Automation That Displaces Workers Without Planning</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-ended-questions">Open-Ended Questions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Maya Fetzer & Dr. Jude Okolie — Bucknell University
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
