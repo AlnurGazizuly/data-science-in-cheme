@@ -252,8 +252,42 @@ _plot_images = []
   }
 
   // ── Sanitizer 4: Rewrite file reads to demo data ──────────────────────────
+  // Specialized demo for MER_T12_06.csv (Monthly Energy Review CO2 emissions)
+  // Used by Section 11a Project 1: time-indexed multi-source emissions data
+  const CO2_DEMO_DATA_PY = `
+import pandas as pd
+import numpy as np
+_co2_cats = ['Geothermal Energy', 'Non-Biomass Waste', 'Petroleum Coke',
+             'Distillate Fuel ', 'Residual Fuel Oil', 'Petroleum',
+             'Natural Gas', 'Coal', 'Total Energy Electric Power Sector CO2 Emissions']
+_co2_months = pd.date_range('2018-01-01', periods=48, freq='MS')
+_co2_rows = []
+np.random.seed(42)
+for _i, _cat in enumerate(_co2_cats):
+    _base = 5 + _i * 12
+    for _m in _co2_months:
+        _co2_rows.append({
+            'YYYYMM': _m,
+            'Value': str(round(_base + np.random.uniform(-3, 3) + (_m.month / 12) * 2, 4)),
+            'Description': _cat,
+            'MSN': 'MSN' + str(_i).zfill(3),
+            'Column_Order': _i + 1,
+            'Unit': 'Million Metric Tons of Carbon Dioxide'
+        })
+_co2_demo_data = pd.DataFrame(_co2_rows).set_index('YYYYMM')
+`;
+
   function rewriteFileReads(code) {
     if (!/pd\.(read_excel|read_csv|read_table)\s*\(/.test(code)) return { code, injected: false };
+    // Detect filename hint to pick the right demo dataset
+    const filenameMatch = code.match(/pd\.(?:read_csv|read_excel|read_table)\s*\(\s*['"]([^'"]+)['"]/);
+    const fname = filenameMatch ? filenameMatch[1].toLowerCase() : '';
+    // CO2 emissions time series (section 11a project 1)
+    if (/mer_t12|emissions|co2/.test(fname)) {
+      const rewritten = code.replace(/pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g, '_co2_demo_data.copy()');
+      return { code: CO2_DEMO_DATA_PY + '\n' + rewritten, injected: true };
+    }
+    // Default: generic numeric demo data
     const rewritten = code.replace(/pd\.(read_excel|read_csv|read_table)\s*\([^)]*\)/g, '_demo_data.copy()');
     return { code: DEMO_DATA_PY + '\n' + rewritten, injected: true };
   }
@@ -453,6 +487,9 @@ _hist_ncols = 3
   }
 
   function fixSklearnCompat(code) {
+    // statsmodels old API path: arima_model removed in statsmodels 0.12+
+    code = code.replace(/statsmodels\.tsa\.arima_model/g, 'statsmodels.tsa.arima.model');
+
     // Remove squared=True or squared=False from make_scorer calls (param removed in sklearn 1.4+)
     // Handle all orderings of parameters, e.g.:
     //   make_scorer(mean_squared_error, greater_is_better=False, squared=True)
