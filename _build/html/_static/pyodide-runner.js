@@ -16,7 +16,7 @@
     'statsmodels':'statsmodels','nltk':'nltk','seaborn':'seaborn','joblib':'joblib',
   };
   const PYODIDE_BUILTIN = new Set(['numpy','pandas','matplotlib','scipy','sklearn','scikit-learn','sqlite3','ssl','hashlib','hmac','lzma','bz2','zlib']);
-  const BROWSER_INCOMPATIBLE = new Set(['streamlit','torch','gradio','langchain','tensorflow','keras','flask','django','fastapi','celery','redis','psycopg2']);
+  const BROWSER_INCOMPATIBLE = new Set(['streamlit','torch','gradio','langchain','openai','subprocess','tensorflow','keras','flask','django','fastapi','celery','redis','psycopg2']);
   const ALIAS_GUARDS = [
     { alias:'np',  pattern:/\bnp\./,  inject:'import numpy as np' },
     { alias:'pd',  pattern:/\bpd\./,  inject:'import pandas as pd' },
@@ -443,6 +443,15 @@ _hist_ncols = 3
 
   // ── Run code ──────────────────────────────────────────────────────────────
   // Fix sklearn API compatibility issues (e.g. squared param removed in newer sklearn)
+  // Strip Jupyter magic lines (!shell, %magic, %%cell-magic) so they don't SyntaxError
+  function stripJupyterMagics(code) {
+    return code.split('\n').map(line => {
+      if (/^\s*!\s*\S/.test(line)) return '# ' + line.trimStart();   // !pip install ... → comment
+      if (/^\s*%{1,2}\w/.test(line)) return '# ' + line.trimStart(); // %matplotlib inline → comment
+      return line;
+    }).join('\n');
+  }
+
   function fixSklearnCompat(code) {
     // Remove squared=True or squared=False from make_scorer calls (param removed in sklearn 1.4+)
     // Handle all orderings of parameters, e.g.:
@@ -477,6 +486,7 @@ _hist_ncols = 3
     if (noteEl) noteEl.style.display = 'none';
 
     let code = dedent(rawCode);
+    code = stripJupyterMagics(code);
     code = fixHistLayout(code);
     code = removeOuterReturns(code);
     code = fixUnmatchedParens(code);
@@ -667,6 +677,11 @@ for _fn in plt.get_fignums():
 
     // Markdown heading-only blocks (README templates)
     if (/^#{1,6}\s+\S/.test(first) && !/[=()]/.test(trimmed)) return false;
+
+    // Pure Jupyter magic block (every non-empty line starts with ! or %)
+    const nonEmpty = trimmed.split('\n').filter(l => l.trim());
+    const allMagic = nonEmpty.length > 0 && nonEmpty.every(l => /^\s*[!%]\w+/.test(l));
+    if (allMagic) return false;
 
     return true;
   }
