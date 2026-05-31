@@ -628,6 +628,49 @@ for _fn in plt.get_fignums():
     return pre.textContent.replace(/^\n/,'').replace(/\n$/,'');
   }
 
+  // Detect whether a code block is actually Python (vs shell, file tree, markdown, etc.)
+  // Returns false for shell commands, git, file trees, README templates, .gitignore patterns.
+  function looksLikePython(code, el) {
+    // Explicit non-Python lexers
+    if (el && (el.classList.contains('highlight-bash') ||
+               el.classList.contains('highlight-shell') ||
+               el.classList.contains('highlight-console') ||
+               el.classList.contains('highlight-text'))) return false;
+
+    const trimmed = code.trim();
+    if (!trimmed) return false;
+
+    // File tree characters
+    if (/[├└│]──?/.test(trimmed)) return false;
+
+    // Markdown code fences (indicates docs, not runnable)
+    if (/^```/m.test(trimmed)) return false;
+
+    // Get first non-comment, non-empty line for inspection
+    const firstReal = trimmed.split('\n').find(l => {
+      const s = l.trim();
+      return s && !s.startsWith('#');
+    }) || '';
+    const first = firstReal.trim();
+
+    // Shell commands at start of line
+    const shellCmds = /^(git|pip|pip3|python|python3|cd|ls|mkdir|cp|mv|rm|cat|echo|touch|chmod|chown|curl|wget|ssh|scp|sudo|apt|brew|yarn|npm|node|jupyter|streamlit|make|conda|export|source|virtualenv|venv|\.\/|pytest)\b/;
+    if (shellCmds.test(first)) return false;
+
+    // Lines that look like file paths/globs only (e.g. `__pycache__/`, `*.log`, `data/raw/*`)
+    const allLines = trimmed.split('\n').filter(l => l.trim());
+    const pathLike = allLines.every(l => {
+      const s = l.trim();
+      return /^[\w.*/\\\-]+\/?\*?$/.test(s) || /^\*\.\w+$/.test(s);
+    });
+    if (pathLike && allLines.length >= 1 && !/[(=:]/.test(trimmed)) return false;
+
+    // Markdown heading-only blocks (README templates)
+    if (/^#{1,6}\s+\S/.test(first) && !/[=()]/.test(trimmed)) return false;
+
+    return true;
+  }
+
   function transformCells() {
     injectStyles();
     document.querySelectorAll('div.cell_input').forEach(cellInput => {
@@ -635,14 +678,16 @@ for _fn in plt.get_fignums():
       if (!h) return;
       const code = extractCode(h);
       if (!code.trim()) return;
+      if (!looksLikePython(code, h)) return;
       h.parentNode.replaceChild(buildEditor(code), h);
     });
-    const sel = ['div.highlight-python:not(.cell_input *)','div.highlight-ipython3:not(.cell_input *)','div.highlight-default:not(.cell_input *)','div.highlight-shell:not(.cell_input *)'].join(',');
+    const sel = ['div.highlight-python:not(.cell_input *)','div.highlight-ipython3:not(.cell_input *)','div.highlight-default:not(.cell_input *)'].join(',');
     document.querySelectorAll(sel).forEach(el => {
       if (el.closest('.pyodide-editor-wrap')) return;
-      const outer = el.closest('.highlight-python,.highlight-ipython3,.highlight-default,.highlight-shell') || el;
+      const outer = el.closest('.highlight-python,.highlight-ipython3,.highlight-default') || el;
       const code = extractCode(outer);
       if (!code.trim()) return;
+      if (!looksLikePython(code, outer)) return;
       outer.parentNode.replaceChild(buildEditor(code), outer);
     });
     loadPyodideIfNeeded();
